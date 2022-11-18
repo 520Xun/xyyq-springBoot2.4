@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>添加用户</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico"/>
+    <link rel="stylesheet" href="/layui/css/layui.css">
+    <link rel="stylesheet" href="/css/common.css">
+    <link rel="stylesheet" href="/layui/extend/font/dtreefont.css">
+    <link rel="stylesheet" href="/layui/extend/formSelects-v4.css">
+</head>
+<body>
+<div class="yadmin-body animated fadeIn">
+    <!--    样式基于form表单-->
+    <div class="layui-form layui-form-pane">
+        <div class="layui-form-item">
+            <label for="username" class="layui-form-label">
+                用户名
+            </label>
+            <div class="layui-input-block">
+                <input type="text" id="username" placeholder="请填写用户名(必须填)"
+                       autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="authorName" class="layui-form-label">
+                作者名
+            </label>
+            <div class="layui-input-block">
+                <input type="text" id="authorName" placeholder="请填写作者名" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item" pane="">
+            <label class="layui-form-label">
+                性别
+            </label>
+            <div class="layui-input-block">
+                <input type="radio" name="sex" title="男" checked="checked" value="男">
+                <input type="radio" name="sex" title="女" value="女">
+            </div>
+        </div>
+        <!--        <div class="layui-form-item">-->
+        <!--            <label for="age" class="layui-form-label">-->
+        <!--                生日-->
+        <!--            </label>-->
+        <!--            <div class="layui-input-block">-->
+        <!--                <input type="text" id="age" placeholder="请填写年龄" autocomplete="off" class="layui-input">-->
+        <!--            </div>-->
+        <!--        </div>-->
+        <div class="layui-form-item">
+            <label for="username" class="layui-form-label">
+                用户头像
+            </label>
+            <div class="layui-input-block">
+                <div class="layui-upload">
+                    <button type="button" class="layui-btn layui-btn-normal" id="uploadPicture">上传图片</button>
+                    <div class="layui-upload-list">
+                        <img id="picture" width="80px" height="80px" style='border-radius: 40px;'>
+                    </div>
+                    <div style="width: 95px;">
+                        <div class="layui-progress layui-progress-big" lay-showpercent="yes" lay-filter="demo">
+                            <div class="layui-progress-bar" lay-percent=""></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="email" class="layui-form-label">
+                邮箱
+            </label>
+            <div class="layui-input-block">
+                <input type="text" id="email" placeholder="请填写邮箱" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="phone" class="layui-form-label">
+                手机号
+            </label>
+            <div class="layui-input-block">
+                <input type="text" id="phone" placeholder="请填写手机号" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <!-- 编辑时不显示密码框 -->
+        <div class="layui-form-item" id="password-edit-hide">
+            <label for="password" class="layui-form-label">
+                用户密码
+            </label>
+            <div class="layui-input-block">
+                <input type="password" id="password" placeholder="请填写密码" autocomplete="off" class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label for="address" class="layui-form-label">
+                地址
+            </label>
+            <div class="layui-input-block">
+                <input type="text" id="address" placeholder="请填写地址(只需要省份名称)" autocomplete="off"
+                       class="layui-input">
+            </div>
+        </div>
+        <div class="layui-form-item" pane="">
+            <label class="layui-form-label">
+                在线状态
+            </label>
+            <div class="layui-input-block">
+                <input type="radio" name="onlineStatus" title="在线" checked="checked" value="1">
+                <input type="radio" name="onlineStatus" title="隐身" value="0">
+            </div>
+        </div>
+        <div class="layui-form-item" pane="">
+            <label class="layui-form-label">
+                账号状态
+            </label>
+            <div class="layui-input-block">
+                <input type="radio" name="userStatus" title="正常" checked="checked" value="1">
+                <input type="radio" name="userStatus" title="锁定" value="0">
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <label class="layui-form-label">
+                角色
+            </label>
+            <div class="layui-input-block">
+                <select name="role" xm-select="role-select" lay-verify="required" lay-vertype="tips"
+                        xm-select-skin="normal"
+                        id="showRoleSelect">
+                    <option value="">请选择角色</option>
+                </select>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-input-block" style="margin-left:0;text-align:center;">
+                <input type="hidden" id="userId" value="">
+                <button class="layui-btn layui-btn-normal">重置</button>
+                <button class="layui-btn layui-btn-normal" onclick="SaveOrupdateUser()" id="submitBtn">增加</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script src="/layui/layui.js"></script>
+<script src="/js/common.js"></script>
+<script src="/js/jquery-3.4.1.min.js"></script>
+<script>
+    layui.config({
+        base: '/layui/extend/'
+    }).extend({
+        formSelects: 'formSelects-v4'
+    }).use(['form', 'layer', 'formSelects'], function () {
+        $ = layui.jquery;
+    });
+    $(function () {
+        //加载所有的角色
+        loadRoleSelect();
+    })
+
+    function loadRoleSelect() {
+        var url = "/role/findAllRole";
+        $.get(url, {}, function (result) {
+            var str = "";
+            for (var i = 0; i < result.data.length; i++) {
+                var data = result.data[i];
+                str += "<option value=\"" + data.id + "\">" + data.roleName + "</option>\n";
+            }
+            $("#showRoleSelect").append(str);
+        })
+    }
+
+    function child(p) {
+        console.log(p);
+    }
+
+    //子页面提交
+    function SaveOrupdateUser() {
+        var url = "/user/saveUser";
+        var userParam = getUserParam();
+        console.log(userParam);//打印添加用户信息
+        debugger;
+        $.get(url, userParam, function (result) {
+            if (result.state == 1) {
+                layer.msg(result.msg);
+                parent.location.reload();
+                var index = parent.layer.getFrameIndex(Window.name);
+                parent.layer.close(index);//关闭当前页面
+            }
+        }).fail(function () {
+            location.href = "/admin/error/500";
+        })
+    }
+
+    function getUserParam() {
+        var username = $("#username").val();
+        var password = $("#password").val();
+        var authorName = $("#authorName").val();
+        var sex = $("input[name=\"sex\"]:checked").val();
+        var picture = document.getElementsByTagName('img')[0].src;
+        var email = $("#email").val();
+        var phone = $("#phone").val();
+        var address = $("#address").val();
+        var onlineStatus = $("input[name=\"onlineStatus\"]:checked").val();
+        var userStatus = $("input[name=\"userStatus\"]:checked").val();
+        //获取角色的id 数组
+        var checkedRole = layui.formSelects.value('role-select', 'val'); //[1,2,3]
+        var params = {
+            username: username,
+            password: password,
+            authorName: authorName,
+            sex: sex,
+            picture: picture,
+            email: email,
+            phone: phone,
+            address: address,
+            onlineStatus: onlineStatus,
+            userStatus: userStatus,
+            roleIds: checkedRole
+        }
+        return params;
+    }
+
+    //常规使用 - 普通图片上传
+    layui.use(['upload', 'element', 'layer'], function () {
+        var $ = layui.jquery
+            , upload = layui.upload
+            , layer = layui.layer;
+        var uploadInst = upload.render({
+            elem: '#uploadPicture'
+            , url: '/upload/uploadImage'
+            , before: function (obj) { //阻止了上传，先是预览
+                //预读本地文件示例，不支持ie8
+                obj.preview(function (index, file, result) {
+                    console.log(file);
+                    $('#picture').attr('src', result); //图片链接（base64）
+                });
+                layer.msg('上传中', {icon: 16, time: 0});
+            }
+            , done: function (res) {
+                debugger;
+                //如果上传失败
+                if (res.state == 0) {
+                    return layer.msg('上传失败', {icon: 2});
+                }
+                if (res.state == 1) {
+                    $('#picture').attr('src', res.data);
+                    return layer.msg('上传成功', {icon: 1});
+                }
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

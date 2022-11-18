@@ -1,0 +1,53 @@
+<!--<ul class="pagination pagination-sm no-margin pull-right">-->
+<!--  <li><a class="first">首页</a></li>-->
+<!--  <li><a class="pre">上一页</a></li>-->
+<!--  <li><a class="next">下一页</a></li>-->
+<!--  <li><a class="last">尾页</a></li>-->
+<!--  <li><a class="rowCount">总记录数(0)</a></li>-->
+<!--  <li><a class="pageCount">总页数(0)</a></li>-->
+<!--  <li><a class="pageCurrent">当前页(1)</a></li>-->
+<!--</ul>-->
+<div class="layui-btn-sm">
+  <button type="button" class="layui-btn layui-btn-normal first">首页</button>
+<!--  <button type="button" class="layui-btn layui-btn-normal layui-btn-sm pre"><i class="layui-icon"></i></button>-->
+<!--  <button type="button" class="layui-btn layui-btn-normal layui-btn-sm next "><i class="layui-icon"></i></button>-->
+  <button type="button" class="layui-btn layui-btn-normal pre">上一页</button>
+  <button type="button" class="layui-btn layui-btn-normal next">下一页</button>
+  <button type="button" class="layui-btn layui-btn-normal last">尾页</button>
+  <button type="button" class="layui-btn layui-btn-normal rowCount">总记录数(0)</button>
+  <button type="button" class="layui-btn layui-btn-normal pageCount">总页数(0)</button>
+  <button type="button" class="layui-btn layui-btn-normal pageCurrent">当前页(1)</button>
+</div>
+<script type="text/javascript">
+  $(function(){
+    //给指定的选择器动态绑定点击事件
+    $("#page").on("click", ".first, .pre, .next, .last", doJumpToPage);
+  })
+
+  function doJumpToPage(){
+    var clzName = $(this).attr("class");
+    var maxPage = $("#page").data("countPage");//最大页
+    var curPage = $("#page").data("curPage");//当前页
+    if(clzName.indexOf('first')>=0){
+      $("#page").data("curPage", 1);//当前页赋值为1
+    }else if(clzName.indexOf('last')>=0){
+      $("#page").data("curPage", maxPage);//当前页赋值为最大页
+    }else if(clzName.indexOf('pre')>=0 && curPage > 1){
+      var prePage = curPage - 1;//当前页-1
+      $("#page").data("curPage", prePage);
+    }else if(clzName.indexOf('next')>=0&&  curPage < maxPage){
+      var nextPage = curPage + 1;//当前页+1
+      $("#page").data("curPage", nextPage);
+    }
+    doLoadData();//重新查找数据
+  }
+
+  function setPageData(pageObj){
+    $(".rowCount").text("总记录数(" + pageObj.countSize + ")");
+    $(".pageCount").text("总页数(" + pageObj.countPage + ")");
+    $(".pageCurrent").text("当前页(" + pageObj.curPage + ")");
+    $("#page").data("curPage" , pageObj.curPage);
+    $("#page").data("countPage" , pageObj.countPage);
+  }
+
+</script>

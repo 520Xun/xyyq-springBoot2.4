@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>用户管理模块</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico"/>
+    <link rel="stylesheet" href="/layui/css/layui.css">
+    <link rel="stylesheet" href="/css/common.css">
+    <link rel="stylesheet" href="/layui/extend/dtree.css">
+    <link rel="stylesheet" href="/layui/extend/font/dtreefont.css">
+    <!--    swaich开关-->
+    <style>
+        .switch {
+            width: 57px;
+            height: 28px;
+            position: relative;
+            border: 1px solid #dfdfdf;
+            background-color: #fdfdfd;
+            box-shadow: #dfdfdf 0 0 0 0 inset;
+            border-radius: 20px;
+            background-clip: content-box;
+            display: inline-block;
+            -webkit-appearance: none;
+            user-select: none;
+            outline: none;
+        }
+
+        .switch:before {
+            content: '';
+            width: 26px;
+            height: 26px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            border-radius: 20px;
+            background-color: #fff;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+        }
+
+        .switch:checked {
+            border-color: #64bd63;
+            box-shadow: #64bd63 0 0 0 16px inset;
+            background-color: #64bd63;
+        }
+
+        .switch:checked:before {
+            left: 30px;
+        }
+
+        .switch.switch-anim {
+            transition: border cubic-bezier(0, 0, 0, 1) 0.4s, box-shadow cubic-bezier(0, 0, 0, 1) 0.4s;
+        }
+
+        .switch.switch-anim:before {
+            transition: left 0.3s;
+        }
+
+        .switch.switch-anim:checked {
+            box-shadow: #64bd63 0 0 0 16px inset;
+            background-color: #64bd63;
+            transition: border ease 0.4s, box-shadow ease 0.4s, background-color ease 1.2s;
+        }
+
+        .switch.switch-anim:checked:before {
+            transition: left 0.3s;
+        }
+    </style>
+</head>
+
+<body id="BindbodyData">
+<div id="loadPageDiv">
+    <!--盒子-->
+    <div class="box">
+        <div class="box-header">
+            <h2 style="padding: 15px">用户列表</h2>
+            <div class="layui-form-item">
+                <label class="layui-form-label">用户名</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="username" lay-verify="required" placeholder="请输入" autocomplete="off"
+                           class="layui-input">
+                </div>
+                <label class="layui-form-label">邮箱</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="emaiL" lay-verify="required" placeholder="请输入" autocomplete="off"
+                           class="layui-input">
+                </div>
+                <label class="layui-form-label">电话</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="phone" lay-verify="required" placeholder="请输入" autocomplete="off"
+                           class="layui-input">
+                </div>
+                <button type="button" class="layui-btn layui-btn-normal" id="search">搜索</button>
+            </div>
+        </div>
+
+        <div class="layui-btn-sm" id="btn-tool-area">
+            <button class="layui-btn layui-btn-normal btn_add">新增</button>
+            <button type="button" class="layui-btn layui-btn-normal btn_update">修改</button>
+            <button class="layui-btn layui-btn-normal " id="btn_delete">删除</button>
+            <button type="button" class="layui-btn layui-btn-normal" id="导入">导入</button>
+            <button type="button" class="layui-btn layui-btn-normal" id="导出">导出</button>
+        </div>
+    </div>
+    <div class="box-body">
+        <table class="layui-table" lay-even="" lay-skin="nob">
+            <!-- 定义表格列宽-->
+            <colgroup>
+                <col width="150">
+                <col width="150">
+                <col width="150">
+                <col width="150">
+                <col width="150">
+                <col width="150">
+                <col width="150">
+                <col width="150">
+                <col>
+            </colgroup>
+            <thead>
+            <tr>
+                <th><input type="checkbox" onchange="IsCheckAll(this)" name="checkbox" id="checkedAll"></th>
+                <th>用户名</th>
+                <th>作者名</th>
+                <th>性别</th>
+                <th>头像</th>
+                <th>邮箱</th>
+                <th>手机号</th>
+                <th>在线状态</th>
+                <th>创建时间</th>
+                <th>创建ip</th>
+                <th>修改时间</th>
+                <th>账号状态</th>
+                <th>创建者</th>
+                <th>修改者</th>
+                <th>操作</th>
+            </tr>
+            </thead>
+            <tbody id="tbody">
+            <!--   数据存放区域-->
+            </tbody>
+        </table>
+        <!--加载分页区域-->
+        <div id="page">
+        </div>
+
+    </div>
+</div>
+<!--<script src="/js/jquery.js"></script>-->
+<script src="/js/jquery-3.4.1.min.js"></script>
+<script src="/layui/layui.js"></script>
+<script src="/js/common.js"></script>
+<script>
+
+    $(function () {
+        //加载分页
+        $("#page").load("/doPageUI", function () {
+            //刷新数据
+            doLoadData();
+        })
+
+        //   $(".layui-table").find("input[name='checkbox']").on("change",choiceThis)
+        //查询事件
+        $("#search").click(doLoadData);
+        //绑定点击案件
+        $("#btn-tool-area").on("click", ".btn_add,.btn_update", saveUserPageUI);
+    })
+
+    function choiceThis() {
+        //chang 所有的input
+        var count = 0;
+        var inps = $(".layui-table").find("input[name='checkbox']");
+        debugger;
+        for (var i = 0; i < inps.length; i++) {
+            if ($(inps[i]).prop("checked")) {
+                count++;
+            }
+        }
+        if (count == inps.length) {
+            $("#checkedAll").prop("checked", true);
+        } else {
+            $("#checkedAll").prop("checked", false);
+        }
+    }
+
+
+    function doLoadData() {
+        var url = "/user/findUser";
+        var curPage = $("#page").data("curPage");
+        var username = $("#username").val();
+        var email = $("#email").val();
+        var phone = $("#phone").val();
+        //格式验证
+        var params = {
+            username: username,
+            email, email,
+            phone: phone,
+            curPage: curPage ? curPage : 1,
+            pageSize: 5  //默认条数
+        }
+        $.get(url, params, function (result) {
+            //查询成功！
+            if (result.state == 1) {
+                doHandlerTableBody(result.data);
+                //设置页码
+                setPageData(result.data);
+            } else {
+                //相当于alert()
+                layer.msg(result.message);
+            }
+        })
+    }
+
+    //处理表格数据
+    function doHandlerTableBody(data) {
+        $("#tbody").empty();
+        //分页数据赋值
+        setPageData(data);
+        data = data.pageData;
+        for (var i = 0; i < data.length; i++) {
+            var tr = "  <tr>\n" +
+                "  <th><input type=\"checkbox\" value='" + data[i].id + "' name='checkbox'></th>\n" +
+                " <th>" + data[i].username + "</th>\n" +
+                " <th>" + data[i].authorName + "</th>\n" +
+                " <th>" + data[i].sex + "</th>\n" +
+                " <th>" + "<img src='" + data[i].picture + "' style='border-radius: 25px;width: 50px;height: 50px'>" + "</th>" +
+                " <th>" + data[i].email + "</th>\n" +
+                "<th>" + data[i].phone + "</th>\n" +
+                //    "<th>"+(data[i].onlineStatus==1?'在线':'隐身')+"</th>"+
+                "<th><input class=\"switch switch-anim onlineStatus\" onchange=\"checkNum(this)\" type=\"checkbox\" value='" + data[i].onlineStatus + "' /></th>" +
+                "<th>" + data[i].registerTime + "</th>\n" +
+                "<th>" + data[i].registerIp + "</th>\n" +
+                " <th>" + data[i].modifiedTime + "</th>\n" +
+                //   " <th>"+data[i].userStatus+"</th>\n" + " </tr>";
+                //   "<th>"+(data[i].userStatus==1?'启用':'禁用')+"</th>"+
+                //   " <th>"+" <button type='button' class='layui-btn layui-btn-primary layui-border-red'   onclick='changValId(this)'>"+ (data[i].userStatus?"禁用":"启用")+"</button></th><tr>" ;
+                "<th><input class=\"switch switch-anim userStatus\" onchange=\"checkNum(this)\" type=\"checkbox\" value='" + data[i].userStatus + "' /></th>" +
+                " <th>" + data[i].createdUser + "</th>\n" +
+                " <th>" + data[i].modifiedUser + "</th>\n" +
+                "<th><button class=\"layui-btn layui-btn-normal\" onclick='lookUserInfo(this)' >查看</button></th></tr>";
+            $("#tbody").append(tr);
+            $("#tbody tr").last().data("userRow", data[i]);
+            StateIschecked();
+        }
+    }
+
+    function lookUserInfo(btn) {
+        var data = $(btn).parents("tr").data("userRow");
+        console.log(data); //每一行用户的数据
+    }
+
+    //状态选中
+    function StateIschecked() {
+        var checked = $("#tbody tr").last().find(".switch");
+        var states = [];
+        for (var i = 0; i < checked.length; i++) {
+            states.push($(checked[i]).val());
+            if ($(checked[i]).val() == 1) {//选中，即状态为在线，账号为启用
+                $(checked[i]).attr("checked", true);
+            }
+        }
+        console.log(states);//打印选中
+    }
+
+    //修改状态 提交
+    function checkNum(btn) {
+        // if(){
+        //    layer.alert("选中");
+        // }else{
+        //    layer.alert("没选中");
+        // }
+        var id = $(btn).parents("tr").find("input").val();
+        var checked = $(btn).prop('checked') ? "1" : "0";
+        var params = {
+            id: id,
+        }
+        if ($(btn).hasClass("userStatus")) { //修改用户状态
+            params.userStatus = checked;
+            var url = "/user/updateUserStatus";
+        }
+        if ($(btn).hasClass("onlineStatus")) {//修改在线状态
+            params.onlineStatus = checked;
+            var url = "/user/updateOnlineStatus";
+        }
+        console.log(params);
+        $.get(url, params, function (result) {
+            if (result.state == 1) {
+                //静态修改
+                // layer.msg(result.msg, {icon: 6});
+                // checked == 1 ? $(btn).attr("checked", true) : $(btn).attr("checked", false);
+                doLoadData();
+            } else {
+                layer.msg(result.msg, {icon: 2});
+                checked == 1 ? $(btn).prop("checked", false) : $(btn).prop("checked", true);
+            }
+        })
+    }
+
+    //增加或者修改页面
+    function saveUserPageUI() {
+        var title;
+        if ($(this).hasClass("btn_add")) {
+            title = "添加用户";
+        }
+        if ($(this).hasClass("btn_update")) {
+            title = "修改用户";
+        }
+        layer.open({
+            type: 2, //页面层
+            title: title,
+            shadeClose: true,
+            scrollbar: false,//取消浏览器滚动条
+            shade: false,
+            maxmin: true, //开启最大化最小化按钮
+            area: ['893px', '850px'],
+            content: '/admin/user/user_add',//展示的页面
+            success: function (obj, index) {
+                var iframe = window['layui-layer-iframe' + index];
+                iframe.child(122121);
+            }
+        });
+    }
+
+    //全选或者全不选
+    function IsCheckAll(btn) {
+        if ($(btn).prop('checked')) {
+            $(btn).parents().find("input[name='checkbox']").attr("checked", true);
+        } else {
+            $(btn).parents().find("input[name='checkbox']").attr("checked", false);
+        }
+    }
+</script>
+</body>
+</html>

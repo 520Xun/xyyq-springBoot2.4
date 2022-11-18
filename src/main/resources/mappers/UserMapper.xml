@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace：命名空间，对应一个dao层接口的全路径 -->
+<mapper namespace="com.xun.dao.UserDao">
+
+    <sql id="userQuery">
+        <where>
+            <if test="username != null and username !=''">
+                username like concat("%", #{username}, "%")
+            </if>
+            <if test="email != null and email !=''">
+                email like concat("%", #{email}, "%")
+            </if>
+            <if test="phone != null and phone !=''">
+                phone like concat("%", #{phone}, "%")
+            </if>
+        </where>
+    </sql>
+
+    <!-- 查找所有的用户 -->
+    <select id="findUsers" resultType="com.xun.pojo.User">
+        select * from user
+        <include refid="userQuery"/>
+        GROUP BY id DESC
+    </select>
+
+    <insert id="insertUser" parameterType="com.xun.pojo.User" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO `user`(`id`, `username`, `password`, `salt`, `authorName`, `age`, `sex`, `email`, `phone`,
+                           `picture`, `personalized_sign`, `register_time`, `register_ip`, `modifiedTime`, `address`,
+                           `online_status`, `user_status`, `createdUser`, `modifiedUser`)
+        VALUES (null, #{username}, #{password}, #{salt}, #{authorName}, #{age}, #{sex},
+                #{email}, #{phone}, #{picture}, #{personalizedSign}, now(),
+                #{registerIp}, #{modifiedTime}, #{address}, #{onlineStatus}, #{userStatus}, #{createdUser},
+                #{modifiedUser})
+    </insert>
+
+    <update id="updateUser">
+        UPDATE `myblog`.`user`
+        SET `username`          =#{username},
+            `authorName`        = #{authorName},
+            `age`               =#{age},
+            `sex`               = #{sex},
+            `email`             = #{email},
+            `phone`             =#{phone},
+            `picture`           =#{picture},
+            `personalized_sign` = #{personalizedSign},
+            `modifiedTime`      = now(),
+            `address`           = #{address},
+            `online_status`     = #{onlineStatus},
+            `user_status`       = #{userStatus},
+            `modifiedUser`      = #{modifiedUser}
+        WHERE `id` = #{id};
+    </update>
+</mapper>        

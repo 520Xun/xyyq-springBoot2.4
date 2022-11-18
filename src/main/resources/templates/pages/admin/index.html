@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="zh">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>Y-Admin</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/favicon.ico">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon.ico">
+    <!-- layui样式 -->
+    <link rel="stylesheet" href="/layui/css/layui.css">
+    <!-- Y-Admin核心样式 -->
+    <link rel="stylesheet" href="/css/yadmin.css">
+    <!-- 公共样式 -->
+    <link rel="stylesheet" href="css/common.css">
+    <!-- 图标 -->
+    <link rel="stylesheet" href="/remixicon/fonts/remixicon.css">
+    <!-- 首页样式（只为此页面使用） -->
+    <link rel="stylesheet" href="/css/index.css">
+</head>
+
+<body class="layui-layout-body">
+
+    <div class="layui-layout layui-layout-admin">
+
+        <div class="layui-header">
+            <!-- logo 区域 -->
+            <div class="layui-logo">
+                <img src="/images/security.png" alt="logo" style="margin-left: -5px;" />
+                <cite>
+                    Y-Admin&emsp;
+                </cite>
+            </div>
+
+            <!-- 头部区域 -->
+            <ul class="layui-nav layui-layout-left">
+                <li class="layui-nav-item" lay-unselect>
+                    <a lay-event="flexible" title="侧边伸缩">
+                        <i class="layui-icon layui-icon-shrink-right"></i>
+                    </a>
+                </li>
+                <!-- 面包屑 -->
+                <span class="layui-breadcrumb layui-anim layui-anim-up">
+                    <a><cite>首页</cite></a>
+                </span>
+            </ul>
+
+            <!-- 头像区域 -->
+            <ul class="layui-nav layui-layout-right">
+
+                <li class="layui-nav-item feature-items">
+                    <a lay-event="github" title="Github 地址">
+                        <i class="ri-github-fill"></i>
+                    </a>
+                </li>
+
+                <li class="layui-nav-item feature-items">
+                    <a lay-event="website" title="前台">
+                        <i class="ri-earth-line"></i>
+                    </a>
+                </li>
+
+                <li class="layui-nav-item feature-items">
+                    <a lay-event="clear" title="清理标签缓存"><i class="ri-brush-3-line"></i></a>
+                </li>
+
+                <li class="layui-nav-item feature-items">
+                    <a lay-event="tag" title="便签"><i class="ri-git-repository-line"></i></a>
+                </li>
+
+                <li class="layui-nav-item feature-items">
+                    <a lay-event="todo" title="待处理任务"><i class="ri-calendar-todo-line"></i></a>
+                </li>
+
+                <li class="layui-nav-item feature-items">
+                    <a id="screenFull" lay-event="screenFull" title="全屏">
+                        <i class="ri-fullscreen-line"></i>
+                    </a>
+                    <a id="screenRestore" lay-event="screenRestore" title="退出全屏" style="display: none;">
+                        <i class="ri-fullscreen-exit-line"></i>
+                    </a>
+                </li>
+
+                <li class="layui-nav-item user-selection">
+                    <a>
+                        <img src="images/avatar.png" class="layui-nav-img" alt="头像">
+                        <cite>管理员</cite>
+                        <span class="layui-nav-more"></span>
+                    </a>
+                    <dl class="layui-nav-child">
+                        <dd lay-unselect>
+                            <a lay-event="userInfo">基本资料</a>
+                        </dd>
+                        <dd lay-unselect>
+                            <a lay-event="editPwd">修改密码</a>
+                        </dd>
+                        <hr>
+                        <dd lay-unselect>
+                            <a id="loginOut">退出</a>
+                        </dd>
+                    </dl>
+                </li>
+            </ul>
+        </div>
+
+        <!-- 左侧导航区域 -->
+        <div class="layui-side ">
+            <div class="layui-side-scroll">
+                <ul class="layui-nav layui-nav-tree" lay-filter="lay-nav" lay-accordion="true">
+                    <li class="layui-nav-item">
+                        <a lay-url="admin/home/homeIndex" lay-id="home">
+                            <i class="ri-home-8-line"></i>&emsp;<cite>首页</cite>
+                        </a>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a >
+                            <i class="ri-shield-keyhole-line"></i>&emsp;<cite>帖子管理</cite>
+                        </a>
+                        <dl class="layui-nav-child">
+                            <dd>
+                                <a lay-id="#" lay-url="#">
+                                    <cite>帖子列表</cite>
+                                </a>
+                            </dd>
+                            <dd>
+                                <a lay-id="#" lay-url="#">
+                                    <cite>发布帖子</cite>
+                                </a>
+                            </dd>
+                        </dl>
+                    </li>
+                    <li class="layui-nav-item">
+                        <a lay-id="#" lay-url="#">
+                            <i class="ri-shield-keyhole-line"></i>&emsp;<cite>系统管理</cite>
+                        </a>
+                        <dl class="layui-nav-child">
+                            <dd>
+                                <a lay-id="admin/user/user_list" lay-url="admin/user/user_list">
+                                    <cite>用户管理</cite>
+                                </a>
+                            </dd>
+                            <dd>
+                                <a lay-id="admin/role/role_list" lay-url="admin/role/role_list">
+                                    <cite>角色管理</cite>
+                                </a>
+                            </dd>
+                            <dd>
+                                <a lay-id="admin/menu/menu_list" lay-url="admin/menu/menu_list">
+                                    <cite>菜单管理</cite>
+                                </a>
+                            </dd>
+                        </dl>
+                    </li>
+
+                </ul>
+
+            </div>
+        </div>
+
+        <div class="layui-body">
+            <div class="layui-pagetabs">
+                <div class="layui-icon admin-tabs-control layui-icon-refresh-3" lay-event="refresh"></div>
+                <div class="layui-tab" lay-unauto lay-allowclose="true" lay-filter="lay-tab">
+                    <ul class="layui-tab-title">
+                        <li lay-id="home" lay-url="admin/home/index" class="layui-this">
+                            <!-- <i class="ri-home-heart-line ri-xl"></i> -->
+                            <i class="ri-home-8-line ri-xl"></i>
+                        </li>
+                    </ul>
+                    <div class="layui-tab-content">
+                        <div class="layui-tab-item layui-show">
+                            <iframe src="admin/home/index" class="layui-iframe"></iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 底部固定区域 -->
+        <div class="layui-footer">
+            copyright © 2020 Y-Admin all rights reserved.
+            <ul class="tabbar">
+                <li>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                        <path fill="none" d="M0 0h24v24H0z" />
+                        <path
+                            d="M12.414 5H21a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h7.414l2 2zM15 13v-1a3 3 0 0 0-6 0v1H8v4h8v-4h-1zm-2 0h-2v-1a1 1 0 0 1 2 0v1z" />
+                    </svg>
+                </li>
+                <li>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                        <path fill="none" d="M0 0h24v24H0z" />
+                        <path
+                            d="M21 5a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h7.414l2 2H16v2h2V5h3zm-3 8h-2v2h-2v3h4v-5zm-2-2h-2v2h2v-2zm2-2h-2v2h2V9zm-2-2h-2v2h2V7z" />
+                    </svg>
+                </li>
+                <li>
+                    <div class="fileAdd">
+                        <ul>
+                            <li class="word"></li>
+                            <li class="powerpoint"></li>
+                            <li class="excel"></li>
+                        </ul>
+                        <div>
+                            <span></span>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                        <path fill="none" d="M0 0h24v24H0z" />
+                        <path
+                            d="M12.414 5H21a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h7.414l2 2zM11 13.05a2.5 2.5 0 1 0 2 2.45V11h3V9h-5v4.05z" />
+                    </svg>
+                </li>
+                <li>
+                    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                        <path fill="none" d="M0 0h24v24H0z" />
+                        <path
+                            d="M12.414 5H21a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h7.414l2 2zM12 13a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5zm-4 5h8a4 4 0 1 0-8 0z" />
+                    </svg>
+                </li>
+            </ul>
+
+        </div>
+
+<!--        &lt;!&ndash; 移动端遮罩 &ndash;&gt;-->
+<!--        <div class="site-mobile-shade"></div>-->
+    </div>
+    <!-- layui JS -->
+    <script src="layui/layui.js"></script>
+    <!-- jQuery JS -->
+ <script src="js/jquery.js"></script>
+    <!-- 公共JS -->
+  <script src="js/common.js"></script>
+
+</body>
+
+</html>
