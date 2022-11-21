@@ -57,11 +57,6 @@
                     <div class="layui-upload-list">
                         <img id="picture" width="80px" height="80px" style='border-radius: 40px;'>
                     </div>
-                    <div style="width: 95px;">
-                        <div class="layui-progress layui-progress-big" lay-showpercent="yes" lay-filter="demo">
-                            <div class="layui-progress-bar" lay-percent=""></div>
-                        </div>
-                    </div>
                 </div>
             </div>
         </div>
@@ -142,6 +137,10 @@
 <script src="/layui/layui.js"></script>
 <script src="/js/common.js"></script>
 <script>
+    $(function () {
+        //加载所有的角色
+        loadRoleSelect();
+    })
     layui.config({
         base: '/layui/extend/'
     }).extend({
@@ -149,12 +148,6 @@
     }).use(['form', 'layer', 'formSelects'], function () {
         $ = layui.jquery
     });
-
-
-    $(function () {
-        //加载所有的角色
-        loadRoleSelect();
-    })
 
     //把角色列表展示
     function loadRoleSelect() {
@@ -222,6 +215,7 @@
                 parent.location.reload();
                 var index = parent.layer.getFrameIndex(Window.name);
                 parent.layer.close(index);//关闭当前页面
+                layui.form.render(); //更新全部
             }
             layer.msg(result.msg, {icon: 2});
         }).fail(function () {

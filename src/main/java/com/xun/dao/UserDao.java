@@ -90,4 +90,12 @@ public interface UserDao {
      * @return
      */
     int updateUser (User user);
+
+    /**
+     * 根据用户id删除用户
+     *
+     * @param ids
+     * @return
+     */
+    int deleteUseByIds (Integer[] ids);
 }

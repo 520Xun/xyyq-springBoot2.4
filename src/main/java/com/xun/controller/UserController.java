@@ -94,5 +94,12 @@ public class UserController {
         return jr;
     }
 
-
+    /**
+     * 删除用户
+     */
+    @RequestMapping ("deleteUser")
+    public JsonResult deleteUser (@RequestParam ("ids[]") Integer[] ids) {
+        int n = userService.deleteUser (ids);
+        return new JsonResult (n);
+    }
 }

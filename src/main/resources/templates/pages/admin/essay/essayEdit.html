@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>编辑文章</title>
+    <!--引入所需依赖-->
+    <link rel="stylesheet" href="../static/editormd/css/style.css"
+          th:href="@{/editormd/css/style.css}"/>
+    <link rel="stylesheet" href="../static/editormd/css/editormd.css"
+          th:href="@{/editormd/css/editormd.css}"/>
+
+    <!--    <script th:src="@{/editormd/js/jquery.min.js}" src="../static/editormd/js/jquery.min.js"></script>-->
+    <!--引入所需依赖-->
+    <script src="../static/editormd/js/jquery.min.js" th:src="@{/editormd/js/jquery.min.js}"></script>
+    <script src="../static/editormd/editormd.js" th:src="@{/editormd/editormd.js}"></script>
+</head>
+<body>
+<h1>EditorMD</h1>
+
+<!--这里的id=editormd_id就是下面的初始化editorMD的editormd_id-->
+<div id="editormd_id">
+    <!-- 第一个textarea是文本输入区域-->
+    <textarea id="htmlContent" class="editorMd-html-textarea" name="editorMd-html-textarea" placeholder="请输入内容...">
+    </textarea>
+    <!--第二个textarea 是展示文本区域 要隐藏起来 display->none-->
+    <textarea class="editorMd-text-textarea" name="editorMd-text-textarea" style="display:none;" id="textContent">
+    </textarea>
+    <button type="button" onclick="submit()"></button>
+</div>
+<script>
+    //初始化editorMD
+    var testEditor;
+    $(function () {
+        testEditor = editormd("editormd_id", {
+            width: "90%",
+            height: 720,
+            toc: true,
+            emoji: true,//表情功能开启
+            taskList: true,
+            syncScrolling: "single",
+            imageUpload: true,
+            imageFormats: ["jpg", "jpeg", "gif", "png", "bmp", "webp"],
+            imageUploadURL: "/upload/uploadImage",       //图片上传URL 即后台的图片上传接口URL
+            path: '/editormd/lib/',          //项目启动路径
+            //path: '../static/editormd/lib/',    //本地路径
+            saveHTMLToTextarea: true
+        });
+    });
+
+    var testEditor;
+    $(function () {
+        testEditor = editormd.markdownToHTML("test-editormd", {
+            htmlDecode: "style, script, iframe",
+            emoji: true,
+            taskList: true,
+            tex: true,  // 默认不解析
+            flowChart: true,  // 默认不解析
+            sequenceDiagram: true,  // 默认不解析
+        });
+        console.log(testEditor);
+    })
+
+</script>
+</body>
+</html>

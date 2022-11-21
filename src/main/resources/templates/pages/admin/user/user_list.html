@@ -68,7 +68,7 @@
 </head>
 
 <body id="BindbodyData">
-<div id="loadPageDiv">
+<div>
     <!--盒子-->
     <div class="box">
         <div class="box-header">
@@ -96,7 +96,7 @@
         <div class="layui-btn-sm" id="btn-tool-area">
             <button class="layui-btn layui-btn-normal btn_add">新增</button>
             <button type="button" class="layui-btn layui-btn-normal btn_update">修改</button>
-            <button class="layui-btn layui-btn-normal " id="btn_delete">删除</button>
+            <button class="layui-btn layui-btn-normal  btn_delete">删除</button>
             <button type="button" class="layui-btn layui-btn-normal" id="导入">导入</button>
             <button type="button" class="layui-btn layui-btn-normal" id="导出">导出</button>
         </div>
@@ -162,41 +162,51 @@
             doLoadData();
         })
 
-        //   $(".layui-table").find("input[name='checkbox']").on("change",choiceThis)
         //查询事件
         $("#search").click(doLoadData);
         //绑定点击案件
-        $("#btn-tool-area").on("click", ".btn_add,.btn_update", saveUserPageUI);
+        $("#btn-tool-area").on("click", ".btn_add,.btn_update", saveUserPageUI)
+            .on("click", ".btn_delete", deleteUser);
     })
 
-    function choiceThis() {
-        //chang 所有的input
-        var count = 0;
-        var inps = $(".layui-table").find("input[name='checkbox']");
-        debugger;
-        for (var i = 0; i < inps.length; i++) {
-            if ($(inps[i]).prop("checked")) {
-                count++;
+    //删除用户
+    function deleteUser() {
+        var checks = $("#tbody").find("input[name='checkbox']:checked");
+        if (!checks.length) {
+            layer.open({
+                type: 0, //默认就是0，所以可以省略
+                content: '至少选择一条删除的数据！',
+                icon: 2
+            })
+            return;
+        }
+        var ids = [];//空数组
+        $.each(checks, function () {
+            ids.push($(this).val());
+        })
+        var params = {ids: ids};
+        var url = "/user/deleteUser";
+        $.get(url, params, function (result) {
+            if (result.state == 0) {
+                layer.msg(result.msg, {icon: 2});
+            } else if (result.state == 1) {
+                layer.msg("成功删除" + result.data + "条数据!", {icon: 1});
+                doLoadData();//删除数据
             }
-        }
-        if (count == inps.length) {
-            $("#checkedAll").prop("checked", true);
-        } else {
-            $("#checkedAll").prop("checked", false);
-        }
-    }
+        });
 
+    }
 
     function doLoadData() {
         var url = "/user/findUser";
         var curPage = $("#page").data("curPage");
         var username = $("#username").val();
-        var email = $("#email").val();
+        var email = $("#emaiL").val();
         var phone = $("#phone").val();
         //格式验证
         var params = {
             username: username,
-            email, email,
+            email: email,
             phone: phone,
             curPage: curPage ? curPage : 1,
             pageSize: 5  //默认条数
@@ -209,7 +219,7 @@
                 setPageData(result.data);
             } else {
                 //相当于alert()
-                layer.msg(result.message);
+                layer.msg(result.message, {icon: 2});
             }
         })
     }
@@ -234,9 +244,6 @@
                 "<th>" + data[i].registerTime + "</th>\n" +
                 "<th>" + data[i].registerIp + "</th>\n" +
                 " <th>" + data[i].modifiedTime + "</th>\n" +
-                //   " <th>"+data[i].userStatus+"</th>\n" + " </tr>";
-                //   "<th>"+(data[i].userStatus==1?'启用':'禁用')+"</th>"+
-                //   " <th>"+" <button type='button' class='layui-btn layui-btn-primary layui-border-red'   onclick='changValId(this)'>"+ (data[i].userStatus?"禁用":"启用")+"</button></th><tr>" ;
                 "<th><input class=\"switch switch-anim userStatus\" onchange=\"checkNum(this)\" type=\"checkbox\" value='" + data[i].userStatus + "' /></th>" +
                 " <th>" + data[i].createdUser + "</th>\n" +
                 " <th>" + data[i].modifiedUser + "</th>\n" +
@@ -262,16 +269,11 @@
                 $(checked[i]).attr("checked", true);
             }
         }
-        console.log(states);//打印选中
+        //  console.log(states);//打印选中
     }
 
     //修改状态 提交
     function checkNum(btn) {
-        // if(){
-        //    layer.alert("选中");
-        // }else{
-        //    layer.alert("没选中");
-        // }
         var id = $(btn).parents("tr").find("input").val();
         var checked = $(btn).prop('checked') ? "1" : "0";
         var params = {
@@ -291,6 +293,7 @@
                 //静态修改
                 // layer.msg(result.msg, {icon: 6});
                 // checked == 1 ? $(btn).attr("checked", true) : $(btn).attr("checked", false);
+                layer.msg(result.msg, {icon: 6});
                 doLoadData();
             } else {
                 layer.msg(result.msg, {icon: 2});
@@ -341,6 +344,7 @@
                 }
             }, end: function () {
                 $("#BindbodyData").data("userData", "");
+                layui.form.render(); //更新全部
             }
         });
     }

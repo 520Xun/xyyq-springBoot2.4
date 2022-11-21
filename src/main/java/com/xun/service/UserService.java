@@ -52,4 +52,11 @@ public interface UserService {
      */
     Integer updateUser (User user, Integer[] roleIds);
 
+    /**
+     * 删除用户，可删除多个
+     *
+     * @param ids
+     * @return
+     */
+    Integer deleteUser (Integer[] ids);
 }
