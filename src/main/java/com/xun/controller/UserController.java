@@ -63,11 +63,34 @@ public class UserController {
         return jr;
     }
 
+    /**
+     * 新增用户
+     *
+     * @param user
+     * @param roleIds
+     * @return
+     */
     @RequestMapping ("saveUser")
     public JsonResult InsertUser (User user, @RequestParam ("roleIds[]") Integer[] roleIds) {
-        int n = userService.insertUser (user, roleIds);
+        Integer n = userService.insertUser (user, roleIds);
         JsonResult jr = new JsonResult (n);
         jr.setMsg ("添加成功！");
+        return jr;
+    }
+
+    /**
+     * 修改用户
+     *
+     * @param user
+     * @param roleIds
+     * @return
+     */
+    @RequestMapping ("updateUser")
+    public JsonResult updateUser (User user, @RequestParam (value = "roleIds[]", required = false) Integer[] roleIds) {
+        System.out.println ("********修改数据");
+        Integer n = userService.updateUser (user, roleIds);
+        JsonResult jr = new JsonResult (n);
+        jr.setMsg ("修改成功！");
         return jr;
     }
 

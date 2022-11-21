@@ -1,7 +1,6 @@
 package com.xun.controller;
 
 import com.xun.common.pojo.JsonResult;
-import org.springframework.util.ResourceUtils;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -35,9 +34,10 @@ public class UploadController {
         // 如果文件内容不为空，则写入上传路径
         if (! file.isEmpty ()) {
             //文件上传的地址
-            String path = ResourceUtils.getURL ("classpath:").getPath () + "static/upload";
+            // String path = ResourceUtils.getURL ("classpath:").getPath () + "static/upload";
+            String realPath = "E:/images";
             //String path = getSavePath ();
-            String realPath = path.replace ('/', '\\').substring (1, path.length ());
+            //  String realPath = path.replace ('/', '\\').substring (1, path.length ());
             //用于查看路径是否正确
             System.out.println (realPath);
             // 上传文件路径
@@ -62,7 +62,7 @@ public class UploadController {
 //            Map<String, Object> res = new HashMap<> ();
 //            // 返回的是一个url对象,图片名称
 //            res.put ("url", filename);
-            filename = "/upload" + "/" + filename;
+            filename = "/images" + "/" + filename;
             return new JsonResult (filename);
         } else {
             return null;

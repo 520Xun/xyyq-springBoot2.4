@@ -136,6 +136,11 @@
             </thead>
             <tbody id="tbody">
             <!--   数据存放区域-->
+            <tr>
+                <td colspan="7">
+                    数组正在加载中
+                </td>
+            </tr>
             </tbody>
         </table>
         <!--加载分页区域-->
@@ -300,8 +305,24 @@
         if ($(this).hasClass("btn_add")) {
             title = "添加用户";
         }
-        if ($(this).hasClass("btn_update")) {
+        if (!$(this).hasClass("btn_update")) {
+        } else {
             title = "修改用户";
+            //判断是否勾选了
+            var length = checkedInputLength();
+            if (length == 0) {
+                layer.msg("请选中一条数据！");
+                return false;
+            }
+            if (length != 1) {
+                layer.msg("只能选中一条数据！");
+                return false;
+            }
+            //将要修改的数据绑定
+            var rowData = getCheckedRowData();
+            if (rowData != null) {
+                $("#BindbodyData").data("userData", rowData);
+            }
         }
         layer.open({
             type: 2, //页面层
@@ -314,9 +335,24 @@
             content: '/admin/user/user_add',//展示的页面
             success: function (obj, index) {
                 var iframe = window['layui-layer-iframe' + index];
-                iframe.child(122121);
+                var data = $("#BindbodyData").data("userData");
+                if (data != null) {
+                    iframe.loadUPdateUserData(data);
+                }
+            }, end: function () {
+                $("#BindbodyData").data("userData", "");
             }
         });
+    }
+
+    //获取当前被选中行的数据
+    function getCheckedRowData() {
+        return $("#tbody").find("input[name='checkbox']:checked").parents("tr").data("userRow");
+    }
+
+    //input被选中的个数
+    function checkedInputLength() {
+        return $("#tbody").find("input[name='checkbox']:checked").length;
     }
 
     //全选或者全不选

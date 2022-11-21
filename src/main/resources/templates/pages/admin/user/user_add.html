@@ -10,7 +10,7 @@
     <link rel="stylesheet" href="/layui/extend/formSelects-v4.css">
 </head>
 <body>
-<div class="yadmin-body animated fadeIn">
+<div class="yadmin-body animated fadeIn" id="bindUserData">
     <!--    样式基于form表单-->
     <div class="layui-form layui-form-pane">
         <div class="layui-form-item">
@@ -35,7 +35,7 @@
                 性别
             </label>
             <div class="layui-input-block">
-                <input type="radio" name="sex" title="男" checked="checked" value="男">
+                <input type="radio" name="sex" title="男" value="男" checked="checked">
                 <input type="radio" name="sex" title="女" value="女">
             </div>
         </div>
@@ -138,23 +138,25 @@
         </div>
     </div>
 </div>
-
+<script src="/js/jquery-3.4.1.min.js"></script>
 <script src="/layui/layui.js"></script>
 <script src="/js/common.js"></script>
-<script src="/js/jquery-3.4.1.min.js"></script>
 <script>
     layui.config({
         base: '/layui/extend/'
     }).extend({
         formSelects: 'formSelects-v4'
     }).use(['form', 'layer', 'formSelects'], function () {
-        $ = layui.jquery;
+        $ = layui.jquery
     });
+
+
     $(function () {
         //加载所有的角色
         loadRoleSelect();
     })
 
+    //把角色列表展示
     function loadRoleSelect() {
         var url = "/role/findAllRole";
         $.get(url, {}, function (result) {
@@ -167,23 +169,61 @@
         })
     }
 
-    function child(p) {
-        console.log(p);
+    //将要修改的数据赋值到页面
+    function loadUPdateUserData(data) {
+        if (data == null) {
+            layer.msg("请选择要修改的数据！", {icon: 2});
+            return;
+        }
+        console.log(data);
+        $("#bindUserData").data("userData", data);
+        $("#bindUserData").data("userData", data);
+        $("#username").val(data.username);
+        $("#password").val(data.password);
+        $("#password-edit-hide").hide();//修改用户不能直接修改密码
+        $("#authorName").val(data.authorName);
+        $("#picture").attr("src", data.picture);
+        $("#email").val(data.email);
+        $("#phone").val(data.phone);
+        $("#address").val(data.address);
+        $("input[name=sex][value='女']").prop("checked", data.sex == "女" ? true : false);
+        $("input[name=sex][value='男']").prop("checked", data.sex == "男" ? true : false);
+        $("input[name=onlineStatus][value='0']").prop("checked", data.onlineStatus == "0" ? true : false);
+        $("input[name=onlineStatus][value='1']").prop("checked", data.onlineStatus == "1" ? true : false);
+        $("input[name=userStatus][value='0']").prop("checked", data.userStatus == "0" ? true : false);
+        $("input[name=userStatus][value='1']").prop("checked", data.userStatus == "1" ? true : false);
+        layui.form.render(); //更新全部
+        //根据id查询该用户有那些角色进行匹配
+        selectUserRoleInfo(data.id);
+        $("#submitBtn").text("修改");
+    }
+
+    function selectUserRoleInfo(id) {
+        $.get("/userRole/findRoleByUserId", {id: id}, function (result) {
+            if (result.state == 1) {
+                layui.formSelects.value('role-select', result.data);
+            }
+        })
     }
 
     //子页面提交
     function SaveOrupdateUser() {
         var url = "/user/saveUser";
         var userParam = getUserParam();
+        if ($("#bindUserData").data("userData") != null) {
+            url = "/user/updateUser";
+            userParam.id = $("#bindUserData").data("userData").id;
+        }
         console.log(userParam);//打印添加用户信息
-        debugger;
+
         $.get(url, userParam, function (result) {
             if (result.state == 1) {
-                layer.msg(result.msg);
+                layer.msg(result.msg, {icon: 1});
                 parent.location.reload();
                 var index = parent.layer.getFrameIndex(Window.name);
                 parent.layer.close(index);//关闭当前页面
             }
+            layer.msg(result.msg, {icon: 2});
         }).fail(function () {
             location.href = "/admin/error/500";
         })
@@ -235,7 +275,7 @@
                 layer.msg('上传中', {icon: 16, time: 0});
             }
             , done: function (res) {
-                debugger;
+
                 //如果上传失败
                 if (res.state == 0) {
                     return layer.msg('上传失败', {icon: 2});
