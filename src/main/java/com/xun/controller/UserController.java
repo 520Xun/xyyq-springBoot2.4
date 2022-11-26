@@ -1,5 +1,6 @@
 package com.xun.controller;
 
+import com.xun.common.exception.ServiceException;
 import com.xun.common.pojo.JsonResult;
 import com.xun.pojo.User;
 import com.xun.service.UserService;
@@ -7,6 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * @version: java version 1.8
@@ -95,11 +97,76 @@ public class UserController {
     }
 
     /**
-     * 删除用户
+     * 将用户加入到回收站内
      */
     @RequestMapping ("deleteUser")
     public JsonResult deleteUser (@RequestParam ("ids[]") Integer[] ids) {
         int n = userService.deleteUser (ids);
+        JsonResult jr = new JsonResult (n);
+        jr.setMsg (n + "条数据已加入回收站！");
+        return jr;
+    }
+
+    /**
+     * 恢复用户
+     *
+     * @return
+     */
+    @RequestMapping ("recoverUser")
+    public JsonResult recoverUser (@RequestParam ("ids[]") Integer[] ids) {
+        int n = userService.recoverUser (ids);
+        JsonResult jr = new JsonResult (n);
+        jr.setMsg (n + "条数据已恢复！");
+        return jr;
+    }
+
+    /**
+     * 彻底删除用户
+     *
+     * @param ids
+     * @return
+     */
+    @RequestMapping ("chealUser")
+    public JsonResult chealUser (@RequestParam ("ids[]") Integer[] ids) {
+        int n = userService.chealUser (ids);
+        JsonResult jr = new JsonResult (n);
+        jr.setMsg (n + "条数据已彻底删除！！！");
+        return jr;
+    }
+
+    /**
+     * 一键导出所有
+     *
+     * @return
+     */
+    @RequestMapping ("exportAllUser")
+    public JsonResult exportAllUser () {
+        userService.exportAllUser ();
+        return new JsonResult ("导出成功！");
+    }
+
+    /**
+     * 根据id 导出用户
+     *
+     * @param ids
+     * @return
+     */
+    @RequestMapping ("exportByUserId")
+    public JsonResult exportByUserId (@RequestParam ("ids[]") Integer[] ids) {
+        userService.exportByUserId (ids);
+        return new JsonResult ("导出成功！");
+    }
+
+    /**
+     * 导入用户
+     */
+    @RequestMapping ("saveExcelCar")
+    public JsonResult saveExcelCar (MultipartFile file) {
+        //MultipartFile：上传处理对象
+        if (file == null) {
+            throw new ServiceException ("上传文件不存在！");
+        }
+        int n = userService.handlerSaveExcelUser (file);
         return new JsonResult (n);
     }
 }

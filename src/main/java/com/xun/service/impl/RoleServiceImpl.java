@@ -15,13 +15,13 @@ import java.util.List;
  * @date: 2022-11-16 20:50
  */
 @Service
-public class RoleServiceImpL implements RoleService {
+public class RoleServiceImpl implements RoleService {
 
     @Autowired
     private RoleDao roleDao;
 
     public List<Role> findAllRole () {
-       List<Role> list= roleDao.findAllRole();
+        List<Role> list = roleDao.findAllRole ();
         return list;
     }
 }

@@ -68,85 +68,86 @@
 </head>
 
 <body id="BindbodyData">
-<div>
-    <!--盒子-->
-    <div class="box">
-        <div class="box-header">
-            <h2 style="padding: 15px">用户列表</h2>
-            <div class="layui-form-item">
-                <label class="layui-form-label">用户名</label>
-                <div class="layui-input-inline">
-                    <input type="text" id="username" lay-verify="required" placeholder="请输入" autocomplete="off"
-                           class="layui-input">
-                </div>
-                <label class="layui-form-label">邮箱</label>
-                <div class="layui-input-inline">
-                    <input type="text" id="emaiL" lay-verify="required" placeholder="请输入" autocomplete="off"
-                           class="layui-input">
-                </div>
-                <label class="layui-form-label">电话</label>
-                <div class="layui-input-inline">
-                    <input type="text" id="phone" lay-verify="required" placeholder="请输入" autocomplete="off"
-                           class="layui-input">
-                </div>
-                <button type="button" class="layui-btn layui-btn-normal" id="search">搜索</button>
+<!--盒子-->
+<div class="box">
+    <div class="box-header">
+        <h2 style="padding: 15px">用户列表</h2>
+        <div class="layui-form-item">
+            <label class="layui-form-label">用户名</label>
+            <div class="layui-input-inline">
+                <input type="text" id="username" lay-verify="required" placeholder="请输入" autocomplete="off"
+                       class="layui-input">
             </div>
-        </div>
-
-        <div class="layui-btn-sm" id="btn-tool-area">
-            <button class="layui-btn layui-btn-normal btn_add">新增</button>
-            <button type="button" class="layui-btn layui-btn-normal btn_update">修改</button>
-            <button class="layui-btn layui-btn-normal  btn_delete">删除</button>
-            <button type="button" class="layui-btn layui-btn-normal" id="导入">导入</button>
-            <button type="button" class="layui-btn layui-btn-normal" id="导出">导出</button>
+            <label class="layui-form-label">邮箱</label>
+            <div class="layui-input-inline">
+                <input type="text" id="emaiL" lay-verify="required" placeholder="请输入" autocomplete="off"
+                       class="layui-input">
+            </div>
+            <label class="layui-form-label">电话</label>
+            <div class="layui-input-inline">
+                <input type="text" id="phone" lay-verify="required" placeholder="请输入" autocomplete="off"
+                       class="layui-input">
+            </div>
+            <button type="button" class="layui-btn layui-btn-normal" id="search">搜索</button>
+            <button type="button" class="layui-btn layui-btn-normal" id="cheal">清空</button>
         </div>
     </div>
-    <div class="box-body">
-        <table class="layui-table" lay-even="" lay-skin="nob">
-            <!-- 定义表格列宽-->
-            <colgroup>
-                <col width="150">
-                <col width="150">
-                <col width="150">
-                <col width="150">
-                <col width="150">
-                <col width="150">
-                <col width="150">
-                <col width="150">
-                <col>
-            </colgroup>
-            <thead>
-            <tr>
-                <th><input type="checkbox" onchange="IsCheckAll(this)" name="checkbox" id="checkedAll"></th>
-                <th>用户名</th>
-                <th>作者名</th>
-                <th>性别</th>
-                <th>头像</th>
-                <th>邮箱</th>
-                <th>手机号</th>
-                <th>在线状态</th>
-                <th>创建时间</th>
-                <th>创建ip</th>
-                <th>修改时间</th>
-                <th>账号状态</th>
-                <th>创建者</th>
-                <th>修改者</th>
-                <th>操作</th>
-            </tr>
-            </thead>
-            <tbody id="tbody">
-            <!--   数据存放区域-->
-            <tr>
-                <td colspan="7">
-                    数组正在加载中
-                </td>
-            </tr>
-            </tbody>
-        </table>
-        <!--加载分页区域-->
-        <div id="page">
-        </div>
 
+    <div class="layui-btn-sm" id="btn-tool-area">
+        <button class="layui-btn layui-btn-normal btn_add">新增</button>
+        <button type="button" class="layui-btn layui-btn-normal btn_update">修改</button>
+        <button class="layui-btn layui-btn-normal  btn_delete">删除</button>
+        <input type="file" id="saveUser" style="display: none" onchange="saveExcelUser()">
+        <label for="saveUser" class="layui-btn layui-btn-normal saveUser">导入</label>
+        <button type="button" class="layui-btn layui-btn-normal exportAll">导出</button>
+        <button type="button" class="layui-btn layui-btn-normal exportByUserId">选择性导出</button>
+        <button class="layui-btn layui-btn-normal  btn_recycleBin">回收站</button>
+    </div>
+</div>
+<div class="box-body">
+    <table class="layui-table" lay-even="" lay-skin="nob">
+        <!-- 定义表格列宽-->
+        <colgroup>
+            <col width="150">
+            <col width="150">
+            <col width="150">
+            <col width="150">
+            <col width="150">
+            <col width="150">
+            <col width="150">
+            <col width="150">
+            <col>
+        </colgroup>
+        <thead>
+        <tr>
+            <th><input type="checkbox" onchange="IsCheckAll(this)" name="checkbox" id="checkedAll"></th>
+            <th>用户名</th>
+            <th>作者名</th>
+            <th>性别</th>
+            <th>头像</th>
+            <th>邮箱</th>
+            <th>手机号</th>
+            <th>在线状态</th>
+            <th>创建时间</th>
+            <th>创建ip</th>
+            <th>修改时间</th>
+            <th>账号状态</th>
+            <th>创建者</th>
+            <th>修改者</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody id="tbody">
+        <!--   数据存放区域-->
+        <tr>
+            <td colspan="7">
+                数组正在加载中
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <!--加载分页区域-->
+    <div id="page">
     </div>
 </div>
 <!--<script src="/js/jquery.js"></script>-->
@@ -164,12 +165,102 @@
 
         //查询事件
         $("#search").click(doLoadData);
+        //清空查询条件
+        $("#cheal").click(chealSearch);
         //绑定点击案件
         $("#btn-tool-area").on("click", ".btn_add,.btn_update", saveUserPageUI)
-            .on("click", ".btn_delete", deleteUser);
+            .on("click", ".btn_delete", deleteUser)
+            .on("click", ".btn_recycleBin", doLoadData)
+            .on("click", ".chealUser", deleteUser)
+            .on("click", ".exportAll", exportAllUser)
+            .on("click", ".exportByUserId", exportAllUser)
     })
 
-    //删除用户
+    //清空
+    function chealSearch() {
+        $("#username").val("");
+        $("#emaiL").val("");
+        $("#phone").val("");
+    }
+
+    //导入
+    function saveExcelUser() {
+        debugger;
+        // 收集参数，也就是文件名
+        var fileName = $("#saveUser").val();
+        // 截取导入文件的类型
+        var suffix = fileName.substr(fileName.lastIndexOf(".") + 1).toLocaleLowerCase();
+        if (suffix != "xlsx") {
+            alert("只支持xls文件");
+            return;
+        }
+        //获得上传的文件，并判断大小
+        var uploadFile = $("#saveUser").get(0).files[0];
+        if (uploadFile.size > 1 * 1024 * 1024) {
+            alert("文件大小不超过1MB");
+            return;
+        }
+        // FormData是ajax提供的接口,可以模拟键值对向后台提交参数;
+        // FormData最大的优势是不但能提交文本数据，还能提交二进制数据
+        var formData = new FormData();
+        formData.append("file", uploadFile);
+        $(".saveUser").text("已选择");
+        //发送请求
+        $.ajax({
+            url: '/user/saveExcelCar',
+            data: formData,
+            // 设置ajax向后台提交参数之前，是否把参数转换成字符串：true--是,false--不是,默认是true
+            processData: false,
+            // 提交参数之前，是否把参数统一按urlencoded编码：true--是,false--不是，默认是true
+            contentType: false,
+            type: 'post',
+            dataType: 'json',
+            success: function (result) {
+                if (result.state == "1") {
+                    //提示成功导入记录条数
+                    layer.msg("成功导入" + result.count + "条记录", {icon: "1"});
+                    //调用刷新数据方法
+                    doLoadData();
+                    $(".saveUser").text("导入");
+                } else {
+                    // 提示信息
+                    layer.msg(result.msg, {icon: "2"})
+                }
+            }
+        })
+    }
+
+    //导出所有用户信息
+    function exportAllUser() {
+        var url = "/user/exportAllUser";
+        var params = {}
+        if ($(this).hasClass("exportByUserId")) {
+            url = "/user/exportByUserId";
+            var checks = $("#tbody").find("input[name='checkbox']:checked");
+            if (!checks.length) {
+                layer.open({
+                    type: 0, //默认就是0，所以可以省略
+                    content: '至少选择一条要导出的数据！',
+                    icon: 2
+                })
+                return;
+            }
+            var ids = [];//空数组
+            $.each(checks, function () {
+                ids.push($(this).val());
+            })
+            params.ids = ids;
+        }
+        $.get(url, params, function (result) {
+            if (result.state == 1) {
+                layer.msg(result.data, {icon: "1"});
+            } else {
+                layer.msg(result.msg, {icon: "2"});
+            }
+        })
+    }
+
+    //加入回收站
     function deleteUser() {
         var checks = $("#tbody").find("input[name='checkbox']:checked");
         if (!checks.length) {
@@ -186,18 +277,49 @@
         })
         var params = {ids: ids};
         var url = "/user/deleteUser";
+        if ($(this).hasClass("chealUser")) {
+            url = "/user/chealUser";
+        }
         $.get(url, params, function (result) {
             if (result.state == 0) {
                 layer.msg(result.msg, {icon: 2});
             } else if (result.state == 1) {
-                layer.msg("成功删除" + result.data + "条数据!", {icon: 1});
-                doLoadData();//删除数据
+                layer.msg(result.msg, {icon: 1});
+                doLoadData();
             }
         });
+    }
 
+    //恢复用户
+    function recover() {
+        var checks = $("#tbody").find("input[name='checkbox']:checked");
+        if (!checks.length) {
+            layer.open({
+                type: 0, //默认就是0，所以可以省略
+                content: '至少选择一条恢复的数据！',
+                icon: 2
+            })
+            return;
+        }
+        var ids = [];//空数组
+        $.each(checks, function () {
+            ids.push($(this).val());
+        })
+        var params = {ids: ids};
+        var url = "/user/recoverUser";
+        $.get(url, params, function (result) {
+            if (result.state == 0) {
+                layer.msg(result.msg, {icon: 2});
+            } else if (result.state == 1) {
+                layer.msg(result.msg, {icon: 1});
+                doLoadData();
+            }
+        });
     }
 
     function doLoadData() {
+        $("#btn-tool-area").find(".back").remove();
+        $("#btn-tool-area").find(".chealUser").removeClass("chealUser").addClass("btn_delete");
         var url = "/user/findUser";
         var curPage = $("#page").data("curPage");
         var username = $("#username").val();
@@ -210,6 +332,13 @@
             phone: phone,
             curPage: curPage ? curPage : 1,
             pageSize: 5  //默认条数
+        }
+        //查询回收数据
+        if ($(this).hasClass("btn_recycleBin")) {
+            params.deleteState = 2;
+            $("#btn-tool-area").append("<button class=\"layui-btn layui-btn-normal  back\" onclick='doLoadData()'>返回用户列表</button>");
+            $("#btn-tool-area").append("<button class=\"layui-btn layui-btn-normal  back\" onclick='recover()'>恢复用户</button>");
+            $("#btn-tool-area").find(".btn_delete").removeClass("btn_delete").addClass("chealUser");
         }
         $.get(url, params, function (result) {
             //查询成功！
@@ -230,46 +359,69 @@
         //分页数据赋值
         setPageData(data);
         data = data.pageData;
-        for (var i = 0; i < data.length; i++) {
-            var tr = "  <tr>\n" +
-                "  <th><input type=\"checkbox\" value='" + data[i].id + "' name='checkbox'></th>\n" +
-                " <th>" + data[i].username + "</th>\n" +
-                " <th>" + data[i].authorName + "</th>\n" +
-                " <th>" + data[i].sex + "</th>\n" +
-                " <th>" + "<img src='" + data[i].picture + "' style='border-radius: 25px;width: 50px;height: 50px'>" + "</th>" +
-                " <th>" + data[i].email + "</th>\n" +
-                "<th>" + data[i].phone + "</th>\n" +
-                //    "<th>"+(data[i].onlineStatus==1?'在线':'隐身')+"</th>"+
-                "<th><input class=\"switch switch-anim onlineStatus\" onchange=\"checkNum(this)\" type=\"checkbox\" value='" + data[i].onlineStatus + "' /></th>" +
-                "<th>" + data[i].registerTime + "</th>\n" +
-                "<th>" + data[i].registerIp + "</th>\n" +
-                " <th>" + data[i].modifiedTime + "</th>\n" +
-                "<th><input class=\"switch switch-anim userStatus\" onchange=\"checkNum(this)\" type=\"checkbox\" value='" + data[i].userStatus + "' /></th>" +
-                " <th>" + data[i].createdUser + "</th>\n" +
-                " <th>" + data[i].modifiedUser + "</th>\n" +
-                "<th><button class=\"layui-btn layui-btn-normal\" onclick='lookUserInfo(this)' >查看</button></th></tr>";
+        var tr;
+        if (data.length <= 0) {
+            tr = "<tr><td>无数据</td></tr>";
             $("#tbody").append(tr);
-            $("#tbody tr").last().data("userRow", data[i]);
-            StateIschecked();
+        } else {
+            for (var i = 0; i < data.length; i++) {
+                tr = "  <tr>\n" +
+                    "  <th><input type=\"checkbox\" value='" + data[i].id + "' name='checkbox'></th>\n" +
+                    " <th>" + data[i].username + "</th>\n" +
+                    " <th>" + data[i].authorName + "</th>\n" +
+                    " <th>" + data[i].sex + "</th>\n" +
+                    " <th>" + "<img src='" + data[i].picture + "' style='border-radius: 25px;width: 50px;height: 50px'>" + "</th>" +
+                    " <th>" + data[i].email + "</th>\n" +
+                    "<th>" + data[i].phone + "</th>\n" +
+                    //    "<th>"+(data[i].onlineStatus==1?'在线':'隐身')+"</th>"+
+                    "<th><input class=\"switch switch-anim onlineStatus\" onchange=\"checkNum(this)\" type=\"checkbox\" value='" + data[i].onlineStatus + "' /></th>" +
+                    "<th>" + data[i].registerTime + "</th>\n" +
+                    "<th>" + data[i].registerIp + "</th>\n" +
+                    " <th>" + data[i].modifiedTime + "</th>\n" +
+                    "<th><input class=\"switch switch-anim userStatus\" onchange=\"checkNum(this)\" type=\"checkbox\" value='" + data[i].userStatus + "' /></th>" +
+                    " <th>" + data[i].createdUser + "</th>\n" +
+                    " <th>" + data[i].modifiedUser + "</th>\n" +
+                    "<th><button class=\"layui-btn layui-btn-normal\" onclick='lookUserInfo(this)' >查看</button></th></tr>";
+                $("#tbody").append(tr);
+                $("#tbody tr").last().data("userRow", data[i]);
+                StateIschecked();
+            }
         }
     }
 
     function lookUserInfo(btn) {
         var data = $(btn).parents("tr").data("userRow");
         console.log(data); //每一行用户的数据
+        layer.open({
+            type: 2, //页面层
+            title: "个人信息",
+            shadeClose: true,
+            scrollbar: false,//取消浏览器滚动条
+            shade: false,
+            maxmin: true, //开启最大化最小化按钮
+            area: ['893px', '850px'],
+            content: '/admin/user/user_add',//展示的页面
+            success: function (obj, index) {
+                var iframe = window['layui-layer-iframe' + index];
+                //      var data = $("#BindbodyData").data("userData");
+                if (data != null) {
+                    iframe.loadUPdateUserData(data);
+                }
+            }, end: function () {
+                $("#BindbodyData").data("userData", "");
+                //   layui.form.render(); //更新全部
+            }
+        });
     }
 
     //状态选中
     function StateIschecked() {
         var checked = $("#tbody tr").last().find(".switch");
-        var states = [];
         for (var i = 0; i < checked.length; i++) {
-            states.push($(checked[i]).val());
             if ($(checked[i]).val() == 1) {//选中，即状态为在线，账号为启用
                 $(checked[i]).attr("checked", true);
             }
         }
-        //  console.log(states);//打印选中
     }
 
     //修改状态 提交
@@ -287,7 +439,6 @@
             params.onlineStatus = checked;
             var url = "/user/updateOnlineStatus";
         }
-        console.log(params);
         $.get(url, params, function (result) {
             if (result.state == 1) {
                 //静态修改
@@ -344,7 +495,7 @@
                 }
             }, end: function () {
                 $("#BindbodyData").data("userData", "");
-                layui.form.render(); //更新全部
+                //   layui.form.render(); //更新全部
             }
         });
     }

@@ -2,6 +2,7 @@ package com.xun.service;
 
 import com.xun.common.pojo.JsonResult;
 import com.xun.pojo.User;
+import org.springframework.web.multipart.MultipartFile;
 
 /**
  * @version: java version 1.8
@@ -53,10 +54,44 @@ public interface UserService {
     Integer updateUser (User user, Integer[] roleIds);
 
     /**
-     * 删除用户，可删除多个
+     * 将用户加入回收站
      *
      * @param ids
      * @return
      */
     Integer deleteUser (Integer[] ids);
+
+    /**
+     * 彻底删除用户。可删除多个
+     *
+     * @param ids
+     * @return
+     */
+    Integer chealUser (Integer[] ids);
+
+    /**
+     * 恢复用户
+     *
+     * @param ids
+     * @return
+     */
+    Integer recoverUser (Integer[] ids);
+
+    /**
+     * 导出所有用户
+     */
+    void exportAllUser ();
+
+    /**
+     * 根据用户id导出
+     */
+    void exportByUserId (Integer[] ids);
+
+    /**
+     * 导入用户
+     *
+     * @param file
+     * @return
+     */
+    int handlerSaveExcelUser (MultipartFile file);
 }

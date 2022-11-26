@@ -17,16 +17,17 @@
             <label for="username" class="layui-form-label">
                 用户名
             </label>
-            <div class="layui-input-block">
+            <div class="layui-input-inline">
                 <input type="text" id="username" placeholder="请填写用户名(必须填)"
                        autocomplete="off" class="layui-input">
             </div>
+            <div class="layui-form-mid layui-word-aux">不可修改</div>
         </div>
         <div class="layui-form-item">
             <label for="authorName" class="layui-form-label">
                 作者名
             </label>
-            <div class="layui-input-block">
+            <div class="layui-input-inline">
                 <input type="text" id="authorName" placeholder="请填写作者名" autocomplete="off" class="layui-input">
             </div>
         </div>
@@ -39,14 +40,6 @@
                 <input type="radio" name="sex" title="女" value="女">
             </div>
         </div>
-        <!--        <div class="layui-form-item">-->
-        <!--            <label for="age" class="layui-form-label">-->
-        <!--                生日-->
-        <!--            </label>-->
-        <!--            <div class="layui-input-block">-->
-        <!--                <input type="text" id="age" placeholder="请填写年龄" autocomplete="off" class="layui-input">-->
-        <!--            </div>-->
-        <!--        </div>-->
         <div class="layui-form-item">
             <label for="username" class="layui-form-label">
                 用户头像
@@ -124,9 +117,15 @@
                 </select>
             </div>
         </div>
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label">个性签名</label>
+            <div class="layui-input-block">
+                    <textarea id="personalizedSign" placeholder="请输入个性签名"
+                              class="layui-textarea"></textarea>
+            </div>
+        </div>
         <div class="layui-form-item">
             <div class="layui-input-block" style="margin-left:0;text-align:center;">
-                <input type="hidden" id="userId" value="">
                 <button class="layui-btn layui-btn-normal">重置</button>
                 <button class="layui-btn layui-btn-normal" onclick="SaveOrupdateUser()" id="submitBtn">增加</button>
             </div>
@@ -164,14 +163,15 @@
 
     //将要修改的数据赋值到页面
     function loadUPdateUserData(data) {
+        debugger;
         if (data == null) {
             layer.msg("请选择要修改的数据！", {icon: 2});
             return;
         }
-        console.log(data);
+
         $("#bindUserData").data("userData", data);
         $("#bindUserData").data("userData", data);
-        $("#username").val(data.username);
+        $("#username").val(data.username).attr("readOnly", true);
         $("#password").val(data.password);
         $("#password-edit-hide").hide();//修改用户不能直接修改密码
         $("#authorName").val(data.authorName);
@@ -185,9 +185,10 @@
         $("input[name=onlineStatus][value='1']").prop("checked", data.onlineStatus == "1" ? true : false);
         $("input[name=userStatus][value='0']").prop("checked", data.userStatus == "0" ? true : false);
         $("input[name=userStatus][value='1']").prop("checked", data.userStatus == "1" ? true : false);
-        layui.form.render(); //更新全部
+        $("#personalizedSign").val(data.personalizedSign);
         //根据id查询该用户有那些角色进行匹配
         selectUserRoleInfo(data.id);
+        layui.form.render(); //更新全部
         $("#submitBtn").text("修改");
     }
 
@@ -211,7 +212,7 @@
 
         $.get(url, userParam, function (result) {
             if (result.state == 1) {
-                layer.msg(result.msg, {icon: 1});
+                layer.msg(result.msg, {icon: 1, time: 6});
                 parent.location.reload();
                 var index = parent.layer.getFrameIndex(Window.name);
                 parent.layer.close(index);//关闭当前页面
@@ -236,6 +237,7 @@
         var userStatus = $("input[name=\"userStatus\"]:checked").val();
         //获取角色的id 数组
         var checkedRole = layui.formSelects.value('role-select', 'val'); //[1,2,3]
+        var personalizedSign = $("#personalizedSign").val();
         var params = {
             username: username,
             password: password,
@@ -247,7 +249,8 @@
             address: address,
             onlineStatus: onlineStatus,
             userStatus: userStatus,
-            roleIds: checkedRole
+            roleIds: checkedRole,
+            personalizedSign: personalizedSign
         }
         return params;
     }

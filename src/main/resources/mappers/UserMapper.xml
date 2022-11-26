@@ -5,23 +5,22 @@
 <mapper namespace="com.xun.dao.UserDao">
 
     <sql id="userQuery">
-        <where>
-            <if test="username != null and username !=''">
-                username like concat("%", #{username}, "%")
-            </if>
-            <if test="email != null and email !=''">
-                email like concat("%", #{email}, "%")
-            </if>
-            <if test="phone != null and phone !=''">
-                phone like concat("%", #{phone}, "%")
-            </if>
-        </where>
+        <if test="autherName != null and autherName !=''">
+            autherName like concat("%", #{autherName}, "%") and
+        </if>
+        <if test="email != null and email !=''">
+            email like concat("%", #{email}, "%") and
+        </if>
+        <if test="phone != null and phone !=''">
+            phone like concat("%", #{phone}, "%") and
+        </if>
     </sql>
 
     <!-- 查找所有的用户 -->
     <select id="findUsers" resultType="com.xun.pojo.User">
-        select * from user
+        select * from user where
         <include refid="userQuery"/>
+        delete_state=#{deleteState}
         GROUP BY id DESC
     </select>
 
@@ -53,10 +52,46 @@
         WHERE `id` = #{id};
     </update>
 
-    <delete id="deleteUseByIds">
+    <update id="deleteUseByIds">
+        update user set delete_state=2 where id in
+        <foreach collection="array" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <delete id="chealUser">
         delete from user where id in
         <foreach collection="array" item="id" open="(" separator="," close=")">
             #{id}
         </foreach>
     </delete>
+
+    <update id="recoverUser">
+        update user set delete_state=1 where id in
+        <foreach collection="array" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <select id="exportByUserId" resultType="com.xun.pojo.User">
+        select * from user where id in
+        <foreach collection="array" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </select>
+
+    <insert id="insertUserList">
+        insert into user
+        (`id`, `username`, `authorName`, `sex`, `email`, `phone`,
+        `picture`, `register_time`, `register_ip`, `modifiedTime`, `address`,
+        `online_status`, `user_status`, `createdUser`, `modifiedUser`,`delete_state`) values
+        <foreach collection="list" item="user" separator=",">
+            (null, #{user.username}, #{user.authorName}, #{user.sex},
+            #{user.email}, #{user.phone}, #{user.picture}, now(),
+            #{user.registerIp}, #{user.modifiedTime}, #{user.address}, #{user.onlineStatus}, #{user.userStatus},
+            #{user.createdUser},
+            #{user.modifiedUser},#{user.deleteState})
+        </foreach>
+
+    </insert>
 </mapper>        

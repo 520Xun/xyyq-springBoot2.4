@@ -4,6 +4,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -15,33 +16,33 @@ import java.util.Date;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Role {
-        /**
-         * 主键
-         */
-        private Integer id;
-        /**
-         * 角色名称
-         */
-        private String roleName;
-        /**
-         * 角色备注
-         */
-        private String note;
-        /**
-         * 角色创建时间
-         */
-        private Date createdTime;
-        /**
-         * 修改时间
-         */
-        private Date modifedTime;
-        /**
-         * 创建者
-         */
-        private String createdUser;
-        /**
-         * 修改者
-         */
-        private  String modifedUser;
+public class Role implements Serializable {
+    /**
+     * 主键
+     */
+    private Integer id;
+    /**
+     * 角色名称
+     */
+    private String roleName;
+    /**
+     * 角色备注
+     */
+    private String note;
+    /**
+     * 角色创建时间
+     */
+    private Date createdTime;
+    /**
+     * 修改时间
+     */
+    private Date modifedTime;
+    /**
+     * 创建者
+     */
+    private String createdUser;
+    /**
+     * 修改者
+     */
+    private String modifedUser;
 }

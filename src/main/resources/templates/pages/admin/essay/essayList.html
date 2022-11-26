@@ -2,9 +2,247 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>文章列表</title>
+    <title>用户管理模块</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico"/>
+    <link rel="stylesheet" href="/layui/css/layui.css">
+    <link rel="stylesheet" href="/css/common.css">
+    <link rel="stylesheet" href="/layui/extend/dtree.css">
+    <link rel="stylesheet" href="/layui/extend/font/dtreefont.css">
+    <!--    swaich开关-->
+    <style>
+        .switch {
+            width: 57px;
+            height: 28px;
+            position: relative;
+            border: 1px solid #dfdfdf;
+            background-color: #fdfdfd;
+            box-shadow: #dfdfdf 0 0 0 0 inset;
+            border-radius: 20px;
+            background-clip: content-box;
+            display: inline-block;
+            -webkit-appearance: none;
+            user-select: none;
+            outline: none;
+        }
+
+        .switch:before {
+            content: '';
+            width: 26px;
+            height: 26px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            border-radius: 20px;
+            background-color: #fff;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+        }
+
+        .switch:checked {
+            border-color: #64bd63;
+            box-shadow: #64bd63 0 0 0 16px inset;
+            background-color: #64bd63;
+        }
+
+        .switch:checked:before {
+            left: 30px;
+        }
+
+        .switch.switch-anim {
+            transition: border cubic-bezier(0, 0, 0, 1) 0.4s, box-shadow cubic-bezier(0, 0, 0, 1) 0.4s;
+        }
+
+        .switch.switch-anim:before {
+            transition: left 0.3s;
+        }
+
+        .switch.switch-anim:checked {
+            box-shadow: #64bd63 0 0 0 16px inset;
+            background-color: #64bd63;
+            transition: border ease 0.4s, box-shadow ease 0.4s, background-color ease 1.2s;
+        }
+
+        .switch.switch-anim:checked:before {
+            transition: left 0.3s;
+        }
+    </style>
 </head>
-<body>
-            
+<body id="BindbodyData">
+<div class="box">
+    <div class="box-header">
+        <h2 style="padding: 15px">博文列表</h2>
+        <div class="layui-form-item">
+            <label class="layui-form-label">标题</label>
+            <div class="layui-input-inline">
+                <input type="text" id="title" lay-verify="required" placeholder="请输入" autocomplete="off"
+                       class="layui-input">
+            </div>
+            <button type="button" class="layui-btn layui-btn-normal" id="search">搜索</button>
+        </div>
+    </div>
+
+    <div class="layui-btn-sm" id="btn-tool-area">
+        <button class="layui-btn layui-btn-normal btn_add">新增</button>
+        <button type="button" class="layui-btn layui-btn-normal btn_update">修改</button>
+        <button class="layui-btn layui-btn-normal  btn_delete">删除</button>
+        <button class="layui-btn layui-btn-normal  btn_delete">一键上架</button>
+        <button class="layui-btn layui-btn-normal  btn_delete">一键下架</button>
+        <input type="file" id="saveUser" style="display: none" onchange="saveExcelUser()">
+        <label for="saveUser" class="layui-btn layui-btn-normal saveUser">导入</label>
+        <button type="button" class="layui-btn layui-btn-normal exportAll">导出</button>
+        <button type="button" class="layui-btn layui-btn-normal exportByUserId">选择性导出</button>
+        <button class="layui-btn layui-btn-normal  btn_recycleBin">回收站</button>
+    </div>
+</div>
+<div class="box-body">
+    <table class="layui-table" lay-even="" lay-skin="nob">
+        <!-- 定义表格列宽-->
+        <colgroup>
+            <col width="50">
+            <col width="200">
+            <col width="150">
+            <col width="150">
+            <col width="150">
+            <col width="150">
+            <col width="150">
+            <col width="150">
+            <col>
+        </colgroup>
+        <thead>
+        <tr>
+            <th><input type="checkbox" onchange="IsCheckAll(this)" name="checkbox" id="checkedAll"></th>
+            <th>标题</th>
+            <th>封面预览</th>
+            <th>作者名</th>
+            <th>类型</th>
+            <th>推荐</th>
+            <th>状态</th>
+            <th>评分</th>
+            <th>被收藏</th>
+            <th>被顶</th>
+            <th>被踩</th>
+            <th>更新时间</th>
+            <th>修改时间</th>
+            <th>操作</th>
+        </tr>
+        </thead>
+        <tbody id="tbody">
+<!--        <tr>-->
+<!--            <th><input type="checkbox"></th>-->
+<!--            <th>Java项目——个人博客系统</th>-->
+<!--            <th>作者名</th>-->
+<!--            <th>java</th>-->
+<!--            <th><input class="switch switch-anim userStatus" type="checkbox"/></th>-->
+<!--            <th>已发布</th>-->
+<!--            <th>5</th>-->
+<!--            <th>1000</th>-->
+<!--            <th>100000</th>-->
+<!--            <th>10000</th>-->
+<!--            <th>2022-11-25</th>-->
+<!--            <th>2022-11-25</th>-->
+<!--            <th>-->
+<!--                <button class="layui-btn layui-btn-normal  ">上架</button>-->
+<!--                <button class="layui-btn layui-btn-normal  ">下架</button>-->
+<!--            </th>-->
+<!--        </tr>-->
+        </tbody>
+    </table>
+    <!--加载分页区域-->
+    <div id="page">
+    </div>
+</div>
+<!--<script src="/js/jquery.js"></script>-->
+<script src="/js/jquery-3.4.1.min.js"></script>
+<script src="/layui/layui.js"></script>
+<script src="/js/common.js"></script>
+<script>
+
+    $(function () {
+        //加载分页
+        $("#page").load("/doPageUI", function () {
+            doLoadData();
+        })
+        //查询事件
+        $("#search").click(doLoadData);
+        //清空查询条件
+        //  $("#cheal").click(chealSearch);
+    })
+
+    //加载数据
+    function doLoadData() {
+        $("#btn-tool-area").find(".back").remove();
+        $("#btn-tool-area").find(".chealUser").removeClass("chealUser").addClass("btn_delete");
+        var url = "/blog/findBlog";
+        var curPage = $("#page").data("curPage");
+        var title = $("#title").val();
+        //格式验证
+        var params = {
+            title: title,
+            curPage: curPage ? curPage : 1,
+            pageSize: 1  //默认条数
+        }
+        //查询回收数据
+        if ($(this).hasClass("btn_recycleBin")) {
+            params.deleteState = 2;
+            $("#btn-tool-area").append("<button class=\"layui-btn layui-btn-normal  back\" onclick='doLoadData()'>返回用户列表</button>");
+            $("#btn-tool-area").append("<button class=\"layui-btn layui-btn-normal  back\" onclick='recover()'>恢复用户</button>");
+            $("#btn-tool-area").find(".btn_delete").removeClass("btn_delete").addClass("chealUser");
+        }
+        $.get(url, params, function (result) {
+            //查询成功！
+            if (result.state == 1) {
+                doHandlerTableBody(result.data);
+                //设置页码
+                setPageData(result.data);
+            } else {
+                //相当于alert()
+                layer.msg(result.message, {icon: 2});
+            }
+        })
+    }
+
+    //处理表格数据
+    function doHandlerTableBody(data) {
+        $("#tbody").empty();
+        //分页数据赋值
+        setPageData(data);
+        data = data.pageData;
+        var tr;
+        if (data.length <= 0) {
+            tr = "<tr><td>无数据</td></tr>";
+            $("#tbody").append(tr);
+        } else {
+            for (var i = 0; i < data.length; i++) {
+                tr = "  <tr>\n" +
+                    "  <th><input type=\"checkbox\" value='" + data[i].id + "' name='checkbox'></th>\n" +
+                    " <th>" + data[i].title + "</th>\n" +
+                    " <th>" + data[i].user.authorName + "</th>\n" +
+                    " <th>" + data[i].type.name + "</th>\n" +
+                    "<th>"+"<img src="data[i].blog_cover">"+"</th>"+
+                    "<th><input class=\"switch switch-anim onlineStatus\" onchange=\"checkNum(this)\" type=\"checkbox\" value='" + data[i].recommend + "'  /></th>" +
+                    "<th>" + (data[i].essayStatus == 1 ? '发布' : '审核') + "</th>\n" +
+                    "<th>" + data[i].essayGrade + "</th>\n" +
+                    " <th>" + data[i].essayCollect + "</th>\n" +
+                    " <th>" + data[i].essayTop + "</th>\n" +
+                    " <th>" + data[i].essayTread + "</th>\n" +
+                    " <th>" + data[i].publishDate + "</th>\n" +
+                    " <th>" + data[i].updateDate + "</th>\n" +
+                    "<th><button class=\"layui-btn layui-btn-normal\" onclick='lookUserInfo(this)' >审批</button><button class=\"layui-btn layui-btn-normal\" onclick='lookUserInfo(this)' >销毁</button></th></tr>";
+                $("#tbody").append(tr);
+                $("#tbody tr").last().data("userRow", data[i]);
+                StateIschecked();
+            }
+        }
+    }
+
+    //推荐选中
+    function StateIschecked() {
+        var checked = $("#tbody tr").last().find(".switch");
+        for (var i = 0; i < checked.length; i++) {
+            if ($(checked[i]).val() == 1) {//选中，即为推荐
+                $(checked[i]).attr("checked", true);
+            }
+        }
+    }
+</script>
 </body>
 </html>

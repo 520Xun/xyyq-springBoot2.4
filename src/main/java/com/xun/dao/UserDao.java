@@ -18,7 +18,7 @@ import java.util.List;
 @Mapper
 public interface UserDao {
     /**
-     * 查找所有的用户
+     * 查找所有的用户，按条件查
      * 倒叙排列
      *
      * @param user
@@ -92,10 +92,53 @@ public interface UserDao {
     int updateUser (User user);
 
     /**
-     * 根据用户id删除用户
+     * 根据用户id将用户加入回收站
      *
      * @param ids
      * @return
      */
     int deleteUseByIds (Integer[] ids);
+
+    /**
+     * 彻底删除用户
+     *
+     * @param ids
+     * @return
+     */
+    int chealUser (Integer[] ids);
+
+    /**
+     * 恢复数据
+     *
+     * @param ids
+     * @return
+     */
+    int recoverUser (Integer[] ids);
+
+    /**
+     * 导出所有用户
+     *
+     * @return
+     */
+    @Select ("select * from user")
+    List<User> exportAllUser ();
+
+    /**
+     * 根据用户id导出信息
+     *
+     * @param ids
+     * @return
+     */
+    List<User> exportByUserId (Integer[] ids);
+
+    /**
+     * 导入插入用户
+     *
+     * @param userList
+     * @return
+     */
+    int insertUserList (List<User> userList);
+
+    @Select ("select * from user where id=#{id}")
+    User findUserById (Integer id);
 }
