@@ -84,8 +84,8 @@
         <button class="layui-btn layui-btn-normal btn_add">新增</button>
         <button type="button" class="layui-btn layui-btn-normal btn_update">修改</button>
         <button class="layui-btn layui-btn-normal  btn_delete">删除</button>
-        <button class="layui-btn layui-btn-normal  btn_delete">一键上架</button>
-        <button class="layui-btn layui-btn-normal  btn_delete">一键下架</button>
+        <button class="layui-btn layui-btn-normal  ">一键上架</button>
+        <button class="layui-btn layui-btn-normal  ">一键下架</button>
         <input type="file" id="saveUser" style="display: none" onchange="saveExcelUser()">
         <label for="saveUser" class="layui-btn layui-btn-normal saveUser">导入</label>
         <button type="button" class="layui-btn layui-btn-normal exportAll">导出</button>
@@ -97,14 +97,20 @@
     <table class="layui-table" lay-even="" lay-skin="nob">
         <!-- 定义表格列宽-->
         <colgroup>
-            <col width="50">
+            <col width="30">
+            <col width="150">
+            <col width="150">
+            <col width="150">
+            <col width="60">
+            <col width="60">
+            <col width="150">
             <col width="200">
             <col width="150">
             <col width="150">
             <col width="150">
             <col width="150">
             <col width="150">
-            <col width="150">
+            <col width="200">
             <col>
         </colgroup>
         <thead>
@@ -116,34 +122,34 @@
             <th>类型</th>
             <th>推荐</th>
             <th>状态</th>
-            <th>评分</th>
+            <th>评分(0-5)</th>
             <th>被收藏</th>
             <th>被顶</th>
             <th>被踩</th>
-            <th>更新时间</th>
+            <th>发布时间</th>
             <th>修改时间</th>
             <th>操作</th>
         </tr>
         </thead>
         <tbody id="tbody">
-<!--        <tr>-->
-<!--            <th><input type="checkbox"></th>-->
-<!--            <th>Java项目——个人博客系统</th>-->
-<!--            <th>作者名</th>-->
-<!--            <th>java</th>-->
-<!--            <th><input class="switch switch-anim userStatus" type="checkbox"/></th>-->
-<!--            <th>已发布</th>-->
-<!--            <th>5</th>-->
-<!--            <th>1000</th>-->
-<!--            <th>100000</th>-->
-<!--            <th>10000</th>-->
-<!--            <th>2022-11-25</th>-->
-<!--            <th>2022-11-25</th>-->
-<!--            <th>-->
-<!--                <button class="layui-btn layui-btn-normal  ">上架</button>-->
-<!--                <button class="layui-btn layui-btn-normal  ">下架</button>-->
-<!--            </th>-->
-<!--        </tr>-->
+        <!--        <tr>-->
+        <!--            <th><input type="checkbox"></th>-->
+        <!--            <th>Java项目——个人博客系统</th>-->
+        <!--            <th>作者名</th>-->
+        <!--            <th>java</th>-->
+        <!--            <th><input class="switch switch-anim userStatus" type="checkbox"/></th>-->
+        <!--            <th>已发布</th>-->
+        <!--            <th>5</th>-->
+        <!--            <th>1000</th>-->
+        <!--            <th>100000</th>-->
+        <!--            <th>10000</th>-->
+        <!--            <th>2022-11-25</th>-->
+        <!--            <th>2022-11-25</th>-->
+        <!--            <th>-->
+        <!--                <button class="layui-btn layui-btn-normal  ">上架</button>-->
+        <!--                <button class="layui-btn layui-btn-normal  ">下架</button>-->
+        <!--            </th>-->
+        <!--        </tr>-->
         </tbody>
     </table>
     <!--加载分页区域-->
@@ -164,8 +170,66 @@
         //查询事件
         $("#search").click(doLoadData);
         //清空查询条件
-        //  $("#cheal").click(chealSearch);
+        $("#cheal").click(chealSearch);
+        //按钮功能绑定区域
+        $("#btn-tool-area").on("click", ".btn_add,.btn_update", saveBlogPageUI)
     })
+
+    function chealSearch() {
+        $("#title").val("");
+    }
+
+    function saveBlogPageUI() {
+        var title;
+        if ($(this).hasClass("btn_add")) {
+            title = "添加文章";
+        }
+        if (!$(this).hasClass("btn_update")) {
+        } else {
+            title = "修改文章";
+            //判断是否勾选了
+            var length = $("#tbody").find("input[name='checkbox']:checked").length;
+            if (length == 0) {
+                layer.msg("请选中一条数据！");
+                return false;
+            }
+            if (length != 1) {
+                layer.msg("只能选中一条数据！");
+                return false;
+            }
+            //将要修改的数据绑定
+            var rowData = getCheckedRowData();
+            if (rowData != null) {
+                $("#BindbodyData").data("blogData", rowData);
+            }
+        }
+        layer.open({
+            type: 2, //页面层
+            title: title,
+            shadeClose: true,
+            scrollbar: false,//取消浏览器滚动条
+            shade: false,
+            maxmin: true, //开启最大化最小化按钮
+            area: ['1200px', '800px'],//宽 ，高
+            content: '/admin/essay/essayEdit',//展示的页面
+            success: function (obj, index) {
+                var iframe = window['layui-layer-iframe' + index];
+                var data = $("#BindbodyData").data("blogData");
+                if (data != null && data != "") {
+                    debugger
+                    iframe.loadUpdateBlogData(data);
+                }
+            }, end: function () {
+                $("#BindbodyData").data("blogData", "");
+                //   layui.form.render(); //更新全部
+            }
+        });
+    }
+
+    //获取当前被选中行的数据
+    function getCheckedRowData() {
+        return $("#tbody").find("input[name='checkbox']:checked").parents("tr").data("blogRow");
+    }
 
     //加载数据
     function doLoadData() {
@@ -178,14 +242,14 @@
         var params = {
             title: title,
             curPage: curPage ? curPage : 1,
-            pageSize: 1  //默认条数
+            pageSize: 5  //默认条数
         }
         //查询回收数据
         if ($(this).hasClass("btn_recycleBin")) {
             params.deleteState = 2;
-            $("#btn-tool-area").append("<button class=\"layui-btn layui-btn-normal  back\" onclick='doLoadData()'>返回用户列表</button>");
-            $("#btn-tool-area").append("<button class=\"layui-btn layui-btn-normal  back\" onclick='recover()'>恢复用户</button>");
-            $("#btn-tool-area").find(".btn_delete").removeClass("btn_delete").addClass("chealUser");
+            $("#btn-tool-area").append("<button class=\"layui-btn layui-btn-normal  back\" onclick='doLoadData()'>返回博文列表</button>");
+            $("#btn-tool-area").append("<button class=\"layui-btn layui-btn-normal  back\" onclick='recover()'>恢复博文</button>");
+            $("#btn-tool-area").find(".btn_delete").removeClass("btn_delete").addClass("clealBlog");
         }
         $.get(url, params, function (result) {
             //查询成功！
@@ -212,15 +276,26 @@
             $("#tbody").append(tr);
         } else {
             for (var i = 0; i < data.length; i++) {
+                var essayStatusText;//状态文本
+                if (data[i].essayStatus == 0) {
+                    essayStatusText = "草稿";
+                } else if (data[i].essayStatus == 1) {
+                    essayStatusText = "已发布，待审核";
+                } else if (data[i].essayStatus == 2) {
+                    essayStatusText = "已发布，已审核";
+                } else {
+                    essayStatusText = "参数异常！";
+                }
                 tr = "  <tr>\n" +
                     "  <th><input type=\"checkbox\" value='" + data[i].id + "' name='checkbox'></th>\n" +
                     " <th>" + data[i].title + "</th>\n" +
+                    " <th>" + "<img src='" + data[i].blogCover + "' width='80px' height='80px'>" + "</th>" +
                     " <th>" + data[i].user.authorName + "</th>\n" +
                     " <th>" + data[i].type.name + "</th>\n" +
-                    "<th>"+"<img src="data[i].blog_cover">"+"</th>"+
                     "<th><input class=\"switch switch-anim onlineStatus\" onchange=\"checkNum(this)\" type=\"checkbox\" value='" + data[i].recommend + "'  /></th>" +
-                    "<th>" + (data[i].essayStatus == 1 ? '发布' : '审核') + "</th>\n" +
-                    "<th>" + data[i].essayGrade + "</th>\n" +
+                    "<th>" + essayStatusText + "</th>\n" +
+                    //"<th>" + data[i].essayGrade + "</th>\n" +
+                    "<th><div id=" + "essayGrade" + data[i].id + " onclick='updateEssayGrade(this)'></div></th>" +
                     " <th>" + data[i].essayCollect + "</th>\n" +
                     " <th>" + data[i].essayTop + "</th>\n" +
                     " <th>" + data[i].essayTread + "</th>\n" +
@@ -228,10 +303,47 @@
                     " <th>" + data[i].updateDate + "</th>\n" +
                     "<th><button class=\"layui-btn layui-btn-normal\" onclick='lookUserInfo(this)' >审批</button><button class=\"layui-btn layui-btn-normal\" onclick='lookUserInfo(this)' >销毁</button></th></tr>";
                 $("#tbody").append(tr);
-                $("#tbody tr").last().data("userRow", data[i]);
-                StateIschecked();
+                $("#tbody tr").last().data("blogRow", data[i]);
+                StateIschecked();//加载推荐
+                loadessayGrade(data[i]);//加载评分
             }
         }
+    }
+
+    var essayGrade;
+
+    //加载评分
+    function loadessayGrade(data) {
+        layui.use(['rate'], function () {
+            var rate = layui.rate;
+            //显示文字
+            essayGrade = rate.render({
+                elem: "#essayGrade" + data.id
+                , value: data.essayGrade//初始值
+                , text: true //开启文本
+                , half: true //开启半星
+            });
+        })
+    }
+
+    //修改评分 在加载数据时绑定
+    function updateEssayGrade(btn) {
+        var id = $(btn).parents("tr").children(":eq(0)").children().val();
+        var essayGradeText = essayGrade.config.value;//评分的值
+        var url = "/blog/updateEssayGrade";
+        var params = {
+            essayGrade: essayGradeText,
+            id: id
+        }
+        $.get(url, params, function (result) {
+            //修改成功
+            if (result.state == 1) {
+                layer.msg(result.msg, {icon: 1});
+                doLoadData();//刷新数据
+            } else {
+                layer.msg(result.msg, {icon: 2});
+            }
+        })
     }
 
     //推荐选中
@@ -241,6 +353,38 @@
             if ($(checked[i]).val() == 1) {//选中，即为推荐
                 $(checked[i]).attr("checked", true);
             }
+        }
+    }
+
+    //修改推荐
+    function checkNum(btn) {
+        var id = $(btn).parents("tr").find("input").val();
+        var checked = $(btn).prop('checked') ? "1" : "0";
+        var params = {
+            id: id,
+            recommend: checked,
+        }
+        var url = "/blog/updateRecommend";
+        $.get(url, params, function (result) {
+            if (result.state == 1) {
+                //静态修改
+                layer.msg(result.msg, {icon: 6});
+                checked == 1 ? $(btn).attr("checked", true) : $(btn).attr("checked", false);
+                // layer.msg(result.msg, {icon: 6});
+                // doLoadData();
+            } else {
+                layer.msg(result.msg, {icon: 2});
+                checked == 1 ? $(btn).prop("checked", false) : $(btn).prop("checked", true);
+            }
+        })
+    }
+
+    //全选或者全不选
+    function IsCheckAll(btn) {
+        if ($(btn).prop('checked')) {
+            $(btn).parents().find("input[name='checkbox']").attr("checked", true);
+        } else {
+            $(btn).parents().find("input[name='checkbox']").attr("checked", false);
         }
     }
 </script>

@@ -28,4 +28,28 @@
                      select="com.xun.dao.TypeDao.findTypeById">
         </association>
     </resultMap>
+
+    <select id="findBlogByTitleAndAuthorName" resultMap="checkedBlog">
+        select *
+        from blog
+        where title = #{title}
+          and content = #{content}
+    </select>
+    <resultMap id="checkedBlog" type="com.xun.pojo.BlogUserTypeVo">
+        <id property="id" column="id"/>
+        <association property="user"
+                     column="user_id"
+                     select="com.xun.dao.UserDao.findUserById">
+        </association>
+    </resultMap>
+
+    <insert id="insertBlog" parameterType="com.xun.pojo.BlogUserTypeVo" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO `myblog`.`blog`(`id`, `title`, `user_id`, `content`, `NumberView`, `publishDate`, `updateDate`,
+                                    `essayStatus`, `essayGrade`, `essayCollect`, `essayTop`, `essayTread`, `type_id`,
+                                    `deleteState`, `recommend`, `blog_cover`)
+        VALUES (null, #{blog.title}, #{userId}, #{blog.content}, #{blog.NumberView}, now(), #{blog.updateDate},
+                #{blog.essayStatus}, #{blog.essayGrade}, #{blog.essayCollect}, #{blog.essayTop}, #{blog.essayTread},
+                #{blog.type.id}, #{blog.deleteState}, #{blog.recommend},
+                #{blog.blog_cover})
+    </insert>
 </mapper>

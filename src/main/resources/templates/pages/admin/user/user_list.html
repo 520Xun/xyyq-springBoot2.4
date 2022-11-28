@@ -377,10 +377,10 @@
                     "<th><input class=\"switch switch-anim onlineStatus\" onchange=\"checkNum(this)\" type=\"checkbox\" value='" + data[i].onlineStatus + "' /></th>" +
                     "<th>" + data[i].registerTime + "</th>\n" +
                     "<th>" + data[i].registerIp + "</th>\n" +
-                    " <th>" + data[i].modifiedTime + "</th>\n" +
+                    " <th>" + (data[i].modifiedTime == null ? "无" : data[i].modifiedTime) + "</th>\n" +
                     "<th><input class=\"switch switch-anim userStatus\" onchange=\"checkNum(this)\" type=\"checkbox\" value='" + data[i].userStatus + "' /></th>" +
                     " <th>" + data[i].createdUser + "</th>\n" +
-                    " <th>" + data[i].modifiedUser + "</th>\n" +
+                    " <th>" + (data[i].modifiedUser == null ? "无" : data[i].modifiedUser) + "</th>\n" +
                     "<th><button class=\"layui-btn layui-btn-normal\" onclick='lookUserInfo(this)' >查看</button></th></tr>";
                 $("#tbody").append(tr);
                 $("#tbody tr").last().data("userRow", data[i]);

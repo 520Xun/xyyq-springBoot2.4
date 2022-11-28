@@ -5,7 +5,7 @@
 <mapper namespace="com.xun.dao.UserDao">
 
     <sql id="userQuery">
-        <if test="autherName != null and autherName !=''">
+        <if test="authorName != null and authorName !=''">
             autherName like concat("%", #{autherName}, "%") and
         </if>
         <if test="email != null and email !=''">

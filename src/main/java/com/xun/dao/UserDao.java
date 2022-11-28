@@ -24,14 +24,14 @@ public interface UserDao {
      * @param user
      * @return
      */
-    List<User> findUsers (User user);
+    List< User > findUsers ( User user );
 
     /**
      * 修改账号在线状态前，判断账号是否被禁用
      * 检查账号是否被禁用
      */
-    @Select ("select user_status from user where id=#{id} ")
-    Integer checkUserStatus (Integer id);
+    @Select ( "select user_status from user where id=#{id} " )
+    Integer checkUserStatus ( Integer id );
 
     /**
      * 修改在线状态
@@ -41,8 +41,8 @@ public interface UserDao {
      * @param username
      * @return
      */
-    @Update ("update user set online_status=#{onlineStatus}, modifiedUser=#{username} where id=#{id}")
-    Integer updateOnlineStatus (@Param ("id") Integer id, @Param ("onlineStatus") Integer onlineStatus, @Param ("username") String username);
+    @Update ( "update user set online_status=#{onlineStatus}, modifiedUser=#{username} where id=#{id}" )
+    Integer updateOnlineStatus ( @Param ( "id" ) Integer id, @Param ( "onlineStatus" ) Integer onlineStatus, @Param ( "username" ) String username );
 
     /**
      * 修改账号状态
@@ -53,8 +53,8 @@ public interface UserDao {
      * @param username
      * @return
      */
-    @Update ("update user set user_status=#{userStatus},online_status=#{userStatus}, modifiedUser=#{username} where id=#{id}")
-    Integer updateUserStatus (@Param ("id") Integer id, @Param ("userStatus") Integer userStatus, @Param ("username") String username);
+    @Update ( "update user set user_status=#{userStatus},online_status=#{userStatus}, modifiedUser=#{username} where id=#{id}" )
+    Integer updateUserStatus ( @Param ( "id" ) Integer id, @Param ( "userStatus" ) Integer userStatus, @Param ( "username" ) String username );
 
     /**
      * 查找用户名是否已存在
@@ -62,8 +62,8 @@ public interface UserDao {
      * @param username
      * @return
      */
-    @Select ("select username from user where username=#{username}")
-    User findUserByName (String username);
+    @Select ( "select username from user where username=#{username}" )
+    User findUserByName ( String username );
 
     /**
      * 查找作者名字是否存在
@@ -71,8 +71,8 @@ public interface UserDao {
      * @param authorName
      * @return
      */
-    @Select ("select authorName from user where authorName=#{authorName}")
-    User findUserByAuthorUser (String authorName);
+    @Select ( "select authorName from user where authorName=#{authorName}" )
+    List< User > findUserByAuthorUser ( String authorName );
 
     /**
      * 新增用户
@@ -81,7 +81,7 @@ public interface UserDao {
      * @return
      */
 
-    int insertUser (User user);
+    int insertUser ( User user );
 
     /**
      * 修改用户
@@ -89,7 +89,7 @@ public interface UserDao {
      * @param user
      * @return
      */
-    int updateUser (User user);
+    int updateUser ( User user );
 
     /**
      * 根据用户id将用户加入回收站
@@ -97,7 +97,7 @@ public interface UserDao {
      * @param ids
      * @return
      */
-    int deleteUseByIds (Integer[] ids);
+    int deleteUseByIds ( Integer[] ids );
 
     /**
      * 彻底删除用户
@@ -105,7 +105,7 @@ public interface UserDao {
      * @param ids
      * @return
      */
-    int chealUser (Integer[] ids);
+    int chealUser ( Integer[] ids );
 
     /**
      * 恢复数据
@@ -113,15 +113,15 @@ public interface UserDao {
      * @param ids
      * @return
      */
-    int recoverUser (Integer[] ids);
+    int recoverUser ( Integer[] ids );
 
     /**
      * 导出所有用户
      *
      * @return
      */
-    @Select ("select * from user")
-    List<User> exportAllUser ();
+    @Select ( "select * from user" )
+    List< User > exportAllUser ( );
 
     /**
      * 根据用户id导出信息
@@ -129,7 +129,7 @@ public interface UserDao {
      * @param ids
      * @return
      */
-    List<User> exportByUserId (Integer[] ids);
+    List< User > exportByUserId ( Integer[] ids );
 
     /**
      * 导入插入用户
@@ -137,8 +137,17 @@ public interface UserDao {
      * @param userList
      * @return
      */
-    int insertUserList (List<User> userList);
+    int insertUserList ( List< User > userList );
 
-    @Select ("select * from user where id=#{id}")
-    User findUserById (Integer id);
+    @Select ( "select * from user where id=#{id}" )
+    User findUserById ( Integer id );
+
+    /**
+     * 根据作者名查询其id
+     *
+     * @param authorName
+     * @return
+     */
+    @Select ( "select id from user where authorName=#{authorName}" )
+    Integer findUserIdByAuthorUser ( String authorName );
 }

@@ -43,7 +43,11 @@
             <artifactId>commons-fileupload</artifactId>
             <version>1.3.2</version>
         </dependency>
-
+        <dependency>
+            <groupId>com.alibaba</groupId>
+            <artifactId>fastjson</artifactId>
+            <version>1.2.70</version>
+        </dependency>
         <!--邮箱发送-->
         <dependency>
             <groupId>org.springframework.boot</groupId>

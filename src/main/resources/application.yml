@@ -5,17 +5,17 @@ server:
     context-path: /
   tomcat:
     threads:
-     max: 1000
-     min-spare: 30
+      max: 1000
+      min-spare: 30
     uri-encoding: utf-8
-     
+
 #mybatis
 mybatis:
   configuration:
     map-underscore-to-camel-case: true
     default-statement-timeout: 30
   mapper-locations:
-  - classpath:/mappers/**.xml
+    - classpath:/mappers/**.xml
 
 #log
 logging:
@@ -24,6 +24,10 @@ logging:
 
 #spring
 spring:
+  servlet:
+    multipart:
+      max-file-size: 10MB #单个文件最大
+      max-request-size: 100MB #总文件最大
   datasource:
     url: jdbc:mysql:///myblog?serverTimezone=GMT%2B8
     username: root
@@ -33,6 +37,7 @@ spring:
     prefix: classpath:/templates/pages/
     suffix: .html
     cache: false
+
 com:
   xun:
     page:
@@ -42,3 +47,4 @@ com:
 pagehelper:
   helper-dialect: mysql #指定方言为mysql
   reasonable: true #分页查询合理化（当前页>最大页 为最大页 <0 为1）
+

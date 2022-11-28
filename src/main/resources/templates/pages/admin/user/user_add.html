@@ -83,8 +83,15 @@
                 地址
             </label>
             <div class="layui-input-block">
-                <input type="text" id="address" placeholder="请填写地址(只需要省份名称)" autocomplete="off"
-                       class="layui-input">
+                <select name="address" xm-select-radio="address-select" lay-verify="required" lay-vertype="tips"
+                        xm-select-skin="normal"
+                        id="address">
+                    <option value="">请选择地址</option>
+                    <option value="湖南">湖南</option>
+                    <option value="广东">广东</option>
+                    <option value="北京">北京</option>
+                    <option value="湖南">湖南</option>
+                </select>
             </div>
         </div>
         <div class="layui-form-item" pane="">
@@ -113,7 +120,7 @@
                 <select name="role" xm-select="role-select" lay-verify="required" lay-vertype="tips"
                         xm-select-skin="normal"
                         id="showRoleSelect">
-                    <option value="">请选择角色</option>
+                    <option value="0">请选择角色</option>
                 </select>
             </div>
         </div>
@@ -126,7 +133,7 @@
         </div>
         <div class="layui-form-item">
             <div class="layui-input-block" style="margin-left:0;text-align:center;">
-                <button class="layui-btn layui-btn-normal">重置</button>
+                <button class="layui-btn layui-btn-normal" onclick="clealUserData()" type="reset">重置</button>
                 <button class="layui-btn layui-btn-normal" onclick="SaveOrupdateUser()" id="submitBtn">增加</button>
             </div>
         </div>
@@ -148,6 +155,7 @@
         $ = layui.jquery
     });
 
+
     //把角色列表展示
     function loadRoleSelect() {
         var url = "/role/findAllRole";
@@ -163,13 +171,10 @@
 
     //将要修改的数据赋值到页面
     function loadUPdateUserData(data) {
-        debugger;
         if (data == null) {
             layer.msg("请选择要修改的数据！", {icon: 2});
             return;
         }
-
-        $("#bindUserData").data("userData", data);
         $("#bindUserData").data("userData", data);
         $("#username").val(data.username).attr("readOnly", true);
         $("#password").val(data.password);
@@ -192,12 +197,30 @@
         $("#submitBtn").text("修改");
     }
 
+    //查询用户所拥有的角色
     function selectUserRoleInfo(id) {
         $.get("/userRole/findRoleByUserId", {id: id}, function (result) {
             if (result.state == 1) {
                 layui.formSelects.value('role-select', result.data);
             }
         })
+    }
+
+    //重置
+    function clealUserData() {
+        $("#authorName").val("");
+        $("#picture").attr("src", "");
+        $("#email").val("");
+        $("#phone").val("");
+        $("#address").val("");
+        $("input[name=sex][value='女']").prop("checked", false);
+        $("input[name=sex][value='男']").prop("checked", true);
+        $("input[name=onlineStatus][value='0']").prop("checked", false);
+        $("input[name=onlineStatus][value='1']").prop("checked", true);
+        $("input[name=userStatus][value='0']").prop("checked", false);
+        $("input[name=userStatus][value='1']").prop("checked", true);
+        layui.formSelects.value('role-select', 0);
+        layui.form.render(); //更新全部
     }
 
     //子页面提交

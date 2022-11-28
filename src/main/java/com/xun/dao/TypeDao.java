@@ -4,6 +4,8 @@ import com.xun.pojo.Type;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
+import java.util.List;
+
 /**
  * @version: java version 1.8
  * @Author: xun
@@ -12,8 +14,11 @@ import org.apache.ibatis.annotations.Select;
  */
 @Mapper
 public interface TypeDao {
-    
-    @Select ("select * from type where id=#{id}")
-    Type findTypeById (Integer id);
+
+    @Select ( "select * from type where id=#{id}" )
+    Type findTypeById ( Integer id );
+
+    @Select ( "select * from type" )
+    List< Type > findAllType ( );
 
 }

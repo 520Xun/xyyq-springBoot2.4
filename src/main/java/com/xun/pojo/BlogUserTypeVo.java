@@ -23,23 +23,20 @@ public class BlogUserTypeVo implements Serializable {
     private User user;//作者
     private String content;//博文
     private Integer NumberView;//被查看次数
-    @JsonFormat (pattern = "yyyy-MM-dd HH:mm:ss")
-    /**
-     * 发布时间
-     */
-    private String publishDate;
-    /**
-     * 最后一次修改时间
-     */
-    @JsonFormat (pattern = "yyyy-MM-dd HH:mm:ss")
-    private String updateDate;
-    private Integer essayStatus = 1;//博文状态 (0草稿,1发布 2 审核)
-    private Integer essayGrade;//博文评分
+    @JsonFormat ( pattern = "yyyy-MM-dd HH:mm:ss" )
+    private String publishDate;//发布时间
+    @JsonFormat ( pattern = "yyyy-MM-dd HH:mm:ss" )
+    private String updateDate;//修改时间
+    private Integer essayStatus = 1;//博文状态 0 存为草稿无需审核 1 已发布，未审核 2 已发布，已审核)
+    private String essayGrade;//博文评分
     private Integer essayCollect;//博文被收藏数量
     private Integer essayTop;//被顶数量
     private Integer essayTread;//被踩数量
     private Type type;//分类对象
     private Integer deleteState = 1;//是否删除 1为正常  0为彻底删除  默认1正常 2加入回收站
+    /**
+     * 当文章没有审核时，不允许推荐
+     */
     private Integer recommend = 1;//是否推荐 1为推荐 0 为不推荐
-    private String blog_cover;//博文封面
+    private String blogCover;//博文封面
 }
