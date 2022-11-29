@@ -7,6 +7,7 @@ import com.xun.common.pojo.Pagination;
 import com.xun.common.pojo.pageProperties;
 import com.xun.common.util.Assert;
 import com.xun.dao.BlogDao;
+import com.xun.dao.BlogTagDao;
 import com.xun.dao.UserDao;
 import com.xun.pojo.BlogUserTypeVo;
 import com.xun.pojo.User;
@@ -36,6 +37,10 @@ public class BlogServiceImpl implements BlogService {
     private BlogDao blogDao;
     @Autowired
     private UserDao userDao;
+
+    @Autowired
+    private BlogTagDao blogTagDao;
+
     @Autowired
     private pageProperties pp;
 
@@ -59,6 +64,7 @@ public class BlogServiceImpl implements BlogService {
         Integer userStatus = blogDao.checkRecommend ( id );
         Assert.isEmpty ( userStatus == 0, "当前文章为草稿，不能推荐！" );
         Assert.isEmpty ( userStatus == 1, "当前文章未审核，不能推荐！" );
+        Assert.isEmpty ( userStatus == 3, "当前文章已被回收，不能推荐！" );
         Integer n = blogDao.updateRecommend ( id, recommend );
         /**
          * 文章不记录修改者
@@ -86,12 +92,58 @@ public class BlogServiceImpl implements BlogService {
         //查询出标题和作者名
         BlogUserTypeVo blog = blogDao.findBlogByTitleAndAuthorName ( vo.getTitle ( ), vo.getContent ( ) );
         //验证有无此作者
-        List< User > u2 = userDao.findUserByAuthorUser ( blog.getUser ( ).getAuthorName ( ) );
+        List< User > u2 = userDao.findUserByAuthorUser ( vo.getUser ( ).getAuthorName ( ) );
         Assert.isEmpty ( u2.size ( ) == 0, "填写的作者不存在！" );
         Assert.isEmpty ( blog != null && u2.size ( ) != 0, "文章已经存在！" );
         Integer userId = userDao.findUserIdByAuthorUser ( vo.getUser ( ).getAuthorName ( ) );
         int n = blogDao.insertBlog ( vo, userId );
+        //插入文章与标签之间的关系
+        blogTagDao.insertBlogTag ( vo.getId ( ), tagIds );
+        return n;
+    }
 
-        return null;
+    @Override
+    public int deleteBlog ( Integer[] ids ) {
+        Assert.isEmpty ( ids == null || ids.length == 0, "请选择要删除的数据" );
+        int n = blogDao.deleteBlogByIds ( ids );
+        Assert.isEmpty ( n == 0, "数据已被加入回收站！" );
+        return n;
+    }
+
+    @Override
+    public Integer chealBlog ( Integer[] ids ) {
+        Assert.isEmpty ( ids == null || ids.length == 0, "请选择要删除的数据" );
+        int n = blogDao.chealBlog ( ids );
+        Assert.isEmpty ( n == 0, "数据已被删除！" );
+        return n;
+    }
+
+    @Override
+    public Integer recoverBlog ( Integer[] ids ) {
+        Assert.isEmpty ( ids == null || ids.length == 0, "请选择要恢复的数据" );
+        int n = blogDao.recoverBlog ( ids );
+        Assert.isEmpty ( n == 0, "数据已被恢复！" );
+        return n;
+    }
+
+    @Override
+    public Integer updateBlog ( BlogUserTypeVo vo, Integer[] tagIds ) {
+        Assert.isEmpty ( vo == null, "请填写文章信息" );
+        Assert.isEmpty ( vo.getTitle ( ) == null, "必须填写文章标题！" );
+        Assert.isEmpty ( vo.getContent ( ) == null, "必须填写文章内容！" );
+        Assert.isEmpty ( vo.getUser ( ).getAuthorName ( ) == null, "必须填写文章内容！" );
+        Assert.isEmpty ( vo.getType ( ).getId ( ) == null, "必须勾选分类！" );
+        //判断文章是否已经存在
+        //查询出标题和作者名
+        BlogUserTypeVo blog = blogDao.findBlogByTitleAndAuthorName ( vo.getTitle ( ), vo.getContent ( ) );
+        //验证有无此作者
+        List< User > u2 = userDao.findUserByAuthorUser ( vo.getUser ( ).getAuthorName ( ) );
+        Assert.isEmpty ( u2.size ( ) == 0, "填写的作者不存在！" );
+        //  Assert.isEmpty ( blog != null && u2.size ( ) != 0, "文章已经存在！" );
+        blogTagDao.deteleBlogTagByBlogId ( vo.getId ( ) );
+        blogTagDao.insertBlogTag ( vo.getId ( ), tagIds );
+        int n = blogDao.updateBlog ( vo );
+        Assert.isEmpty ( n == 0, "修改失败！" );
+        return n;
     }
 }

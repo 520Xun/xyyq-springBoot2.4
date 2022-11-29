@@ -1,6 +1,8 @@
 package com.xun.dao;
 
+import org.apache.ibatis.annotations.Delete;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
@@ -22,4 +24,9 @@ public interface BlogTagDao {
      */
     @Select ( "select tag_id from blog_tag where blog_id=#{blogId}" )
     List< Integer > findTagByBlogId ( Integer blogId );
+
+    Integer insertBlogTag ( @Param ( "blogId" ) Integer id, @Param ( "tagIds" ) Integer[] tagIds );
+
+    @Delete ( "delete from blog_tag where blog_id=#{id}" )
+    int deteleBlogTagByBlogId ( Integer id );
 }

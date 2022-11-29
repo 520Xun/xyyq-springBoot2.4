@@ -5,16 +5,15 @@
 <mapper namespace="com.xun.dao.BlogDao">
 
     <sql id="blogQuerry">
-        <where>
-            <if test="title != null and title !=''">
-                title like concat("%", #{title}, "%")
-            </if>
-        </where>
+        <if test="title != null and title !=''">
+            title like concat("%", #{title}, "%") and
+        </if>
     </sql>
 
     <select id="findBlogs" resultMap="findBlogAll">
-        select * from blog
+        select * from blog where
         <include refid="blogQuerry"></include>
+        deleteState=#{deleteState}
     </select>
 
     <resultMap id="findBlogAll" type="com.xun.pojo.BlogUserTypeVo">
@@ -43,13 +42,46 @@
         </association>
     </resultMap>
 
-    <insert id="insertBlog" parameterType="com.xun.pojo.BlogUserTypeVo" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insertBlog" parameterType="com.xun.pojo.BlogUserTypeVo" useGeneratedKeys="true" keyProperty="blog.id">
         INSERT INTO `myblog`.`blog`(`id`, `title`, `user_id`, `content`, `NumberView`, `publishDate`, `updateDate`,
                                     `essayStatus`, `essayGrade`, `essayCollect`, `essayTop`, `essayTread`, `type_id`,
                                     `deleteState`, `recommend`, `blog_cover`)
         VALUES (null, #{blog.title}, #{userId}, #{blog.content}, #{blog.NumberView}, now(), #{blog.updateDate},
                 #{blog.essayStatus}, #{blog.essayGrade}, #{blog.essayCollect}, #{blog.essayTop}, #{blog.essayTread},
                 #{blog.type.id}, #{blog.deleteState}, #{blog.recommend},
-                #{blog.blog_cover})
+                #{blog.blogCover})
     </insert>
+
+    <update id="updateBlog">
+        UPDATE `myblog`.`blog`
+        SET `title`       = #{title},
+            `content`     =#{content},
+            `NumberView`  = #{NumberView},
+            `updateDate`  = now(),
+            `essayStatus` = #{essayStatus},
+            `type_id`     = #{type.id},
+            `blog_cover`  =#{blogCover}
+        WHERE `id` = #{id};
+    </update>
+
+    <update id="deleteBlogByIds">
+        update blog set deleteState=2 where id in
+        <foreach collection="array" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
+
+    <delete id="chealBlog">
+        delete from blog where id in
+        <foreach collection="array" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+    <update id="recoverBlog">
+        update blog set deleteState=1,essayStatus=3 where id in
+        <foreach collection="array" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </update>
 </mapper>

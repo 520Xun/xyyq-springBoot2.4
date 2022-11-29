@@ -84,8 +84,6 @@
         <button class="layui-btn layui-btn-normal btn_add">新增</button>
         <button type="button" class="layui-btn layui-btn-normal btn_update">修改</button>
         <button class="layui-btn layui-btn-normal  btn_delete">删除</button>
-        <button class="layui-btn layui-btn-normal  ">一键上架</button>
-        <button class="layui-btn layui-btn-normal  ">一键下架</button>
         <input type="file" id="saveUser" style="display: none" onchange="saveExcelUser()">
         <label for="saveUser" class="layui-btn layui-btn-normal saveUser">导入</label>
         <button type="button" class="layui-btn layui-btn-normal exportAll">导出</button>
@@ -173,8 +171,102 @@
         $("#cheal").click(chealSearch);
         //按钮功能绑定区域
         $("#btn-tool-area").on("click", ".btn_add,.btn_update", saveBlogPageUI)
+            .on("click", ".btn_delete", deleteBlog)
+            .on("click", ".btn_recycleBin", doLoadData)
+            .on("click", ".clealBlog", deleteBlog)
+            .on("click", ".exportAll", exportAllBlog)
+            .on("click", ".exportByUserId", exportAllBlog)
     })
 
+    //导出所有用户信息
+    function exportAllBlog() {
+        var url = "/blog/exportAllBlog";
+        var params = {}
+        if ($(this).hasClass("exportByUserId")) {
+            url = "/blog/exportByBlogId";
+            var checks = $("#tbody").find("input[name='checkbox']:checked");
+            if (!checks.length) {
+                layer.open({
+                    type: 0, //默认就是0，所以可以省略
+                    content: '至少选择一条要导出的数据！',
+                    icon: 2
+                })
+                return;
+            }
+            var ids = [];//空数组
+            $.each(checks, function () {
+                ids.push($(this).val());
+            })
+            params.ids = ids;
+        }
+        $.get(url, params, function (result) {
+            if (result.state == 1) {
+                layer.msg(result.data, {icon: "1"});
+            } else {
+                layer.msg(result.msg, {icon: "2"});
+            }
+        })
+    }
+
+    //加入回收站
+    function deleteBlog() {
+        var checks = $("#tbody").find("input[name='checkbox']:checked");
+        if (!checks.length) {
+            layer.open({
+                type: 0, //默认就是0，所以可以省略
+                content: '至少选择一条删除的数据！',
+                icon: 2
+            })
+            return;
+        }
+        var ids = [];//空数组
+        $.each(checks, function () {
+            ids.push($(this).val());
+        })
+        var params = {ids: ids};
+        var url = "/blog/deleteBlog";
+        debugger
+        if ($(this).hasClass("clealBlog")) {
+            url = "/blog/chealBlog";
+        }
+        $.get(url, params, function (result) {
+            if (result.state == 0) {
+                layer.msg(result.msg, {icon: 2});
+            } else if (result.state == 1) {
+                layer.msg(result.msg, {icon: 1});
+                doLoadData();
+            }
+        });
+    }
+
+    //恢复用户
+    function recover() {
+        var checks = $("#tbody").find("input[name='checkbox']:checked");
+        if (!checks.length) {
+            layer.open({
+                type: 0, //默认就是0，所以可以省略
+                content: '至少选择一条恢复的数据！',
+                icon: 2
+            })
+            return;
+        }
+        var ids = [];//空数组
+        $.each(checks, function () {
+            ids.push($(this).val());
+        })
+        var params = {ids: ids};
+        var url = "/blog/recoverBlog";
+        $.get(url, params, function (result) {
+            if (result.state == 0) {
+                layer.msg(result.msg, {icon: 2});
+            } else if (result.state == 1) {
+                layer.msg(result.msg, {icon: 1});
+                doLoadData();
+            }
+        });
+    }
+
+    //重置
     function chealSearch() {
         $("#title").val("");
     }
@@ -234,7 +326,7 @@
     //加载数据
     function doLoadData() {
         $("#btn-tool-area").find(".back").remove();
-        $("#btn-tool-area").find(".chealUser").removeClass("chealUser").addClass("btn_delete");
+        $("#btn-tool-area").find(".clealBlog").removeClass("clealBlog").addClass("btn_delete");
         var url = "/blog/findBlog";
         var curPage = $("#page").data("curPage");
         var title = $("#title").val();
@@ -244,6 +336,7 @@
             curPage: curPage ? curPage : 1,
             pageSize: 5  //默认条数
         }
+        debugger
         //查询回收数据
         if ($(this).hasClass("btn_recycleBin")) {
             params.deleteState = 2;
@@ -283,8 +376,8 @@
                     essayStatusText = "已发布，待审核";
                 } else if (data[i].essayStatus == 2) {
                     essayStatusText = "已发布，已审核";
-                } else {
-                    essayStatusText = "参数异常！";
+                } else if (data[i].essayStatus == 3) {
+                    essayStatusText = "回收站！";
                 }
                 tr = "  <tr>\n" +
                     "  <th><input type=\"checkbox\" value='" + data[i].id + "' name='checkbox'></th>\n" +
@@ -300,7 +393,7 @@
                     " <th>" + data[i].essayTop + "</th>\n" +
                     " <th>" + data[i].essayTread + "</th>\n" +
                     " <th>" + data[i].publishDate + "</th>\n" +
-                    " <th>" + data[i].updateDate + "</th>\n" +
+                    " <th>" + (data[i].updateDate == null ? "无" : data[i].updateDate) + "</th>\n" +
                     "<th><button class=\"layui-btn layui-btn-normal\" onclick='lookUserInfo(this)' >审批</button><button class=\"layui-btn layui-btn-normal\" onclick='lookUserInfo(this)' >销毁</button></th></tr>";
                 $("#tbody").append(tr);
                 $("#tbody tr").last().data("blogRow", data[i]);
@@ -330,6 +423,7 @@
     function updateEssayGrade(btn) {
         var id = $(btn).parents("tr").children(":eq(0)").children().val();
         var essayGradeText = essayGrade.config.value;//评分的值
+        debugger
         var url = "/blog/updateEssayGrade";
         var params = {
             essayGrade: essayGradeText,

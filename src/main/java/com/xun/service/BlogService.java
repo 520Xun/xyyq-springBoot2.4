@@ -44,4 +44,37 @@ public interface BlogService {
      * @return
      */
     Integer insertBlog ( BlogUserTypeVo vo, Integer[] tagIds );
+
+    /**
+     * 将数据存入回收站
+     *
+     * @param ids
+     * @return
+     */
+    int deleteBlog ( Integer[] ids );
+
+    /**
+     * 彻底删除文章
+     *
+     * @param ids
+     * @return
+     */
+    Integer chealBlog ( Integer[] ids );
+
+    /**
+     * 恢复文章
+     *
+     * @param ids
+     * @return
+     */
+    Integer recoverBlog ( Integer[] ids );
+
+    /**
+     * 修改文章
+     *
+     * @param vo
+     * @param tagIds
+     * @return
+     */
+    Integer updateBlog ( BlogUserTypeVo vo, Integer[] tagIds );
 }

@@ -75,4 +75,24 @@ public interface BlogDao {
      * @return
      */
     int insertBlog ( @Param ( "blog" ) BlogUserTypeVo vo, @Param ( "userId" ) Integer userId );
+
+    /**
+     * 将数据存入回收站
+     *
+     * @param ids
+     * @return
+     */
+    int deleteBlogByIds ( Integer[] ids );
+
+    int chealBlog ( Integer[] ids );
+
+    int recoverBlog ( Integer[] ids );
+
+    /**
+     * 修改文章
+     *
+     * @param vo
+     * @return
+     */
+    int updateBlog ( BlogUserTypeVo vo );
 }

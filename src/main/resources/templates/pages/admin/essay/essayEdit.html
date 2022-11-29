@@ -20,7 +20,7 @@
     <script src="/editormd/editormd.js"></script>
 </head>
 <body>
-<div class="layui-form">
+<div class="layui-form" id="bindUserData">
     <div class="layui-form-item">
         <label class="layui-form-label">标题</label>
         <div class="layui-input-block">
@@ -71,9 +71,10 @@
     </div>
     <div class="layui-btn-container">
         <button type="button" class="layui-btn layui-btn-normal">重置</button>
-        <button type="button" class="layui-btn layui-btn-normal" id="submitBtn" onclick="SaveOrupdateBlog()">发布
+        <button type="button" class="layui-btn layui-btn-normal" id="submitBtn" onclick="SaveOrupdateBlog(this)">发布
         </button>
-        <button type="button" class="layui-btn layui-btn-normal">存为草稿</button>
+        <button type="button" class="layui-btn layui-btn-normal essayStatus" onclick="SaveOrupdateBlog(this)">存为草稿
+        </button>
     </div>
 </div>
 <!--这里的id=editormd_id就是下面的初始化editorMD的editormd_id-->
@@ -102,7 +103,7 @@
     });
 
     //提交或者修改博文
-    function SaveOrupdateBlog() {
+    function SaveOrupdateBlog(btn) {
         var url = "/blog/saveBlog";
         debugger
         var blogParam = getBlogParam();
@@ -114,13 +115,17 @@
             layer.msg("请填写标题！", {icon: 2})
             return;
         }
-        if (!blogParam.user.authorName) {
+        if (!blogParam.authorName) {
             layer.msg("请填写作者名！", {icon: 2})
             return;
         }
         if ($("#bindUserData").data("blogData") != null) {
-            url = "/user/updateUser";
+            url = "/blog/updateBlog";
             blogParam.id = $("#bindUserData").data("blogData").id;
+        }
+        //存为草稿
+        if ($(btn).hasClass("essayStatus")) {
+            blogParam.essayStatus = 0;
         }
         console.log(blogParam);//打印添加用户信息
 
@@ -148,12 +153,8 @@
         var content = $("#htmlContent").text();
         var blogParam = {
             title: title,
-            user: user = {
-                authorName: authorName
-            },
-            type: type = {
-                id: typeId
-            },
+            authorName: authorName,
+            typeId: typeId,
             tagIds: tagIds,
             blogCover: blogCover,
             content: content
@@ -207,14 +208,11 @@
         });
     }
 
-    function fabu() {
-        var content = $('#htmlContent').val();
-        debugger;
-    }
 
     //加载要修改的数据
     function loadUpdateBlogData(data) {
         console.log(data);
+        $("#bindUserData").data("blogData", data);
         $("#titile").val(data.title);
         $("#authorName").val(data.user.authorName);
         $("#typeSelect").val(data.type.id).addClass("layui-this")

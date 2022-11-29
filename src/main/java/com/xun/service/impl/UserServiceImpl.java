@@ -119,8 +119,8 @@ public class UserServiceImpl implements UserService {
         Assert.isEmpty ( user == null || user.getId ( ) == null, "请选择要修改的用户信息！" );
         Assert.isEmpty ( user.getUsername ( ) == null || user.getUsername ( ).equals ( "" ), "请填写要修改的用户信息！" );
         Assert.isEmpty ( roleIds == null || roleIds.length == 0, "请至少选择一个角色！" );
-        List< User > u2 = userDao.findUserByAuthorUser ( user.getAuthorName ( ) );
-        Assert.isEmpty ( u2.size ( ) != 0, "作者名已存在！" );
+//        List< User > u2 = userDao.findUserByAuthorUser ( user.getAuthorName ( ) );
+//        Assert.isEmpty ( u2.size ( ) != 0, "作者名已存在！" );
         user.setModifiedUser ( "admin" );
         userRoleDao.deteleUserRoleByUserId ( user.getId ( ) );
         userRoleDao.insertUserRole ( user.getId ( ), roleIds );

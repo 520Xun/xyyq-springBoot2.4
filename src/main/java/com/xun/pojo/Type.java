@@ -19,11 +19,14 @@ import java.util.Date;
 public class Type {
     private Integer id;
     private String name;
-    @JsonFormat (pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat ( pattern = "yyyy-MM-dd HH:mm:ss" )
     private Date createdTime;
-    @JsonFormat (pattern = "yyyy-MM-dd HH:mm:ss")
+    @JsonFormat ( pattern = "yyyy-MM-dd HH:mm:ss" )
     private Date modifiedTime;
     private String createdUser;
     private String modifiedUser;
 
+    public Type ( Integer id ) {
+        this.id = id;
+    }
 }
