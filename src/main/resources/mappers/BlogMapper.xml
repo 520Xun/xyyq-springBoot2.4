@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!-- namespace：命名空间，对应一个dao层接口的全路径 -->
-<mapper namespace="com.xun.dao.BlogDao">
+<mapper namespace="com.xun.sys.dao.BlogDao">
 
     <sql id="blogQuerry">
         <if test="title != null and title !=''">
@@ -16,15 +16,15 @@
         deleteState=#{deleteState}
     </select>
 
-    <resultMap id="findBlogAll" type="com.xun.pojo.BlogUserTypeVo">
+    <resultMap id="findBlogAll" type="com.xun.sys.pojo.BlogUserTypeVo">
         <id property="id" column="id"/>
         <association property="user"
                      column="user_id"
-                     select="com.xun.dao.UserDao.findUserById">
+                     select="com.xun.sys.dao.UserDao.findUserById">
         </association>
         <association property="type"
                      column="type_id"
-                     select="com.xun.dao.TypeDao.findTypeById">
+                     select="com.xun.sys.dao.TypeDao.findTypeById">
         </association>
     </resultMap>
 
@@ -32,40 +32,41 @@
         select *
         from blog
         where title = #{title}
-          and content = #{content}
+        and content = #{content}
     </select>
-    <resultMap id="checkedBlog" type="com.xun.pojo.BlogUserTypeVo">
+    <resultMap id="checkedBlog" type="com.xun.sys.pojo.BlogUserTypeVo">
         <id property="id" column="id"/>
         <association property="user"
                      column="user_id"
-                     select="com.xun.dao.UserDao.findUserById">
+                     select="com.xun.sys.dao.UserDao.findUserById">
         </association>
     </resultMap>
 
-    <insert id="insertBlog" parameterType="com.xun.pojo.BlogUserTypeVo" useGeneratedKeys="true" keyProperty="blog.id">
+    <insert id="insertBlog" parameterType="com.xun.sys.pojo.BlogUserTypeVo" useGeneratedKeys="true"
+            keyProperty="blog.id">
         INSERT INTO `myblog`.`blog`(`id`, `title`, `user_id`, `content`, `NumberView`, `publishDate`, `updateDate`,
-                                    `essayStatus`, `essayGrade`, `essayCollect`, `essayTop`, `essayTread`, `type_id`,
-                                    `deleteState`, `recommend`, `blog_cover`)
+        `essayStatus`, `essayGrade`, `essayCollect`, `essayTop`, `essayTread`, `type_id`,
+        `deleteState`, `recommend`, `blog_cover`)
         VALUES (null, #{blog.title}, #{userId}, #{blog.content}, #{blog.NumberView}, now(), #{blog.updateDate},
-                #{blog.essayStatus}, #{blog.essayGrade}, #{blog.essayCollect}, #{blog.essayTop}, #{blog.essayTread},
-                #{blog.type.id}, #{blog.deleteState}, #{blog.recommend},
-                #{blog.blogCover})
+        #{blog.essayStatus}, #{blog.essayGrade}, #{blog.essayCollect}, #{blog.essayTop}, #{blog.essayTread},
+        #{blog.type.id}, #{blog.deleteState}, #{blog.recommend},
+        #{blog.blogCover})
     </insert>
 
     <update id="updateBlog">
         UPDATE `myblog`.`blog`
-        SET `title`       = #{title},
-            `content`     =#{content},
-            `NumberView`  = #{NumberView},
-            `updateDate`  = now(),
-            `essayStatus` = #{essayStatus},
-            `type_id`     = #{type.id},
-            `blog_cover`  =#{blogCover}
+        SET `title` = #{title},
+        `content` =#{content},
+        `NumberView` = #{NumberView},
+        `updateDate` = now(),
+        `essayStatus` = #{essayStatus},
+        `type_id` = #{type.id},
+        `blog_cover` =#{blogCover}
         WHERE `id` = #{id};
     </update>
 
     <update id="deleteBlogByIds">
-        update blog set deleteState=2 where id in
+        update blog set deleteState=2,essayStatus=3 where id in
         <foreach collection="array" item="id" open="(" separator="," close=")">
             #{id}
         </foreach>
@@ -79,7 +80,7 @@
     </delete>
 
     <update id="recoverBlog">
-        update blog set deleteState=1,essayStatus=3 where id in
+        update blog set deleteState=1,essayStatus=1 where id in
         <foreach collection="array" item="id" open="(" separator="," close=")">
             #{id}
         </foreach>

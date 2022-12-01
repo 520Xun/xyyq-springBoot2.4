@@ -26,8 +26,8 @@ logging:
 spring:
   servlet:
     multipart:
-      max-file-size: 10MB #单个文件最大
-      max-request-size: 100MB #总文件最大
+      max-file-size: 1024MB #单个文件最大
+      max-request-size: 102400MB #总文件最大
   datasource:
     url: jdbc:mysql:///myblog?serverTimezone=GMT%2B8
     username: root

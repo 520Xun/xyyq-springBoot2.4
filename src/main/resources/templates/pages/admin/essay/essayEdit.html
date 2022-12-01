@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
-<!--xmlns:th="http://www.thymeleaf.org"-->
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
     <title>编辑文章</title>
@@ -52,7 +51,6 @@
             <select name="role" xm-select="tag-select" lay-verify="required" lay-vertype="tips"
                     xm-select-skin="normal" id="showTagSelect">
                 <option value="">请选择标签</option>
-
             </select>
         </div>
     </div>
@@ -80,7 +78,8 @@
 <!--这里的id=editormd_id就是下面的初始化editorMD的editormd_id-->
 <div id="editormd_id">
     <!-- 第一个textarea是文本输入区域-->
-    <textarea id="htmlContent" class="editorMd-html-textarea" name="editorMd-html-textarea" placeholder="请输入内容...">
+    <textarea id="htmlContent" class="editorMd-html-textarea" name="editorMd-html-textarea" placeholder="请输入内容..."
+              th:text="${content}">
     </textarea>
     <!--第二个textarea 是展示文本区域 要隐藏起来 display->none   html-->
     <textarea class="editorMd-text-textarea" name="editorMd-text-textarea" style="display:none;" id="textContent">
@@ -97,16 +96,28 @@
     //初始化editorMD
     var testEditor;
     $(function () {
-        initEditorMD();
+        // initEditorMD();
         loadTagselect();
         loadTypeselect();
     });
 
+    function changType() {
+        var typeText = $("#typeSelect option:selected").text();
+        if (typeText == "转载") {
+            layer.msg("请在文章末尾注明出处，否则侵权由个人承担！", {icon: 2});
+            return;
+        }
+        if (typeText == "翻译") {
+            layer.msg("请在文章末尾注明出处，否则侵权由个人承担！", {icon: 2});
+
+        }
+    }
+
     //提交或者修改博文
     function SaveOrupdateBlog(btn) {
         var url = "/blog/saveBlog";
-        debugger
         var blogParam = getBlogParam();
+        changType();
         if (!blogParam) {
             layer.msg("请不要填写空值", {icon: 2});
             return;
@@ -129,7 +140,7 @@
         }
         console.log(blogParam);//打印添加用户信息
 
-        $.get(url, blogParam, function (result) {
+        $.post(url, blogParam, function (result) {
             if (result.state == 1) {
                 layer.msg(result.msg, {icon: 1});
                 parent.location.reload();
@@ -147,7 +158,7 @@
     function getBlogParam() {
         var title = $("#titile").val();
         var authorName = $("#authorName").val();
-        var typeId = $("#typeSelect :selected").val();
+        var typeId = $("#typeSelect option:selected").val();
         var tagIds = layui.formSelects.value('tag-select', 'val');
         var blogCover = $("#blogCover").attr("src");
         var content = $("#htmlContent").text();
@@ -204,18 +215,98 @@
             imageUploadURL: "/upload/mackDown/uploadImage",       //图片上传URL 即后台的图片上传接口URL
             path: '/editormd/lib/',          //项目启动路径
             //path: '../static/editormd/lib/',    //本地路径
-            saveHTMLToTextarea: true
+            saveHTMLToTextarea: true,
+            onload: function () {
+                initPasteDragImg(this); //支持复制图片直接粘贴
+            }
         });
+    }
+
+    function initPasteDragImg(Editor) {
+        var doc = document.getElementById(Editor.id);
+        doc.addEventListener('paste', function (event) {
+            var items = (event.clipboardData || window.clipboardData).items;
+            var file = null;
+            if (items && items.length) {
+                // 搜索剪切板items
+                for (var i = 0; i < items.length; i++) {
+                    if (items[i].type.indexOf('image') !== -1) {
+                        file = items[i].getAsFile();
+                        break;
+                    }
+                }
+            } else {
+                console.log("当前浏览器不支持");
+                return;
+            }
+            if (!file) {
+                console.log("粘贴内容非图片");
+                return;
+            }
+            //console.log(file);
+            uploadImg(file, Editor);
+        });
+
+        var dashboard = document.getElementById(Editor.id)
+        dashboard.addEventListener("dragover", function (e) {
+            e.preventDefault()
+            e.stopPropagation()
+        })
+        dashboard.addEventListener("dragenter", function (e) {
+            e.preventDefault()
+            e.stopPropagation()
+        })
+        dashboard.addEventListener("drop", function (e) {
+            e.preventDefault()
+            e.stopPropagation()
+            var files = this.files || e.dataTransfer.files;
+            uploadImg(files[0], Editor);
+        })
+    }
+
+    function uploadImg(file, Editor) {
+        var formData = new FormData();
+        var fileName = new Date().getTime() + "." + file.name.split(".").pop();
+        formData.append('editormd-image-file', file, fileName);
+
+        $.ajax({
+            url: Editor.settings.imageUploadURL,
+            type: 'post',
+            data: formData,
+            processData: false,
+            contentType: false,
+            dataType: 'json',
+            success: function (msg) {
+                var success = msg['success'];
+                if (success == 1) {
+                    var url = msg["url"];
+                    if (/\.(png|jpg|jpeg|gif|bmp|ico)$/.test(url)) {
+                        Editor.insertValue("![](" + msg["url"] + ")");//
+                    } else {
+                        //Editor.insertValue("[]("+msg["url"]+")");//下载文件
+                    }
+                } else {
+                    //console.log(msg);
+                    alert("上传失败");
+                }
+            }
+        });
+
     }
 
 
     //加载要修改的数据
     function loadUpdateBlogData(data) {
         console.log(data);
+        debugger
+        var url = "/admin/essay/essayEdit/" + data.content;
+        $.get(url, {}, function () {
+        })
         $("#bindUserData").data("blogData", data);
         $("#titile").val(data.title);
         $("#authorName").val(data.user.authorName);
         $("#typeSelect").val(data.type.id).addClass("layui-this")
+        changType();
         selectBlogTagInfo(data.id);
         $("#blogCover").attr("src", data.blogCover);
         $("#blogCover").show();

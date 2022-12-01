@@ -5,7 +5,8 @@ import com.github.pagehelper.PageHelper;
 import com.xun.common.pojo.JsonResult;
 import com.xun.common.pojo.Pagination;
 import com.xun.common.pojo.pageProperties;
-import com.xun.pojo.User;
+import com.xun.sys.dao.UserDao;
+import com.xun.sys.pojo.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -28,18 +29,18 @@ public class UserDaoTest {
     private pageProperties pp;
 
     @Test
-   public void findAllUser(){
-        User user = new User();
-        user.setUsername("xun");
-        int pageSize=10;
-        pageSize=pageSize==0? pp.getPageSize():pageSize;
-        int curPage=1;
-        Page<User> page = PageHelper.startPage(curPage, pageSize);
-        List<User> users = dao.findUsers(user);
+    public void findAllUser ( ) {
+        User user = new User ( );
+        user.setUsername ( "xun" );
+        int pageSize = 10;
+        pageSize = pageSize == 0 ? pp.getPageSize ( ) : pageSize;
+        int curPage = 1;
+        Page< User > page = PageHelper.startPage ( curPage, pageSize );
+        List< User > users = dao.findUsers ( user );
         //page.getTotal()：PageHelper对象的startPage() 会自动查找数据总条数，返回值为Long
-        Pagination pageObj = new Pagination(curPage, (int) page.getTotal(), pageSize);
-        pageObj.setPageData(users);
-        JsonResult JR = new JsonResult(pageObj);
-        System.out.println(JR);
+        Pagination pageObj = new Pagination ( curPage, ( int ) page.getTotal ( ), pageSize );
+        pageObj.setPageData ( users );
+        JsonResult JR = new JsonResult ( pageObj );
+        System.out.println ( JR );
     }
 }

@@ -2,7 +2,7 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!-- namespace：命名空间，对应一个dao层接口的全路径 -->
-<mapper namespace="com.xun.dao.UserDao">
+<mapper namespace="com.xun.sys.dao.UserDao">
 
     <sql id="userQuery">
         <if test="authorName != null and authorName !=''">
@@ -17,38 +17,38 @@
     </sql>
 
     <!-- 查找所有的用户 -->
-    <select id="findUsers" resultType="com.xun.pojo.User">
+    <select id="findUsers" resultType="com.xun.sys.pojo.User">
         select * from user where
         <include refid="userQuery"/>
         delete_state=#{deleteState}
         GROUP BY id DESC
     </select>
 
-    <insert id="insertUser" parameterType="com.xun.pojo.User" useGeneratedKeys="true" keyProperty="id">
+    <insert id="insertUser" parameterType="com.xun.sys.pojo.User" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO `user`(`id`, `username`, `password`, `salt`, `authorName`, `age`, `sex`, `email`, `phone`,
-                           `picture`, `personalized_sign`, `register_time`, `register_ip`, `modifiedTime`, `address`,
-                           `online_status`, `user_status`, `createdUser`, `modifiedUser`)
+        `picture`, `personalized_sign`, `register_time`, `register_ip`, `modifiedTime`, `address`,
+        `online_status`, `user_status`, `createdUser`, `modifiedUser`)
         VALUES (null, #{username}, #{password}, #{salt}, #{authorName}, #{age}, #{sex},
-                #{email}, #{phone}, #{picture}, #{personalizedSign}, now(),
-                #{registerIp}, #{modifiedTime}, #{address}, #{onlineStatus}, #{userStatus}, #{createdUser},
-                #{modifiedUser})
+        #{email}, #{phone}, #{picture}, #{personalizedSign}, now(),
+        #{registerIp}, #{modifiedTime}, #{address}, #{onlineStatus}, #{userStatus}, #{createdUser},
+        #{modifiedUser})
     </insert>
 
     <update id="updateUser">
         UPDATE user
-        SET `username`          =#{username},
-            `authorName`        = #{authorName},
-            `age`               =#{age},
-            `sex`               = #{sex},
-            `email`             = #{email},
-            `phone`             =#{phone},
-            `picture`           =#{picture},
-            `personalized_sign` = #{personalizedSign},
-            `modifiedTime`      = now(),
-            `address`           = #{address},
-            `online_status`     = #{onlineStatus},
-            `user_status`       = #{userStatus},
-            `modifiedUser`      = #{modifiedUser}
+        SET `username` =#{username},
+        `authorName` = #{authorName},
+        `age` =#{age},
+        `sex` = #{sex},
+        `email` = #{email},
+        `phone` =#{phone},
+        `picture` =#{picture},
+        `personalized_sign` = #{personalizedSign},
+        `modifiedTime` = now(),
+        `address` = #{address},
+        `online_status` = #{onlineStatus},
+        `user_status` = #{userStatus},
+        `modifiedUser` = #{modifiedUser}
         WHERE `id` = #{id};
     </update>
 
@@ -73,7 +73,7 @@
         </foreach>
     </update>
 
-    <select id="exportByUserId" resultType="com.xun.pojo.User">
+    <select id="exportByUserId" resultType="com.xun.sys.pojo.User">
         select * from user where id in
         <foreach collection="array" item="id" open="(" separator="," close=")">
             #{id}

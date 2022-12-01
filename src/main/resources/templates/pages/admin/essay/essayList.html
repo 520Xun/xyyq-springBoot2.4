@@ -14,9 +14,9 @@
             width: 57px;
             height: 28px;
             position: relative;
-            border: 1px solid #dfdfdf;
-            background-color: #fdfdfd;
-            box-shadow: #dfdfdf 0 0 0 0 inset;
+            border: 1px solid rgba(11, 234, 193, 0.99);
+            background-color: #0beac1;
+            box-shadow: #0beac1 0 0 0 0 inset;
             border-radius: 20px;
             background-clip: content-box;
             display: inline-block;
@@ -33,14 +33,14 @@
             top: 0;
             left: 0;
             border-radius: 20px;
-            background-color: #fff;
+            background-color: #ffffff;
             box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
         }
 
         .switch:checked {
-            border-color: #64bd63;
-            box-shadow: #64bd63 0 0 0 16px inset;
-            background-color: #64bd63;
+            border-color: #1E9FFF;
+            box-shadow: #1E9FFF 0 0 0 16px inset;
+            background-color: #1E9FFF;
         }
 
         .switch:checked:before {
@@ -56,8 +56,8 @@
         }
 
         .switch.switch-anim:checked {
-            box-shadow: #64bd63 0 0 0 16px inset;
-            background-color: #64bd63;
+            box-shadow: #1E9FFF 0 0 0 16px inset;
+            background-color: #1E9FFF;
             transition: border ease 0.4s, box-shadow ease 0.4s, background-color ease 1.2s;
         }
 
@@ -69,7 +69,7 @@
 <body id="BindbodyData">
 <div class="box">
     <div class="box-header">
-        <h2 style="padding: 15px">博文列表</h2>
+        <h2 style="padding: 15px">文章列表</h2>
         <div class="layui-form-item">
             <label class="layui-form-label">标题</label>
             <div class="layui-input-inline">
@@ -99,7 +99,7 @@
             <col width="150">
             <col width="150">
             <col width="150">
-            <col width="60">
+            <col width="80">
             <col width="60">
             <col width="150">
             <col width="200">
@@ -311,6 +311,7 @@
                     debugger
                     iframe.loadUpdateBlogData(data);
                 }
+                iframe.initEditorMD();
             }, end: function () {
                 $("#BindbodyData").data("blogData", "");
                 //   layui.form.render(); //更新全部
@@ -336,7 +337,6 @@
             curPage: curPage ? curPage : 1,
             pageSize: 5  //默认条数
         }
-        debugger
         //查询回收数据
         if ($(this).hasClass("btn_recycleBin")) {
             params.deleteState = 2;
@@ -394,13 +394,37 @@
                     " <th>" + data[i].essayTread + "</th>\n" +
                     " <th>" + data[i].publishDate + "</th>\n" +
                     " <th>" + (data[i].updateDate == null ? "无" : data[i].updateDate) + "</th>\n" +
-                    "<th><button class=\"layui-btn layui-btn-normal\" onclick='lookUserInfo(this)' >审批</button><button class=\"layui-btn layui-btn-normal\" onclick='lookUserInfo(this)' >销毁</button></th></tr>";
+                    "<th><button class=\"layui-btn layui-btn-normal\" onclick='Approval(this)' >审批</button><button class=\"layui-btn layui-btn-normal Takedown\" onclick='Approval(this)' >下架</button></th></tr>";
                 $("#tbody").append(tr);
                 $("#tbody tr").last().data("blogRow", data[i]);
                 StateIschecked();//加载推荐
                 loadessayGrade(data[i]);//加载评分
             }
         }
+    }
+
+    //审批文章
+    function Approval(btn) {
+        var data = $(btn).parents("tr").data("blogRow");
+        var url = "/blog/updateEssayStatus";
+        var params = {
+            id: data.id,
+            essayStatus: 2
+        }
+        if ($(btn).hasClass("Takedown")) {
+            params.essayStatus = 0;
+            params.recommend = 0;
+        }
+        debugger
+        $.get(url, params, function (result) {
+            //修改成功
+            if (result.state == 1) {
+                layer.msg(result.msg, {icon: 1});
+                doLoadData();//刷新数据
+            } else {
+                layer.msg(result.msg, {icon: 2});
+            }
+        })
     }
 
     var essayGrade;
@@ -423,7 +447,6 @@
     function updateEssayGrade(btn) {
         var id = $(btn).parents("tr").children(":eq(0)").children().val();
         var essayGradeText = essayGrade.config.value;//评分的值
-        debugger
         var url = "/blog/updateEssayGrade";
         var params = {
             essayGrade: essayGradeText,

@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace：命名空间，对应一个dao层接口的全路径 -->
+<mapper namespace="com.xun.sys.dao.CommentDao">
+
+    <sql id="commentQuerry">
+        <if test="createdTime != null and createdTime !=''">
+            <!-- 查询当前时间本周的评论 -->
+            and YEARWEEK(date_format(#{createdTime} ,'%Y-%m-%d')) = YEARWEEK(now())
+        </if>
+    </sql>
+
+    <!-- 查找所有的评论 -->
+    <select id="findComment" resultMap="commentVo">
+        select * from comment where 1=1
+        <include refid="commentQuerry"/>
+        GROUP BY createdTime asc
+    </select>
+    <resultMap id="commentVo" type="com.xun.sys.pojo.CommentVO">
+        <id property="id" column="id"/>
+        <association property="user"
+                     column="user_id"
+                     select="com.xun.sys.dao.UserDao.findUserById">
+        </association>
+        <association property="blog"
+                     column="blog_id"
+                     select="com.xun.sys.dao.BlogDao.findBlogById">
+        </association>
+    </resultMap>
+</mapper>

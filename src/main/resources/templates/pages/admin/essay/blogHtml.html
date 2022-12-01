@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link rel="stylesheet" href="/editormd/css/editormd.min.css"/>
+    <link rel="stylesheet" href="/editormd/css/editormd.css"/>
+    <script src="/js/jquery-3.4.1.min.js"></script>
+    <script src="/editormd/editormd.min.js"></script>
+    <script src="/editormd/lib/marked.min.js"></script>
+    <script src="/editormd/lib/prettify.min.js"></script>
+    <script src="/editormd/lib/raphael.min.js"></script>
+    <script src="/editormd/lib/underscore.min.js"></script>
+    <script src="/editormd/lib/sequence-diagram.min.js"></script>
+    <script src="/editormd/lib/flowchart.min.js"></script>
+    <script src="/editormd/lib/jquery.flowchart.min.js"></script>
+</head>
+<body>
+<div class="pannel article-toc" id="article-toc"></div>
+<div id="test-editormd" style="width: 90%;padding-left: 5%">
+    <textarea style="display: none" name="test-editormd-markdown-doc" th:text="${comment }"></textarea>
+</div>
+<script>
+    var testEditor;
+    $(function () {
+        testEditor = editormd.markdownToHTML("test-editormd", {
+            htmlDecode: "style, script, iframe",
+            emoji: true,
+            taskList: true,
+            tex: true,  // 默认不解析
+            flowChart: true,  // 默认不解析
+            sequenceDiagram: true,  // 默认不解析
+            tocContainer: '#article-toc',	//指定目录容器的id
+        });
+    })
+
+    // 目录层级
+    const tocLink = document.querySelectorAll('a[level]')	//目录的每一项就是一个包含level属性的a标签
+    tocLink.forEach((item) => {
+        const level = parseInt(item.getAttribute('level'))
+        item.style.paddingLeft = (level - 1) * 10 + 'px'	//利用level属性的值设置左padding
+    })
+
+</script>
+</body>
+</html>
