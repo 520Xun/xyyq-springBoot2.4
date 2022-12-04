@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @version: java version 1.8
@@ -26,5 +27,13 @@ public class CommentVoTest {
         comment.stream ( ).forEach ( e -> {
             System.out.println ( e );
         } );
+    }
+
+
+    @Test
+    public void test02 ( ) {
+        for ( Map< String, Object > map : commentDao.findObjects ( ) ) {
+            System.out.println ( map );
+        }
     }
 }

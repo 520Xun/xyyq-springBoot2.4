@@ -19,6 +19,7 @@ import java.util.Date;
 public class Type {
     private Integer id;
     private String name;
+    private Integer parentId;
     @JsonFormat ( pattern = "yyyy-MM-dd HH:mm:ss" )
     private Date createdTime;
     @JsonFormat ( pattern = "yyyy-MM-dd HH:mm:ss" )

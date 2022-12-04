@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @version: java version 1.8
@@ -39,5 +40,27 @@ public class CommentServiceImpl implements CommentService {
         Pagination pageObj = new Pagination ( curPage, ( int ) page.getTotal ( ), pageSize );
         pageObj.setPageData ( blogs );
         return new JsonResult ( pageObj );
+    }
+
+    @Override
+    public Integer updateCommentState ( Integer id, Integer commentState ) {
+        Assert.isEmpty ( id == null || commentState == null, "请求参数异常" );
+        Integer n = commentDao.updateCommentState ( id, commentState );
+        Assert.isEmpty ( n == 0, "修改失败！" );
+        return n;
+    }
+
+    @Override
+    public Integer deleteComment ( Integer[] ids ) {
+        Assert.isEmpty ( ids == null || ids.length == 0, "至少选择一条数据删除！" );
+        int n = commentDao.deleteComment ( ids );
+        Assert.isEmpty ( n == 0, "修改失败！" );
+        return n;
+    }
+
+    @Override
+    public List< Map< String, Object > > findObjects ( ) {
+        List< Map< String, Object > > map = commentDao.findObjects ( );
+        return map;
     }
 }

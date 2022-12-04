@@ -219,24 +219,27 @@
             })
             return;
         }
-        var ids = [];//空数组
-        $.each(checks, function () {
-            ids.push($(this).val());
-        })
-        var params = {ids: ids};
-        var url = "/blog/deleteBlog";
-        debugger
-        if ($(this).hasClass("clealBlog")) {
-            url = "/blog/chealBlog";
-        }
-        $.get(url, params, function (result) {
-            if (result.state == 0) {
-                layer.msg(result.msg, {icon: 2});
-            } else if (result.state == 1) {
-                layer.msg(result.msg, {icon: 1});
-                doLoadData();
+        layer.confirm('确认要删除吗？', {
+            btn: ['确定', '取消']//按钮
+        }, function (index) {
+            var ids = [];//空数组
+            $.each(checks, function () {
+                ids.push($(this).val());
+            })
+            var params = {ids: ids};
+            var url = "/blog/deleteBlog";
+            if ($(this).hasClass("clealBlog")) {
+                url = "/blog/chealBlog";
             }
-        });
+            $.get(url, params, function (result) {
+                if (result.state == 0) {
+                    layer.msg(result.msg, {icon: 2});
+                } else if (result.state == 1) {
+                    layer.msg(result.msg, {icon: 1});
+                    doLoadData();
+                }
+            });
+        })
     }
 
     //恢复用户

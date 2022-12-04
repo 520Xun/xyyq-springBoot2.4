@@ -104,7 +104,7 @@ public class PageUIController {
     public String webIndexPageUI ( ) {
         long n = times.incrementAndGet ( );//加1的方法
         System.out.println ( n );
-        return "web/index";//前台首页
+        return "Myblog/index";//前台首页
     }
 
     /**

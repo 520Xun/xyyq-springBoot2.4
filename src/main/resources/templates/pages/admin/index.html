@@ -12,7 +12,7 @@
     <!-- Y-Admin核心样式 -->
     <link rel="stylesheet" href="/css/yadmin.css">
     <!-- 公共样式 -->
-    <link rel="stylesheet" href="css/common.css">
+    <link rel="stylesheet" href="/css/common.css">
     <!-- 图标 -->
     <link rel="stylesheet" href="/remixicon/fonts/remixicon.css">
     <!-- 首页样式（只为此页面使用） -->
@@ -83,13 +83,13 @@
 
             <li class="layui-nav-item user-selection">
                 <a>
-                    <img src="	http://localhost/images/20221119115330.jpg" class="layui-nav-img" alt="头像">
+                    <img src="	http://localhost/images/20221202170247.jpg" class="layui-nav-img" alt="头像">
                     <cite>管理员</cite>
                     <span class="layui-nav-more"></span>
                 </a>
                 <dl class="layui-nav-child">
                     <dd lay-unselect>
-                        <a lay-event="userInfo">基本资料</a>
+                        <a onclick="loadLoginUserInfo()">基本资料</a>
                     </dd>
                     <dd lay-unselect>
                         <a lay-event="editPwd">修改密码</a>
@@ -142,9 +142,13 @@
                                 <cite>评论管理</cite>
                             </a>
                         </dd>
+                        <dd>
+                            <a lay-id="admin/log/logList" lay-url="admin/log/logList">
+                                <cite>日志管理</cite>
+                            </a>
+                        </dd>
                     </dl>
                 </li>
-
             </ul>
 
         </div>
@@ -171,54 +175,8 @@
 
     <!-- 底部固定区域 -->
     <div class="layui-footer">
-        copyright © 2020 Y-Admin all rights reserved.
-        <ul class="tabbar">
-            <li>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-                    <path fill="none" d="M0 0h24v24H0z"/>
-                    <path
-                            d="M12.414 5H21a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h7.414l2 2zM15 13v-1a3 3 0 0 0-6 0v1H8v4h8v-4h-1zm-2 0h-2v-1a1 1 0 0 1 2 0v1z"/>
-                </svg>
-            </li>
-            <li>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-                    <path fill="none" d="M0 0h24v24H0z"/>
-                    <path
-                            d="M21 5a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h7.414l2 2H16v2h2V5h3zm-3 8h-2v2h-2v3h4v-5zm-2-2h-2v2h2v-2zm2-2h-2v2h2V9zm-2-2h-2v2h2V7z"/>
-                </svg>
-            </li>
-            <li>
-                <div class="fileAdd">
-                    <ul>
-                        <li class="word"></li>
-                        <li class="powerpoint"></li>
-                        <li class="excel"></li>
-                    </ul>
-                    <div>
-                        <span></span>
-                    </div>
-                </div>
-            </li>
-            <li>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-                    <path fill="none" d="M0 0h24v24H0z"/>
-                    <path
-                            d="M12.414 5H21a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h7.414l2 2zM11 13.05a2.5 2.5 0 1 0 2 2.45V11h3V9h-5v4.05z"/>
-                </svg>
-            </li>
-            <li>
-                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
-                    <path fill="none" d="M0 0h24v24H0z"/>
-                    <path
-                            d="M12.414 5H21a1 1 0 0 1 1 1v14a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h7.414l2 2zM12 13a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5zm-4 5h8a4 4 0 1 0-8 0z"/>
-                </svg>
-            </li>
-        </ul>
-
+        copyright © 2022 -Admin all rights reserved.
     </div>
-
-    <!--        &lt;!&ndash; 移动端遮罩 &ndash;&gt;-->
-    <!--        <div class="site-mobile-shade"></div>-->
 </div>
 <!-- layui JS -->
 <script src="layui/layui.js"></script>
@@ -226,7 +184,42 @@
 <script src="js/jquery.js"></script>
 <!-- 公共JS -->
 <script src="js/common.js"></script>
+<script>
 
+    $(function () {
+        getLoginUser();
+    })
+
+    function getLoginUser() {
+        // var url = "/user/getLoginUser";
+        // var params = {}
+        // $.get(url, params, function (result) {
+        //
+        // })
+    }
+
+    //加载登录者的个人信息
+    function loadLoginUserInfo() {
+        layer.open({
+            type: 2, //页面层
+            title: "个人信息",
+            shadeClose: true,
+            scrollbar: true,//取消浏览器滚动条
+            shade: false,
+            maxmin: true, //开启最大化最小化按钮
+            area: ['893px', '850px'],
+            content: '/admin/user/user_add',//展示的页面
+            success: function (obj, index) {
+                var iframe = window['layui-layer-iframe' + index];
+                if (data != null) {
+                    iframe.loadUPdateUserData(data);
+                }
+            }, end: function () {
+                layui.form.render(); //更新全部
+            }
+        });
+    }
+</script>
 </body>
 
 </html>

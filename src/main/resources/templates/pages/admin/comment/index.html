@@ -1,0 +1,277 @@
+<!doctype html>
+<html lang="en" xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="../static/layui/css/layui.css" th:href="@{/layui/css/layui.css}">
+</head>
+<style type="text/css">
+    a {
+        text-decoration: none !important;
+        cursor: pointer !important;
+        color: #555666 !important;
+    }
+
+    /* 已访问的链接 */
+    a:hover {
+        color: #fc5531 !important;
+    }
+
+    .art h1 {
+        font-size: 32px;
+        font-weight: 500;
+        line-height: 46px;
+        margin: 5px auto 15px auto;
+        text-align: center;
+    }
+
+    .art .meta {
+        font-size: 12px;
+        color: #999;
+        text-align: center;
+    }
+
+    .content p {
+        margin-top: 23px;
+        text-align: justify;
+        font-size: 20px;
+        line-height: 38px;
+        text-indent: 0em;
+    }
+
+    .com {
+        margin-top: 20px;
+    }
+
+    .com h2 {
+        font-size: 18px;
+        color: #000;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    /*评论展示区*/
+    .comment-list {
+        margin-top: 10px;
+    }
+
+    .comment-line-box {
+        padding: 8px 0px;
+    }
+
+    .replay-box .comment-list {
+        margin-left: 32px;
+        padding-left: 10px;
+        border-left: 2px solid #f5f6f7;
+        border-bottom: none;
+    }
+
+    .comment-line-box .nickname {
+        color: #009688;
+    }
+
+    .comment-line-box .opt {
+        margin-left: 10px;
+    }
+
+    .comment-line-box .opt a {
+        font-size: 12px;
+        margin-left: 5px;
+    }
+
+    textarea {
+        min-width: 500px;
+        max-width: 800px;
+        min-height: 100px;
+        max-height: 100px;
+    }
+
+</style>
+<body>
+
+<!--文章-->
+<div class="layui-row">
+    <div class="layui-col-md6 layui-col-md-offset3 art">
+        <div class="title">
+            <h1>如何学习Java可以拿到高工资</h1>
+            <div class="meta">
+                <span class="time">发布时间: 08-23 14:01</span>
+                <span class="source">三傻子说技术</span>
+            </div>
+        </div>
+        <div class="content">
+            <p style="font-weight: bold;color: red">学习Java拿到高工资的秘诀就是：</p>
+            <p>
+                　　首先学好Java基础，这个过程不是一蹴而就的，需要坚持学习，技术都是不断升级出新的，不断吸收新知识巩固旧知识以达到融会贯通，温故知新的境界。
+                其次，就是反复磨炼工作中用到的技术知识点，比如多线程、微服务、数据库等等，争取把自己打造为一名全栈工程师，评价标准就是以一己之力可以实现自己构思的一整套系统。
+                最后，咱们搞技术的人不能仅仅只局限与技术本身，还需要拓展自己的知识面，工作之余多读书，书是不断进步的保证。不仅仅是技术类书籍，科技、艺术、历史、推理等等都是非常好的扩展自己知识的材料。
+                终身学习是每一个人必备的知识素养，不要羡慕别人比你工资高，你只需要按照自己量身定制的路线一步一步走下去，肯定不会差。
+            </p>
+        </div>
+    </div>
+</div>
+<!--评论表单-->
+<div class="layui-row" id="combox">
+    <div class="layui-col-md6 layui-col-md-offset3 com">
+        <h2>发表评论</h2>
+
+        <form class="layui-form layui-form-pane" action="">
+            <div class="layui-form-item">
+                <label class="layui-form-label">用户名</label>
+                <div class="layui-input-inline">
+                    <input type="text" id="username" name="username" required lay-verify="required"
+                           placeholder="" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+            <div class="layui-form-item">
+                <div class="layui-form-item">
+                    <div class="layui-input-inline">
+                        <textarea id="content" name="content" placeholder="最多100字" class="layui-textarea" required
+                                  lay-verify="required" maxlength="100" style="resize:none;" cols="30"
+                                  rows="5"></textarea>
+                    </div>
+                </div>
+            </div>
+            <input type="text" id="replyTo" hidden="hidden">
+            <input type="text" id="parentId" hidden="hidden">
+            <div class="layui-form-item">
+                <button class="layui-btn" lay-submit lay-filter="comform">提交</button>
+            </div>
+        </form>
+    </div>
+</div>
+<!--评论展示区-->
+<div class="layui-row">
+    <div class="layui-col-md6 layui-col-md-offset3 com-box">
+        <div class="comment-list-box">
+            <ul class="comment-list" th:each="comment: ${clist}">
+                <li class="comment-line-box d-flex" data-commentid="15937123" data-username="weixin_46274168">
+                    <a href="#">
+                        <span class="nickname" th:text="${comment.getUsername()}">我是小白呀</span>
+                    </a>
+                    <span class="colon">:</span>
+                    <span class="comment" th:text="${comment.getContent()}">给大佬递茶，望有空互粉互访点赞(=^ω^=)</span>
+                    <span class="opt">
+                        <a th:attr="onclick=|reply(${comment.id},'${comment.username}')|">回复</a>
+                        <a th:onclick="remove([[${comment.id}]])">删除</a>
+                    </span>
+                </li>
+                <li class="replay-box" style="display:block" th:each="subComment: ${comment.getCommentList()}">
+                    <ul class="comment-list">
+                        <li class="comment-line-box" data-commentid="15938081" data-replyname="IndexMan">
+                            <a href="#">
+                                <span class="nickname" th:text="${subComment.getUsername()}">罗汉鱼</span>
+                            </a>
+                            <span class="text">回复</span>
+                            <a href="#">
+                                <span class="nickname" th:text="${subComment.getReplyTo()}">我是小白呀</span>
+                            </a>
+                            <span class="colon">:</span>
+                            <span class="comment" th:text="${subComment.getContent()}">：）</span>
+                            <span class="opt">
+                                <a th:attr="onclick=|reply(${comment.id},'${subComment.username}')|">回复</a>
+                                <a th:onclick="remove([[${subComment.id}]])">删除</a>
+                            </span>
+                        </li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<script src="https://cdn.bootcdn.net/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<script src="../static/layui/layui.js" th:src="@{/layui/layui.js}"></script>
+
+<script>
+    layui.use(['layer', 'form'], function () {
+        var form = layui.form;
+        var layer = layui.layer;
+        $ = layui.jquery;
+
+
+        // 加载评论列表
+        // 提交评论
+        form.on('submit(comform)', function (data) {
+            var data = {
+                "username": $("#username").val(),
+                "content": $('#content').val(),
+                "replyTo": $('#replyTo').val(),
+                "parentId": $('#parentId').val()
+            };
+
+            //layer.alert(JSON.stringify(data));
+            // 添加评论
+            saveComment(data);
+
+            return false;
+        });
+
+
+    });
+
+    function remove(id) {
+        layer.confirm('确定要删除吗？', function (index) {
+
+            //layer.alert(JSON.stringify(ids));
+            $.ajax({
+                url: '/comment/remove/' + id,
+                type: 'POST',
+                success: function (result) {
+                    if (result.code == 200) {
+                        // 刷新页面
+                        window.location.href = "/post";
+                    } else {
+                        layer.msg("删除失败！", {icon: 5});
+                    }
+                }
+            });
+        });
+    }
+
+    function reply(pid, to) {
+        $('#replyTo').val(to);
+        $('#parentId').val(pid);
+
+        // 弹出回复框：
+        layer.open({
+            type: 1,
+            title: "回复评论",
+            skin: "myclass",//自定样式
+            area: ["700px", "400px"],
+            content: $("#combox"),
+
+            success: function (layero, index) {
+            },
+            yes: function () {
+            }
+        });
+
+    }
+
+    function saveComment(data) {
+        $.ajax({
+            url: '/comment/add',
+            type: 'POST',
+            contentType: "application/json",
+            dataType: "json",
+            data: JSON.stringify(data),
+            success: function (result) {
+                if (result.code == 200) {
+                    // 刷新页面
+                    $('#replyTo').val('');
+                    $('#parentId').val('');
+                    window.location.href = "/post";
+                } else {
+                    layer.alert(result.message);
+                }
+            }
+        });
+    }
+
+</script>
+</body>
+</html>

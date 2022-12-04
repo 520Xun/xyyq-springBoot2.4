@@ -256,7 +256,6 @@ public class UserServiceImpl implements UserService {
                 int onlineStatus = ( int ) cell7.getNumericCellValue ( );
                 Cell cell8 = row.getCell ( 8 );
                 String registerTime = simpleDateFormat.format ( cell8.getDateCellValue ( ) );
-                System.out.println ( "创建时间" + registerTime + "*&*&&&&&&&&&&" );
 //                Date registerTime = format.parse (createTime);
                 Cell cell9 = row.getCell ( 9 );
                 String createIp = cell9.getStringCellValue ( );
@@ -327,37 +326,44 @@ public class UserServiceImpl implements UserService {
      * @param row
      */
     private void handlerRowTitle ( Row row ) {
-        Cell cell0 = row.createCell ( 0 );
-        cell0.setCellValue ( "id" );
-        Cell cell1 = row.createCell ( 1 );
-        cell1.setCellValue ( "用户名" );
-        Cell cell2 = row.createCell ( 2 );
-        cell2.setCellValue ( "作者名" );
-        Cell cell3 = row.createCell ( 3 );
-        cell3.setCellValue ( "性别" );
-        Cell cell4 = row.createCell ( 4 );
-        cell4.setCellValue ( "头像" );
-        Cell cell5 = row.createCell ( 5 );
-        cell5.setCellValue ( "邮箱" );
-        Cell cell6 = row.createCell ( 6 );
-        cell6.setCellValue ( "手机号" );
-        Cell cell7 = row.createCell ( 7 );
-        cell7.setCellValue ( "在线状态（1为在线，0为隐身）" );
-        Cell cell8 = row.createCell ( 8 );
-        cell8.setCellValue ( "创建时间" );
-        Cell cell9 = row.createCell ( 9 );
-        cell9.setCellValue ( "创建ip" );
-        Cell cell10 = row.createCell ( 10 );
-        cell10.setCellValue ( "修改时间" );
-        Cell cell11 = row.createCell ( 11 );
-        cell11.setCellValue ( "账号状态(1为正常，0为禁用)" );
-        Cell cell12 = row.createCell ( 12 );
-        cell12.setCellValue ( "创建者" );
-        Cell cell13 = row.createCell ( 13 );
-        cell13.setCellValue ( "修改者" );
-        Cell cell14 = row.createCell ( 14 );
-        cell14.setCellValue ( "回收站(1为正常,2为被回收,0已被删除)" );
-        Cell cell15 = row.createCell ( 15 );
-        cell15.setCellValue ( "地址" );
+//        Cell cell0 = row.createCell ( 0 );
+//        cell0.setCellValue ( "id" );
+//        Cell cell1 = row.createCell ( 1 );
+//        cell1.setCellValue ( "用户名" );
+//        Cell cell2 = row.createCell ( 2 );
+//        cell2.setCellValue ( "作者名" );
+//        Cell cell3 = row.createCell ( 3 );
+//        cell3.setCellValue ( "性别" );
+//        Cell cell4 = row.createCell ( 4 );
+//        cell4.setCellValue ( "头像" );
+//        Cell cell5 = row.createCell ( 5 );
+//        cell5.setCellValue ( "邮箱" );
+//        Cell cell6 = row.createCell ( 6 );
+//        cell6.setCellValue ( "手机号" );
+//        Cell cell7 = row.createCell ( 7 );
+//        cell7.setCellValue ( "在线状态（1为在线，0为隐身）" );
+//        Cell cell8 = row.createCell ( 8 );
+//        cell8.setCellValue ( "创建时间" );
+//        Cell cell9 = row.createCell ( 9 );
+//        cell9.setCellValue ( "创建ip" );
+//        Cell cell10 = row.createCell ( 10 );
+//        cell10.setCellValue ( "修改时间" );
+//        Cell cell11 = row.createCell ( 11 );
+//        cell11.setCellValue ( "账号状态(1为正常，0为禁用)" );
+//        Cell cell12 = row.createCell ( 12 );
+//        cell12.setCellValue ( "创建者" );
+//        Cell cell13 = row.createCell ( 13 );
+//        cell13.setCellValue ( "修改者" );
+//        Cell cell14 = row.createCell ( 14 );
+//        cell14.setCellValue ( "回收站(1为正常,2为被回收,0已被删除)" );
+//        Cell cell15 = row.createCell ( 15 );
+//        cell15.setCellValue ( "地址" );
+        String[] titles = { "id", "用户名", "作者名", "性别", "头像", "邮箱", "手机号", "在线状态(1为在线，0为隐身)", "创建时间", "创建ip", "修改时间", "账号状态(1为正常，0为禁用)", "创建者", "修改者", "回收站(1为正常,2为被回收,0已被删除)", "地址" };
+        for ( int i = 0; i < titles.length; i++ ) {//遍历titles数组，拿到里面的值进行操作
+            //创建一个单元格
+            Cell cell = row.createCell ( i );
+            //设置单元格的值
+            cell.setCellValue ( titles[ i ] );
+        }
     }
 }

@@ -71,13 +71,12 @@
     <div class="box-header">
         <h2 style="padding: 15px">评论管理</h2>
         <div class="layui-form-item">
-            <label class="layui-form-label">标题</label>
+            <label class="layui-form-label">日期</label>
             <div class="layui-input-inline">
-                <input type="text" id="title" lay-verify="required" placeholder="请输入" autocomplete="off"
-                       class="layui-input">
+                <input type="text" name="date" id="date" autocomplete="off" class="layui-input">
             </div>
             <button type="button" class="layui-btn layui-btn-normal" id="search">搜索</button>
-            <button type="button" class="layui-btn layui-btn-normal" id="clealSearch">搜索</button>
+            <button type="button" class="layui-btn layui-btn-normal" id="clealSearch">清空</button>
         </div>
     </div>
 
@@ -91,8 +90,8 @@
         <colgroup>
             <col width="30">
             <col width="150">
-            <col width="150">
-            <col width="150">
+            <col width="100">
+            <col width="180">
             <col width="150">
             <col width="150">
             <col width="150">
@@ -105,13 +104,14 @@
         <tr>
             <th><input type="checkbox" onchange="IsCheckAll(this)" name="checkbox" id="checkedAll"></th>
             <th>评论者</th>
+            <th>头像</th>
             <th>评论文章</th>
             <th>评论内容</th>
+            <th>IP</th>
             <th>是否审批</th>
             <th>被顶</th>
             <th>被踩</th>
             <th>发布时间</th>
-            <th>操作</th>
         </tr>
         </thead>
         <tbody id="tbody">
@@ -134,12 +134,23 @@
         })
         //查询事件
         $("#search").click(doLoadData);
+
+        $("#btn-tool-area").on("click", ".btn_delete", deleteComment)
     })
+
+    layui.use('laydate', function () {
+        var laydate = layui.laydate;
+
+        //执行一个laydate实例
+        laydate.render({
+            elem: '#date' //指定元素
+        });
+    });
 
     function doLoadData() {
         var url = "/comment/findComment";
         var curPage = $("#page").data("curPage");
-        var createdTime = $("#title").val();
+        var createdTime = $("#date").val();
         //格式验证
         var params = {
             createdTime: createdTime,
@@ -174,17 +185,96 @@
                 tr = "  <tr>\n" +
                     "  <th><input type=\"checkbox\" value='" + data[i].id + "' name='checkbox'></th>\n" +
                     " <th>" + data[i].user.authorName + "</th>\n" +
+                    " <th>" + "<img src='" + data[i].user.picture + "' width='80px' height='80px' style='border-radius: 40px'>" + "</th>" +
                     " <th>" + data[i].blog.title + "</th>\n" +
-                    " <th>" + data[i].blog.content + "</th>\n" +
+                    " <th>" + data[i].contant + "</th>\n" +
+                    " <th>" + data[i].commentIp + "</th>\n" +
                     "<th><input class=\"switch switch-anim onlineStatus\" onchange=\"checkNum(this)\" type=\"checkbox\" value='" + data[i].commentState + "'  /></th>" +
                     //"<th>" + data[i].essayGrade + "</th>\n" +
                     " <th>" + data[i].commentTop + "</th>\n" +
                     " <th>" + data[i].commentTread + "</th>\n" +
                     " <th>" + data[i].createdTime + "</th>\n" +
-                    "<th><button class=\"layui-btn layui-btn-normal\" onclick='Approval(this)' >审批</button><button class=\"layui-btn layui-btn-normal Takedown\" onclick='Approval(this)' >删除</button></th></tr>";
+                    "</tr>";
                 $("#tbody").append(tr);
                 $("#tbody tr").last().data("blogRow", data[i]);
+                StateIschecked();//加载推荐
             }
+        }
+    }
+
+    //推荐选中
+    function StateIschecked() {
+        var checked = $("#tbody tr").last().find(".switch");
+        for (var i = 0; i < checked.length; i++) {
+            if ($(checked[i]).val() == 1) {//选中，即为推荐
+                $(checked[i]).attr("checked", true);
+            }
+        }
+    }
+
+
+    //审核
+    function checkNum(btn) {
+        var id = $(btn).parents("tr").find("input").val();
+        var checked = $(btn).prop('checked') ? "1" : "0";
+        var params = {
+            id: id,
+            commentState: checked,
+        }
+        var url = "/comment/updateCommentState";
+        $.get(url, params, function (result) {
+            if (result.state == 1) {
+                //静态修改
+                layer.msg(result.msg, {icon: 6});
+                checked == 1 ? $(btn).attr("checked", true) : $(btn).attr("checked", false);
+                // layer.msg(result.msg, {icon: 6});
+                // doLoadData();
+            } else {
+                layer.msg(result.msg, {icon: 2});
+                checked == 1 ? $(btn).prop("checked", false) : $(btn).prop("checked", true);
+            }
+        })
+    }
+
+    //加入回收站
+    function deleteComment() {
+        var checks = $("#tbody").find("input[name='checkbox']:checked");
+        if (!checks.length) {
+            layer.open({
+                type: 0, //默认就是0，所以可以省略
+                content: '至少选择一条删除的数据！',
+                icon: 2
+            })
+            return;
+        }
+        layer.confirm('确认要删除吗？', {
+            btn: ['确定', '取消']//按钮
+        }, function (index) {
+            //      var index = layer.load(0, {shade: [0.7, '#393D49']}, {shadeClose: true}); //0代表加载的风格，支持0-2
+            var ids = [];//空数组
+            $.each(checks, function () {
+                ids.push($(this).val());
+            })
+            var params = {ids: ids};
+            var url = "/comment/deleteComment";
+            debugger
+            $.get(url, params, function (result) {
+                if (result.state == 0) {
+                    layer.msg(result.msg, {icon: 2});
+                } else if (result.state == 1) {
+                    layer.msg(result.msg, {icon: 1});
+                    doLoadData();
+                }
+            });
+        })
+    }
+
+    //全选或者全不选
+    function IsCheckAll(btn) {
+        if ($(btn).prop('checked')) {
+            $(btn).parents().find("input[name='checkbox']").attr("checked", true);
+        } else {
+            $(btn).parents().find("input[name='checkbox']").attr("checked", false);
         }
     }
 </script>

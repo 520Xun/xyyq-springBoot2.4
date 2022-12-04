@@ -21,7 +21,8 @@ public class CommentVO implements Serializable {
     private Integer id;
     private Blog blog;
     private User user;
-    private String comment;//内容
+    private Integer parentId;
+    private String contant;//内容
     private String commentIp;
     private Integer isReply;//是否回复
     private Integer commentState;//审核

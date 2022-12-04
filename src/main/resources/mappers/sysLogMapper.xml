@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace：命名空间，对应一个dao层接口的全路径 -->
+<mapper namespace="com.xun.sys.dao.SysLogDao">
+
+    <sql id="queryUsername">
+        <if test="username != null and username != ''">
+            and username like concat("%", #{username}, "%")
+        </if>
+        <if test="operation != null and operation != ''">
+            and operation like concat("%", #{operation}, "%")
+        </if>
+    </sql>
+
+
+    <select id="findLogObject" resultType="com.xun.sys.pojo.SysLog">
+        select * from sys_logs where 1=1
+        <include refid="queryUsername"/>
+        order by createdTime
+    </select>
+
+    <delete id="deleteLogByIds">
+        delete from sys_logs where id in
+        <foreach collection="array" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+</mapper>        

@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>用户管理模块</title>
+    <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico"/>
+    <link rel="stylesheet" href="/layui/css/layui.css">
+    <link rel="stylesheet" href="/css/common.css">
+    <link rel="stylesheet" href="/layui/extend/dtree.css">
+    <link rel="stylesheet" href="/layui/extend/font/dtreefont.css">
+    <!--    swaich开关-->
+    <style>
+        .switch {
+            width: 57px;
+            height: 28px;
+            position: relative;
+            border: 1px solid rgba(11, 234, 193, 0.99);
+            background-color: #0beac1;
+            box-shadow: #0beac1 0 0 0 0 inset;
+            border-radius: 20px;
+            background-clip: content-box;
+            display: inline-block;
+            -webkit-appearance: none;
+            user-select: none;
+            outline: none;
+        }
+
+        .switch:before {
+            content: '';
+            width: 26px;
+            height: 26px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            border-radius: 20px;
+            background-color: #ffffff;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+        }
+
+        .switch:checked {
+            border-color: #1E9FFF;
+            box-shadow: #1E9FFF 0 0 0 16px inset;
+            background-color: #1E9FFF;
+        }
+
+        .switch:checked:before {
+            left: 30px;
+        }
+
+        .switch.switch-anim {
+            transition: border cubic-bezier(0, 0, 0, 1) 0.4s, box-shadow cubic-bezier(0, 0, 0, 1) 0.4s;
+        }
+
+        .switch.switch-anim:before {
+            transition: left 0.3s;
+        }
+
+        .switch.switch-anim:checked {
+            box-shadow: #1E9FFF 0 0 0 16px inset;
+            background-color: #1E9FFF;
+            transition: border ease 0.4s, box-shadow ease 0.4s, background-color ease 1.2s;
+        }
+
+        .switch.switch-anim:checked:before {
+            transition: left 0.3s;
+        }
+    </style>
+</head>
+
+<body id="BindbodyData">
+<!--盒子-->
+<div class="box">
+    <div class="box-header">
+        <h2 style="padding: 15px">用户列表</h2>
+        <div class="layui-form-item">
+            <label class="layui-form-label">用户名</label>
+            <div class="layui-input-inline">
+                <input type="text" id="username" lay-verify="required" placeholder="请输入" autocomplete="off"
+                       class="layui-input">
+            </div>
+            <label class="layui-form-label">操作</label>
+            <div class="layui-input-inline">
+                <input type="text" id="operation" lay-verify="required" placeholder="请输入" autocomplete="off"
+                       class="layui-input">
+            </div>
+            <button type="button" class="layui-btn layui-btn-normal" id="search">搜索</button>
+            <button type="button" class="layui-btn layui-btn-normal" id="cheal">清空</button>
+        </div>
+    </div>
+
+    <div class="layui-btn-sm" id="btn-tool-area">
+        <button class="layui-btn layui-btn-normal  btn_delete">删除</button>
+        <input type="file" id="saveUser" style="display: none" onchange="saveExcelUser()">
+        <button type="button" class="layui-btn layui-btn-normal exportAll">导出</button>
+        <button type="button" class="layui-btn layui-btn-normal exportByUserId">选择性导出</button>
+    </div>
+</div>
+<div class="box-body">
+    <table class="layui-table" lay-even="" lay-skin="nob">
+        <!-- 定义表格列宽-->
+        <colgroup>
+            <col width="150">
+            <col width="150">
+            <col width="150">
+            <col width="350">
+            <col width="150">
+            <col width="150">
+            <col width="150">
+            <col width="150">
+            <col>
+        </colgroup>
+        <thead>
+        <tr>
+            <th><input type="checkbox" onchange="IsCheckAll(this)" name="checkbox" id="checkedAll"></th>
+            <th>用户名</th>
+            <th>操作信息</th>
+            <th>请求方法</th>
+            <th>请求参数</th>
+            <th>ip地址</th>
+            <th>执行时间</th>
+            <th>创建时间</th>
+        </tr>
+        </thead>
+        <tbody id="tbody">
+        <!--   数据存放区域-->
+        <tr>
+            <td colspan="7">
+                数组正在加载中
+            </td>
+        </tr>
+        </tbody>
+    </table>
+    <!--加载分页区域-->
+    <div id="page">
+    </div>
+</div>
+<!--<script src="/js/jquery.js"></script>-->
+<script src="/js/jquery-3.4.1.min.js"></script>
+<script src="/layui/layui.js"></script>
+<script src="/js/common.js"></script>
+<script>
+
+    $(function () {
+        //加载分页
+        $("#page").load("/doPageUI", function () {
+            //刷新数据
+            doLoadData();
+        })
+
+        //查询事件
+        $("#search").click(doLoadData);
+        //清空查询条件
+        $("#cheal").click(chealSearch);
+        //绑定点击案件
+        $("#btn-tool-area")
+            .on("click", ".btn_delete", deleteUser)
+            .on("click", ".exportAll", exportAllUser)
+            .on("click", ".exportByUserId", exportAllUser)
+    })
+
+    //清空
+    function chealSearch() {
+        $("#username").val("");
+        $("#operation").val("");
+    }
+
+    //导出所有用户信息
+    function exportAllUser() {
+
+    }
+
+    //加入回收站
+    function deleteUser() {
+        var checks = $("#tbody").find("input[name='checkbox']:checked");
+        if (!checks.length) {
+            layer.open({
+                type: 0, //默认就是0，所以可以省略
+                content: '至少选择一条删除的数据！',
+                icon: 2
+            })
+            return;
+        }
+        layer.confirm('确认要删除吗？', {
+            btn: ['确定', '取消']//按钮
+        }, function (index) {
+            var ids = [];//空数组
+            $.each(checks, function () {
+                ids.push($(this).val());
+            })
+            var params = {ids: ids};
+            var url = "/sysLog/deleteLog";
+            $.get(url, params, function (result) {
+                debugger
+                if (result.state == 0) {
+                    layer.msg(result.msg, {icon: 2});
+                } else if (result.state == 1) {
+                    layer.msg(result.msg, {icon: 1});
+                    doLoadData();
+                }
+            });
+        })
+    }
+
+    function doLoadData() {
+        var url = "/sysLog/findLogObjects";
+        var curPage = $("#page").data("curPage");
+        var username = $("#username").val();
+        var operation = $("#operation").val();
+        //格式验证
+        var params = {
+            username: username,
+            operation: operation,
+            curPage: curPage ? curPage : 1,
+            pageSize: 5  //默认条数
+        }
+        $.get(url, params, function (result) {
+            //查询成功！
+            if (result.state == 1) {
+                doHandlerTableBody(result.data);
+                //设置页码
+                setPageData(result.data);
+            } else {
+                //相当于alert()
+                layer.msg(result.message, {icon: 2});
+            }
+        })
+    }
+
+    //处理表格数据
+    function doHandlerTableBody(data) {
+        data = data.pageData;
+        //1.获取tbody对象，并清空对象
+        var tBody = $("#tbody");
+        tBody.empty();
+        //2.迭代records记录，并将其内容追加到tbody
+        for (var i in data) {
+            //2.1 构建tr对象
+            var tr = $("<tr></tr>");
+            //2.2 构建tds对象
+            var tds = doCreateTds(data[i]);
+            //2.3 将tds追加到tr中
+            tr.append(tds);
+            //2.4 将tr追加到tbody中
+            tBody.append(tr);
+        }
+    }
+
+    function doCreateTds(data) {
+        var tds = "<td><input type='checkbox'  name='checkbox' value='" + data.id + "'></td>" +
+            "<td>" + data.username + "</td>" +
+            "<td>" + data.operation + "</td>" +
+            "<td>" + data.method + "</td>" +
+            "<td>" + data.params + "</td>" +
+            "<td>" + data.ip + "</td>" +
+            "<td>" + data.time + "</td>" +
+            "<td>" + data.createdTime + "</td>";
+        return tds;
+    }
+
+    //全选或者全不选
+    function IsCheckAll(btn) {
+        if ($(btn).prop('checked')) {
+            $(btn).parents().find("input[name='checkbox']").attr("checked", true);
+        } else {
+            $(btn).parents().find("input[name='checkbox']").attr("checked", false);
+        }
+    }
+</script>
+</body>
+</html>
