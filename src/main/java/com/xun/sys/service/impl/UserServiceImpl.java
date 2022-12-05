@@ -6,6 +6,7 @@ import com.xun.common.exception.ServiceException;
 import com.xun.common.pojo.JsonResult;
 import com.xun.common.pojo.Pagination;
 import com.xun.common.pojo.pageProperties;
+import com.xun.common.pojo.saveExcel;
 import com.xun.common.util.Assert;
 import com.xun.common.util.IPUtils;
 import com.xun.sys.dao.UserDao;
@@ -27,10 +28,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 /**
  * @version: java version 1.8
@@ -179,7 +177,7 @@ public class UserServiceImpl implements UserService {
         List< User > list = userDao.exportByUserId ( ids );
         Workbook workbook = new XSSFWorkbook ( );
         Sheet sheet = workbook.createSheet ( "用户表" );
-        Row row = sheet.createRow ( 0 );
+        Row row = sheet.createRow ( 1 );
         handlerRowTitle ( row );
         for ( int i = 0; i < list.size ( ); i++ ) {
             row = sheet.createRow ( i + 1 );
@@ -194,19 +192,29 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public int handlerSaveExcelUser ( MultipartFile file ) {
+    public saveExcel handlerSaveExcelUser ( MultipartFile file ) {
+        saveExcel se = new saveExcel ( );
         try {
             InputStream in = file.getInputStream ( );//获取输入流
-            List< User > userList = getListUserExcel ( in );//获取excel所有car对象
-            int n = userDao.insertUserList ( userList );//插入数据库
+            Map< String, List< ? > > map = getListUserExcel ( in );//获取excel所有car对象
+            System.out.println ( map.get ( "userData" ) );
+            System.out.println ( map.get ( "numList" ) );
+            int n = 0;//插入数据库
+            System.out.println ( map.get ( "userData" ).size ( ) );
+            if ( map.get ( "userData" ).size ( ) != 0 ) {
+                System.out.println ( "确定不插入嘛" );
+                n = userDao.insertUserList ( ( List< User > ) map.get ( "userData" ) );
+            }
             if ( n == 0 ) {
                 throw new ServiceException ( "导入失败！" );
             }
-            return n;
+            se.setSuccessNumber ( n );
+            se.setErrorNumber ( ( List< Integer > ) map.get ( "numList" ) );
         } catch ( Exception e ) {
             e.printStackTrace ( );
+            throw new ServiceException ( "数据导入失败！" );
         }
-        return 0;
+        return se;
     }
 
     @Override
@@ -219,25 +227,30 @@ public class UserServiceImpl implements UserService {
     /**
      * 处理导入的数据
      *
-     * @param in
+     * @param is
      * @return
      */
-    private List< User > getListUserExcel ( InputStream in ) throws Exception {
-        SimpleDateFormat simpleDateFormat = new SimpleDateFormat ( "yyyy-MM-dd HH:mm:ss" );
+    private Map< String, List< ? > > getListUserExcel ( InputStream is ) throws Exception {
+        //获取Workbook对象
+        Workbook workbook = new XSSFWorkbook ( is );
+        //获取有效sheet的数量
+        int sheetNumber = workbook.getNumberOfSheets ( );
         List< User > userList = new ArrayList<> ( );
-        Workbook workbook = new XSSFWorkbook ( in );
-        int sheetCount = workbook.getNumberOfSheets ( );//得到sheet数
-        for ( int i = 0; i < sheetCount; i++ ) {
-            Sheet sheet = workbook.getSheetAt ( i );//得到sheet
+        List< Integer > numList = new ArrayList<> ( );
+        for ( int i = 0; i < sheetNumber; i++ ) {
+            //获取sheet对象
+            Sheet sheet = workbook.getSheetAt ( i );
+            //如果sheet表为空则跳过
             if ( sheet == null ) {
                 continue;
             }
-            //获取第一个实际行的下标
-            int firstNum = sheet.getFirstRowNum ( );
-            //获取总行数
-            int lastRowNum = sheet.getLastRowNum ( );
-            for ( int j = firstNum + 1; j <= lastRowNum; j++ ) {
-                Row row = sheet.getRow ( j );//获取行
+            //获取初始行号
+            int startRowNum = sheet.getFirstRowNum ( );
+            //获取结束行号
+            int endRowNum = sheet.getLastRowNum ( );
+            for ( int j = startRowNum + 1; j <= endRowNum; j++ ) {
+                //获取行
+                Row row = sheet.getRow ( j );
                 Cell cell = row.getCell ( 0 );//单元格
                 int id = ( int ) cell.getNumericCellValue ( );//获取数字
                 Cell cell1 = row.getCell ( 1 );
@@ -255,12 +268,11 @@ public class UserServiceImpl implements UserService {
                 Cell cell7 = row.getCell ( 7 );
                 int onlineStatus = ( int ) cell7.getNumericCellValue ( );
                 Cell cell8 = row.getCell ( 8 );
-                String registerTime = simpleDateFormat.format ( cell8.getDateCellValue ( ) );
-//                Date registerTime = format.parse (createTime);
+                Date registerTime = cell8.getDateCellValue ( );
                 Cell cell9 = row.getCell ( 9 );
                 String createIp = cell9.getStringCellValue ( );
                 Cell cell10 = row.getCell ( 10 );
-                String modifiedTime = simpleDateFormat.format ( cell10.getDateCellValue ( ) );
+                Date modifiedTime = cell10.getDateCellValue ( );
                 Cell cell11 = row.getCell ( 11 );
                 int userState = ( int ) cell11.getNumericCellValue ( );
                 Cell cell12 = row.getCell ( 12 );
@@ -273,10 +285,18 @@ public class UserServiceImpl implements UserService {
                 String address = cell15.getStringCellValue ( );
                 User user = new User ( null, username, "", "", authorName, null, sex, email, phone, picture,
                                 "", registerTime, createIp, modifiedTime, address, onlineStatus, userState, createUser, updateUser, isDelete );
-                userList.add ( user );
+                User u = userDao.findUserByNameAndAuthorName ( username, authorName );//查询用户名和作者名是否存在
+                if ( u == null && ! userList.contains ( user ) ) {
+                    userList.add ( user );
+                } else {
+                    numList.add ( j + 1 );//重复的数据的行号
+                }
             }
         }
-        return userList;
+        Map< String, List< ? > > map = new HashMap<> ( );
+        map.put ( "userData", userList );//需要存入数据库的Car集合
+        map.put ( "numList", numList );//重复行号集合
+        return map;
     }
 
     /**
@@ -326,38 +346,6 @@ public class UserServiceImpl implements UserService {
      * @param row
      */
     private void handlerRowTitle ( Row row ) {
-//        Cell cell0 = row.createCell ( 0 );
-//        cell0.setCellValue ( "id" );
-//        Cell cell1 = row.createCell ( 1 );
-//        cell1.setCellValue ( "用户名" );
-//        Cell cell2 = row.createCell ( 2 );
-//        cell2.setCellValue ( "作者名" );
-//        Cell cell3 = row.createCell ( 3 );
-//        cell3.setCellValue ( "性别" );
-//        Cell cell4 = row.createCell ( 4 );
-//        cell4.setCellValue ( "头像" );
-//        Cell cell5 = row.createCell ( 5 );
-//        cell5.setCellValue ( "邮箱" );
-//        Cell cell6 = row.createCell ( 6 );
-//        cell6.setCellValue ( "手机号" );
-//        Cell cell7 = row.createCell ( 7 );
-//        cell7.setCellValue ( "在线状态（1为在线，0为隐身）" );
-//        Cell cell8 = row.createCell ( 8 );
-//        cell8.setCellValue ( "创建时间" );
-//        Cell cell9 = row.createCell ( 9 );
-//        cell9.setCellValue ( "创建ip" );
-//        Cell cell10 = row.createCell ( 10 );
-//        cell10.setCellValue ( "修改时间" );
-//        Cell cell11 = row.createCell ( 11 );
-//        cell11.setCellValue ( "账号状态(1为正常，0为禁用)" );
-//        Cell cell12 = row.createCell ( 12 );
-//        cell12.setCellValue ( "创建者" );
-//        Cell cell13 = row.createCell ( 13 );
-//        cell13.setCellValue ( "修改者" );
-//        Cell cell14 = row.createCell ( 14 );
-//        cell14.setCellValue ( "回收站(1为正常,2为被回收,0已被删除)" );
-//        Cell cell15 = row.createCell ( 15 );
-//        cell15.setCellValue ( "地址" );
         String[] titles = { "id", "用户名", "作者名", "性别", "头像", "邮箱", "手机号", "在线状态(1为在线，0为隐身)", "创建时间", "创建ip", "修改时间", "账号状态(1为正常，0为禁用)", "创建者", "修改者", "回收站(1为正常,2为被回收,0已被删除)", "地址" };
         for ( int i = 0; i < titles.length; i++ ) {//遍历titles数组，拿到里面的值进行操作
             //创建一个单元格
