@@ -115,6 +115,9 @@
             <th>图片</th>
             <th>图片地址</th>
             <th>排序</th>
+            <th>是否展示</th>
+            <th>创建时间</th>
+            <th>修改时间</th>
         </tr>
         </thead>
         <tbody id="tbody">
@@ -159,8 +162,6 @@
     //清空
     function chealSearch() {
         $("#username").val("");
-        $("#emaiL").val("");
-        $("#phone").val("");
     }
 
     //导入
@@ -256,9 +257,10 @@
             ids.push($(this).val());
         })
         var params = {ids: ids};
-        var url = "/user/deleteUser";
+        debugger
+        var url = "/carousel/deleteCarousel";
         if ($(this).hasClass("chealUser")) {
-            url = "/user/chealUser";
+            url = "/carousel/chealCarouse";
         }
         $.get(url, params, function (result) {
             if (result.state == 0) {
@@ -286,7 +288,7 @@
             ids.push($(this).val());
         })
         var params = {ids: ids};
-        var url = "/user/recoverUser";
+        var url = "/carousel/recoverCarousel";
         $.get(url, params, function (result) {
             if (result.state == 0) {
                 layer.msg(result.msg, {icon: 2});
@@ -300,16 +302,12 @@
     function doLoadData() {
         $("#btn-tool-area").find(".back").remove();
         $("#btn-tool-area").find(".chealUser").removeClass("chealUser").addClass("btn_delete");
-        var url = "/user/findUser";
+        var url = "/carousel/findAllCarousel";
         var curPage = $("#page").data("curPage");
-        var username = $("#username").val();
-        var email = $("#emaiL").val();
-        var phone = $("#phone").val();
+        var name = $("#username").val();
         //格式验证
         var params = {
-            username: username,
-            email: email,
-            phone: phone,
+            name: name,
             curPage: curPage ? curPage : 1,
             pageSize: 5  //默认条数
         }
@@ -347,20 +345,13 @@
             for (var i = 0; i < data.length; i++) {
                 tr = "  <tr>\n" +
                     "  <th><input type=\"checkbox\" value='" + data[i].id + "' name='checkbox'></th>\n" +
-                    " <th>" + data[i].username + "</th>\n" +
-                    " <th>" + data[i].authorName + "</th>\n" +
-                    " <th>" + data[i].sex + "</th>\n" +
-                    " <th>" + "<img src='" + data[i].picture + "' style='border-radius: 25px;width: 50px;height: 50px'>" + "</th>" +
-                    " <th>" + data[i].email + "</th>\n" +
-                    "<th>" + data[i].phone + "</th>\n" +
-                    //    "<th>"+(data[i].onlineStatus==1?'在线':'隐身')+"</th>"+
-                    "<th><input class=\"switch switch-anim onlineStatus\" onchange=\"checkNum(this)\" type=\"checkbox\" value='" + data[i].onlineStatus + "' /></th>" +
-                    "<th>" + data[i].registerTime + "</th>\n" +
-                    "<th>" + data[i].registerIp + "</th>\n" +
-                    " <th>" + (data[i].modifiedTime == null ? "无" : data[i].modifiedTime) + "</th>\n" +
-                    "<th><input class=\"switch switch-anim userStatus\" onchange=\"checkNum(this)\" type=\"checkbox\" value='" + data[i].userStatus + "' /></th>" +
-                    " <th>" + data[i].createdUser + "</th>\n" +
-                    " <th>" + (data[i].modifiedUser == null ? "无" : data[i].modifiedUser) + "</th>\n" +
+                    " <th>" + data[i].name + "</th>\n" +
+                    " <th>" + "<img src='" + data[i].photo + "' style='width: 50px;height: 50px'>" + "</th>" +
+                    " <th>" + data[i].photo + "</th>\n" +
+                    "<th>" + data[i].soft + "</th>\n" +
+                    "<th><input class=\"switch switch-anim onlineStatus\" onchange=\"checkNum(this)\" type=\"checkbox\" value='" + data[i].carouselState + "' /></th>" +
+                    " <th>" + data[i].createdTime + "</th>\n" +
+                    " <th>" + (data[i].updatedTime == null ? "无" : data[i].updatedTime) + "</th>\n" +
                     "<th><button class=\"layui-btn layui-btn-normal\" onclick='lookUserInfo(this)' >查看</button></th></tr>";
                 $("#tbody").append(tr);
                 $("#tbody tr").last().data("userRow", data[i]);
@@ -398,7 +389,7 @@
     function StateIschecked() {
         var checked = $("#tbody tr").last().find(".switch");
         for (var i = 0; i < checked.length; i++) {
-            if ($(checked[i]).val() == 1) {//选中，即状态为在线，账号为启用
+            if ($(checked[i]).val() == 1) {//选中
                 $(checked[i]).attr("checked", true);
             }
         }
@@ -410,22 +401,16 @@
         var checked = $(btn).prop('checked') ? "1" : "0";
         var params = {
             id: id,
+            carouselState: checked
         }
-        if ($(btn).hasClass("userStatus")) { //修改用户状态
-            params.userStatus = checked;
-            var url = "/user/updateUserStatus";
-        }
-        if ($(btn).hasClass("onlineStatus")) {//修改在线状态
-            params.onlineStatus = checked;
-            var url = "/user/updateOnlineStatus";
-        }
+        var url = "/carousel/updateCarouselState"
         $.get(url, params, function (result) {
             if (result.state == 1) {
                 //静态修改
-                // layer.msg(result.msg, {icon: 6});
-                // checked == 1 ? $(btn).attr("checked", true) : $(btn).attr("checked", false);
                 layer.msg(result.msg, {icon: 6});
-                doLoadData();
+                checked == 1 ? $(btn).attr("checked", true) : $(btn).attr("checked", false);
+                // layer.msg(result.msg, {icon: 6});
+                // doLoadData();
             } else {
                 layer.msg(result.msg, {icon: 2});
                 checked == 1 ? $(btn).prop("checked", false) : $(btn).prop("checked", true);
@@ -437,11 +422,11 @@
     function saveUserPageUI() {
         var title;
         if ($(this).hasClass("btn_add")) {
-            title = "添加用户";
+            title = "添加轮播图";
         }
         if (!$(this).hasClass("btn_update")) {
         } else {
-            title = "修改用户";
+            title = "修改轮播图";
             //判断是否勾选了
             var length = checkedInputLength();
             if (length == 0) {
@@ -465,8 +450,8 @@
             scrollbar: false,//取消浏览器滚动条
             shade: false,
             maxmin: true, //开启最大化最小化按钮
-            area: ['893px', '850px'],
-            content: '/admin/user/user_add',//展示的页面
+            area: ['593px', '650px'],
+            content: '/admin/carousel/carouselAdd.html',//展示的页面
             success: function (obj, index) {
                 var iframe = window['layui-layer-iframe' + index];
                 var data = $("#BindbodyData").data("userData");

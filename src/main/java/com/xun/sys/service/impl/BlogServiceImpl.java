@@ -64,7 +64,7 @@ public class BlogServiceImpl implements BlogService {
         Integer userStatus = blogDao.checkRecommend ( id );
         Assert.isEmpty ( userStatus == 0, "当前文章为草稿，不能推荐！" );
         Assert.isEmpty ( userStatus == 1, "当前文章未审核，不能推荐！" );
-        Assert.isEmpty ( userStatus == 3, "当前文章已被回收，不能推荐！" );
+        //     Assert.isEmpty ( userStatus == 3, "当前文章已被回收，不能推荐！" );
         Integer n = blogDao.updateRecommend ( id, recommend );
         /**
          * 文章不记录修改者

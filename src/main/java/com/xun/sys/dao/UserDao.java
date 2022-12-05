@@ -31,7 +31,7 @@ public interface UserDao {
      * 修改账号在线状态前，判断账号是否被禁用
      * 检查账号是否被禁用
      */
-    @Select ( "select user_status from user where id=#{id} " )
+    @Select ( "select user_status from user where id=#{id} and delete_state=1  " )
     Integer checkUserStatus ( Integer id );
 
     /**
@@ -42,7 +42,7 @@ public interface UserDao {
      * @param username
      * @return
      */
-    @Update ( "update user set online_status=#{onlineStatus}, modifiedUser=#{username} where id=#{id}" )
+    @Update ( "update user set online_status=#{onlineStatus}, modifiedUser=#{username} where id=#{id} and delete_state=1" )
     Integer updateOnlineStatus ( @Param ( "id" ) Integer id, @Param ( "onlineStatus" ) Integer onlineStatus, @Param ( "username" ) String username );
 
     /**
@@ -140,7 +140,13 @@ public interface UserDao {
      */
     int insertUserList ( List< User > userList );
 
-    @Select ( "select * from user where id=#{id}" )
+    /**
+     * 根据id查询用户信息
+     *
+     * @param id
+     * @return
+     */
+    @Select ( "select * from user where id=#{id} and  delete_state=1" )
     User findUserById ( Integer id );
 
     /**
@@ -159,4 +165,14 @@ public interface UserDao {
      */
     @Select ( "select count(1) value,address name from user GROUP BY address" )
     List< countUserAddressVo > countUserAddress ( );
+
+    /**
+     * 查询用户名 和作者名是否存在
+     *
+     * @param username
+     * @param authorName
+     * @return
+     */
+    @Select ( "select * from user where username=#{username} and authorName=#{authorName}" )
+    User findUserByNameAndAuthorName ( String username, String authorName );
 }

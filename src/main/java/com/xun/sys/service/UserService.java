@@ -1,6 +1,7 @@
 package com.xun.sys.service;
 
 import com.xun.common.pojo.JsonResult;
+import com.xun.common.pojo.saveExcel;
 import com.xun.sys.pojo.User;
 import com.xun.sys.pojo.countUserAddressVo;
 import org.springframework.web.multipart.MultipartFile;
@@ -96,7 +97,7 @@ public interface UserService {
      * @param file
      * @return
      */
-    int handlerSaveExcelUser ( MultipartFile file );
+    saveExcel handlerSaveExcelUser ( MultipartFile file );
 
     /**
      * 统计用户分布，在地图显示

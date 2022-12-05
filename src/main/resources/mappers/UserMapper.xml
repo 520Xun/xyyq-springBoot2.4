@@ -26,29 +26,29 @@
 
     <insert id="insertUser" parameterType="com.xun.sys.pojo.User" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO `user`(`id`, `username`, `password`, `salt`, `authorName`, `age`, `sex`, `email`, `phone`,
-        `picture`, `personalized_sign`, `register_time`, `register_ip`, `modifiedTime`, `address`,
-        `online_status`, `user_status`, `createdUser`, `modifiedUser`)
+                           `picture`, `personalized_sign`, `register_time`, `register_ip`, `modifiedTime`, `address`,
+                           `online_status`, `user_status`, `createdUser`, `modifiedUser`)
         VALUES (null, #{username}, #{password}, #{salt}, #{authorName}, #{age}, #{sex},
-        #{email}, #{phone}, #{picture}, #{personalizedSign}, now(),
-        #{registerIp}, #{modifiedTime}, #{address}, #{onlineStatus}, #{userStatus}, #{createdUser},
-        #{modifiedUser})
+                #{email}, #{phone}, #{picture}, #{personalizedSign}, now(),
+                #{registerIp}, #{modifiedTime}, #{address}, #{onlineStatus}, #{userStatus}, #{createdUser},
+                #{modifiedUser})
     </insert>
 
     <update id="updateUser">
         UPDATE user
-        SET `username` =#{username},
-        `authorName` = #{authorName},
-        `age` =#{age},
-        `sex` = #{sex},
-        `email` = #{email},
-        `phone` =#{phone},
-        `picture` =#{picture},
-        `personalized_sign` = #{personalizedSign},
-        `modifiedTime` = now(),
-        `address` = #{address},
-        `online_status` = #{onlineStatus},
-        `user_status` = #{userStatus},
-        `modifiedUser` = #{modifiedUser}
+        SET `username`          =#{username},
+            `authorName`        = #{authorName},
+            `age`               =#{age},
+            `sex`               = #{sex},
+            `email`             = #{email},
+            `phone`             =#{phone},
+            `picture`           =#{picture},
+            `personalized_sign` = #{personalizedSign},
+            `modifiedTime`      = now(),
+            `address`           = #{address},
+            `online_status`     = #{onlineStatus},
+            `user_status`       = #{userStatus},
+            `modifiedUser`      = #{modifiedUser}
         WHERE `id` = #{id};
     </update>
 
@@ -86,7 +86,7 @@
         `picture`, `register_time`, `register_ip`, `modifiedTime`, `address`,
         `online_status`, `user_status`, `createdUser`, `modifiedUser`,`delete_state`) values
         <foreach collection="list" item="user" separator=",">
-            (null, #{user.username}, #{user.authorName}, #{user.sex},
+            (user.id, #{user.username}, #{user.authorName}, #{user.sex},
             #{user.email}, #{user.phone}, #{user.picture}, now(),
             #{user.registerIp}, #{user.modifiedTime}, #{user.address}, #{user.onlineStatus}, #{user.userStatus},
             #{user.createdUser},

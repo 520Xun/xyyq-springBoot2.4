@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.Date;
 
 /**
  * @version: java version 1.8
@@ -29,10 +30,10 @@ public class User implements Serializable {
     private String picture;//头像
     private String personalizedSign;//个性签名
     @JsonFormat ( pattern = "yyyy-MM-dd HH:mm:ss" )
-    private String registerTime;//注册时间
+    private Date registerTime;//注册时间
     private String registerIp;//注册的ip
     @JsonFormat ( pattern = "yyyy-MM-dd HH:mm:ss" )
-    private String modifiedTime;//修改的时间
+    private Date modifiedTime;//修改的时间
     private String address; //地址 只需要省份就行，例如： 湖南省-->湖南 (统计全国用户)
     private Integer onlineStatus = 1;//在线状态  0 下线  1 在线  默认在线
     private Integer userStatus = 1;//账号状态 0禁用 1是启用  默认开启账号

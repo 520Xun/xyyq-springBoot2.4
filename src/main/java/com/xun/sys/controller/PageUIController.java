@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import java.util.concurrent.atomic.AtomicLong;
 
 @Controller
+@RequestMapping ( "/" )
 public class PageUIController {
     //该对象利用CPU的算法保证了线程安全
     private final AtomicLong times = new AtomicLong ( );
@@ -99,18 +100,5 @@ public class PageUIController {
                         "![](http://localhost/images/20221124164904.jpg)" );
         return "admin/essay/blogHtml";
     }
-
-    @RequestMapping ( "Myblog" )
-    public String webIndexPageUI ( ) {
-        long n = times.incrementAndGet ( );//加1的方法
-        System.out.println ( n );
-        return "Myblog/index";//前台首页
-    }
-
-    /**
-     * 跳往博客页面
-     */
-    public String doWebPageUI ( @PathVariable ( "page" ) String page, @PathVariable ( "module" ) String module ) {
-        return "web" + "/" + module + "/" + page;
-    }
+    
 }

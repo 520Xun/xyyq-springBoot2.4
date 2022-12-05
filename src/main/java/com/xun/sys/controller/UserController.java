@@ -2,6 +2,7 @@ package com.xun.sys.controller;
 
 import com.xun.common.exception.ServiceException;
 import com.xun.common.pojo.JsonResult;
+import com.xun.common.pojo.saveExcel;
 import com.xun.sys.pojo.User;
 import com.xun.sys.pojo.countUserAddressVo;
 import com.xun.sys.service.UserService;
@@ -174,7 +175,7 @@ public class UserController {
         if ( file == null ) {
             throw new ServiceException ( "上传文件不存在！" );
         }
-        int n = userService.handlerSaveExcelUser ( file );
-        return new JsonResult ( n );
+        saveExcel se = userService.handlerSaveExcelUser ( file );
+        return new JsonResult ( se );
     }
 }

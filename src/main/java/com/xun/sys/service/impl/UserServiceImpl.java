@@ -283,7 +283,7 @@ public class UserServiceImpl implements UserService {
                 int isDelete = ( int ) cell14.getNumericCellValue ( );
                 Cell cell15 = row.getCell ( 15 );
                 String address = cell15.getStringCellValue ( );
-                User user = new User ( null, username, "", "", authorName, null, sex, email, phone, picture,
+                User user = new User ( id, username, "", "", authorName, null, sex, email, phone, picture,
                                 "", registerTime, createIp, modifiedTime, address, onlineStatus, userState, createUser, updateUser, isDelete );
                 User u = userDao.findUserByNameAndAuthorName ( username, authorName );//查询用户名和作者名是否存在
                 if ( u == null && ! userList.contains ( user ) ) {

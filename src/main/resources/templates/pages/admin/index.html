@@ -49,28 +49,28 @@
         <ul class="layui-nav layui-layout-right">
 
             <li class="layui-nav-item feature-items">
-                <a lay-event="github" title="Github 地址">
+                <a href="https://github.com/520Xun/xyyq-springBoot2.4" title="Github 地址">
                     <i class="ri-github-fill"></i>
                 </a>
             </li>
 
             <li class="layui-nav-item feature-items">
-                <a lay-event="website" title="前台">
+                <a href="/Myblog" title="前台">
                     <i class="ri-earth-line"></i>
                 </a>
             </li>
 
-            <li class="layui-nav-item feature-items">
-                <a lay-event="clear" title="清理标签缓存"><i class="ri-brush-3-line"></i></a>
-            </li>
+            <!--            <li class="layui-nav-item feature-items">-->
+            <!--                <a lay-event="clear" title="清理标签缓存"><i class="ri-brush-3-line"></i></a>-->
+            <!--            </li>-->
 
-            <li class="layui-nav-item feature-items">
-                <a lay-event="tag" title="便签"><i class="ri-git-repository-line"></i></a>
-            </li>
+            <!--            <li class="layui-nav-item feature-items">-->
+            <!--                <a lay-event="tag" title="便签"><i class="ri-git-repository-line"></i></a>-->
+            <!--            </li>-->
 
-            <li class="layui-nav-item feature-items">
-                <a lay-event="todo" title="待处理任务"><i class="ri-calendar-todo-line"></i></a>
-            </li>
+            <!--            <li class="layui-nav-item feature-items">-->
+            <!--                <a lay-event="todo" title="待处理任务"><i class="ri-calendar-todo-line"></i></a>-->
+            <!--            </li>-->
 
             <li class="layui-nav-item feature-items">
                 <a id="screenFull" lay-event="screenFull" title="全屏">
@@ -92,7 +92,7 @@
                         <a onclick="loadLoginUserInfo()">基本资料</a>
                     </dd>
                     <dd lay-unselect>
-                        <a lay-event="editPwd">修改密码</a>
+                        <a onclick="editPwdPage()">修改密码</a>
                     </dd>
                     <hr>
                     <dd lay-unselect>
@@ -140,6 +140,11 @@
                         <dd>
                             <a lay-id="admin/comment/commentList" lay-url="admin/comment/commentList">
                                 <cite>评论管理</cite>
+                            </a>
+                        </dd>
+                        <dd>
+                            <a lay-id="admin/carousel/carouselList" lay-url="admin/carousel/carouselList">
+                                <cite>轮播图管理</cite>
                             </a>
                         </dd>
                         <dd>
@@ -209,6 +214,27 @@
             maxmin: true, //开启最大化最小化按钮
             area: ['893px', '850px'],
             content: '/admin/user/user_add',//展示的页面
+            success: function (obj, index) {
+                var iframe = window['layui-layer-iframe' + index];
+                if (data != null) {
+                    iframe.loadUPdateUserData(data);
+                }
+            }, end: function () {
+                layui.form.render(); //更新全部
+            }
+        });
+    }
+
+    function editPwdPage() {
+        layer.open({
+            type: 2, //页面层
+            title: "修改密码",
+            shadeClose: true,
+            scrollbar: true,//取消浏览器滚动条
+            shade: false,
+            maxmin: true, //开启最大化最小化按钮
+            area: ['893px', '850px'],
+            content: '/admin/nav/editPwd',//展示的页面
             success: function (obj, index) {
                 var iframe = window['layui-layer-iframe' + index];
                 if (data != null) {

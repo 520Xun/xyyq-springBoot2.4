@@ -218,7 +218,8 @@
             success: function (result) {
                 if (result.state == "1") {
                     //提示成功导入记录条数
-                    layer.msg("成功导入" + result.count + "条记录", {icon: "1"});
+                    debugger;
+                    layer.msg("有" + (result.data.errorNumber == null ? "0" : result.data.errorNumber) + "行重复数据" + "," + result.data.successNumber + "条执行成功", {icon: "1"});
                     //调用刷新数据方法
                     doLoadData();
                     $(".saveUser").text("导入");
@@ -271,16 +272,19 @@
             })
             return;
         }
+        var btn = $(this);
         layer.confirm('确认要删除吗？', {
             btn: ['确定', '取消']//按钮
         }, function (index) {
+            layer.close(index);
             var ids = [];//空数组
             $.each(checks, function () {
                 ids.push($(this).val());
             })
             var params = {ids: ids};
             var url = "/user/deleteUser";
-            if ($(this).hasClass("chealUser")) {
+            debugger
+            if (btn.hasClass("chealUser")) {
                 url = "/user/chealUser";
             }
             $.get(url, params, function (result) {

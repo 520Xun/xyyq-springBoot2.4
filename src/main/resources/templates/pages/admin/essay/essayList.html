@@ -386,8 +386,8 @@
                     "  <th><input type=\"checkbox\" value='" + data[i].id + "' name='checkbox'></th>\n" +
                     " <th>" + data[i].title + "</th>\n" +
                     " <th>" + "<img src='" + data[i].blogCover + "' width='80px' height='80px'>" + "</th>" +
-                    " <th>" + data[i].user.authorName + "</th>\n" +
-                    " <th>" + data[i].type.name + "</th>\n" +
+                    " <th>" + (data[i].user == null ? "用户可能不存在！" : data[i].user.username) + "</th>\n" +
+                    " <th>" + (data[i].type == null ? "类型可能不存在！" : data[i].type.name) + "</th>\n" +
                     "<th><input class=\"switch switch-anim onlineStatus\" onchange=\"checkNum(this)\" type=\"checkbox\" value='" + data[i].recommend + "'  /></th>" +
                     "<th>" + essayStatusText + "</th>\n" +
                     //"<th>" + data[i].essayGrade + "</th>\n" +
@@ -405,6 +405,7 @@
             }
         }
     }
+
 
     //审批文章
     function Approval(btn) {

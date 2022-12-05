@@ -154,7 +154,7 @@ public class BlogController {
     }
 
     /**
-     * 彻底删除用户
+     * 彻底删除博文
      *
      * @param ids
      * @return
