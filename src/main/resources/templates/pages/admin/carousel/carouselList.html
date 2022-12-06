@@ -343,15 +343,16 @@
             $("#tbody").append(tr);
         } else {
             for (var i = 0; i < data.length; i++) {
+                debugger
                 tr = "  <tr>\n" +
                     "  <th><input type=\"checkbox\" value='" + data[i].id + "' name='checkbox'></th>\n" +
                     " <th>" + data[i].name + "</th>\n" +
-                    " <th>" + "<img src='" + data[i].photo + "' style='width: 50px;height: 50px'>" + "</th>" +
+                    " <th>" + "<img src='" + data[i].photo + "'>" + "</th>" +
                     " <th>" + data[i].photo + "</th>\n" +
                     "<th>" + data[i].soft + "</th>\n" +
                     "<th><input class=\"switch switch-anim onlineStatus\" onchange=\"checkNum(this)\" type=\"checkbox\" value='" + data[i].carouselState + "' /></th>" +
                     " <th>" + data[i].createdTime + "</th>\n" +
-                    " <th>" + (data[i].updatedTime == null ? "无" : data[i].updatedTime) + "</th>\n" +
+                    " <th>" + (data[i].updateTime == null ? "无" : data[i].updateTime) + "</th>\n" +
                     "<th><button class=\"layui-btn layui-btn-normal\" onclick='lookUserInfo(this)' >查看</button></th></tr>";
                 $("#tbody").append(tr);
                 $("#tbody tr").last().data("userRow", data[i]);
@@ -450,7 +451,7 @@
             scrollbar: false,//取消浏览器滚动条
             shade: false,
             maxmin: true, //开启最大化最小化按钮
-            area: ['593px', '650px'],
+            area: ['593px', '550px'],
             content: '/admin/carousel/carouselAdd.html',//展示的页面
             success: function (obj, index) {
                 var iframe = window['layui-layer-iframe' + index];

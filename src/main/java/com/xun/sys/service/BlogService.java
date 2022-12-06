@@ -1,7 +1,11 @@
 package com.xun.sys.service;
 
 import com.xun.common.pojo.JsonResult;
+import com.xun.common.pojo.countBlogTypeVo;
+import com.xun.sys.pojo.Blog;
 import com.xun.sys.pojo.BlogUserTypeVo;
+
+import java.util.List;
 
 /**
  * @version: java version 1.8
@@ -10,6 +14,13 @@ import com.xun.sys.pojo.BlogUserTypeVo;
  * @date: 2022-11-25 21:42
  */
 public interface BlogService {
+    /**
+     * 统计分类文章数量
+     *
+     * @return
+     */
+    List< countBlogTypeVo > countBlogType ( );
+
     /**
      * 查询文章列表 按条件并且分页
      *
@@ -87,4 +98,21 @@ public interface BlogService {
      * @return
      */
     Integer updateEssayStatus ( Integer id, Integer essayStatus, Integer recommend );
+
+    /**
+     * 网站查询推荐文章
+     * 根据推荐跟评分排序
+     *
+     * @return
+     */
+    List< Blog > findRecommendBlog ( );
+
+    /**
+     * 查询主页最新文章
+     * 已审核，未删除
+     * 根据发布时间跟评分排序
+     *
+     * @return
+     */
+    List< BlogUserTypeVo > findAllFirstPageBlog ( );
 }

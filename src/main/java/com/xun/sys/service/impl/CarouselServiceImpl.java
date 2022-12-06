@@ -76,4 +76,26 @@ public class CarouselServiceImpl implements CarouselService {
         Assert.isEmpty ( n == 0, "数据已在列表中！" );
         return n;
     }
+
+    @Override
+    public Integer updateCarousel ( Carousel carousel ) {
+        Assert.isEmpty ( carousel.getId ( ) == null, "请选择要修改的数据！" );
+        int n = carouselDao.updateCarousel ( carousel );
+        Assert.isEmpty ( n == 0, "修改失败" );
+        return n;
+    }
+
+    @Override
+    public Integer saveCarousel ( Carousel carousel ) {
+        int n = carouselDao.saveCarousel ( carousel );
+        Assert.isEmpty ( n == 0, "添加失败" );
+        return n;
+    }
+
+    @Override
+    public List< Carousel > findShowCarousel ( ) {
+        List< Carousel > list = carouselDao.findShowCarousel ( );
+        Assert.isEmpty ( list == null || list.size ( ) == 0, "无轮播图显示！" );
+        return list;
+    }
 }

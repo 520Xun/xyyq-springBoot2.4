@@ -1,8 +1,10 @@
-package com.xun.sys.pojo;
+package com.xun.common.pojo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.io.Serializable;
 
 /**
  * @version: java version 1.8
@@ -14,7 +16,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class countUserAddressVo {
+public class countUserAddressVo implements Serializable {
     private String name;
     private String value;
 }

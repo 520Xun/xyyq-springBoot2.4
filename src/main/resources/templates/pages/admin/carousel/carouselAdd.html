@@ -65,45 +65,49 @@
 <script src="/layui/layui.js"></script>
 <script src="/js/common.js"></script>
 <script>
+    layui.config({
+        base: '/layui/extend/'
+    }).extend({
+        formSelects: 'formSelects-v4'
+    }).use(['form', 'layer'], function () {
+        $ = layui.jquery
+    });
+
     //将要修改的数据赋值到页面
     function loadUPdateUserData(data) {
-        debugger
         if (data == null) {
             layer.msg("请选择要修改的数据！", {icon: 2});
             return;
         }
+        debugger
         $("#bindUserData").data("userData", data);
         $("#username").val(data.name);
+        $("#soft").val(data.soft);
         $("#picture").attr("src", data.photo);
-        $("input[name=sex][value='女']").prop("checked", data.sex == "女" ? true : false);
-        $("input[name=sex][value='男']").prop("checked", data.sex == "男" ? true : false);
+        $("#picture").show();
+        $("input[name=show][value='0']").prop("checked", data.carouselState == "0" ? true : false);
+        $("input[name=show][value='1']").prop("checked", data.carouselState == "1" ? true : false);
         layui.form.render(); //更新全部
         $("#submitBtn").text("修改");
     }
 
     //重置
     function clealUserData() {
-        $("#authorName").val("");
+        $("#username").val("");
+        $("#soft").val("");
         $("#picture").attr("src", "");
-        $("#email").val("");
-        $("#phone").val("");
-        $("#address").val("");
-        $("input[name=sex][value='女']").prop("checked", false);
-        $("input[name=sex][value='男']").prop("checked", true);
-        $("input[name=onlineStatus][value='0']").prop("checked", false);
-        $("input[name=onlineStatus][value='1']").prop("checked", true);
-        $("input[name=userStatus][value='0']").prop("checked", false);
-        $("input[name=userStatus][value='1']").prop("checked", true);
-        layui.formSelects.value('role-select', 0);
+        $("#picture").hide();
+        $("input[name=show][value='0']").prop("checked", false);
+        $("input[name=show][value='1']").prop("checked", true);
         layui.form.render(); //更新全部
     }
 
     //子页面提交
     function SaveOrupdateUser() {
-        var url = "/user/saveUser";
+        var url = "/carousel/saveCarousel";
         var userParam = getUserParam();
         if ($("#bindUserData").data("userData") != null) {
-            url = "/user/updateUser";
+            url = "/carousel/updateCarousel";
             userParam.id = $("#bindUserData").data("userData").id;
         }
         console.log(userParam);//打印添加用户信息
@@ -123,32 +127,15 @@
     }
 
     function getUserParam() {
-        var username = $("#username").val();
-        var password = $("#password").val();
-        var authorName = $("#authorName").val();
-        var sex = $("input[name=\"sex\"]:checked").val();
-        var picture = document.getElementsByTagName('img')[0].src;
-        var email = $("#email").val();
-        var phone = $("#phone").val();
-        var address = $("#address").val();
-        var onlineStatus = $("input[name=\"onlineStatus\"]:checked").val();
-        var userStatus = $("input[name=\"userStatus\"]:checked").val();
-        //获取角色的id 数组
-        var checkedRole = layui.formSelects.value('role-select', 'val'); //[1,2,3]
-        var personalizedSign = $("#personalizedSign").val();
+        var name = $("#username").val();
+        var soft = $("#soft").val();
+        var photo = document.getElementsByTagName('img')[0].src;
+        var showChecked = $("input[name=\"show\"]:checked").val();
         var params = {
-            username: username,
-            password: password,
-            authorName: authorName,
-            sex: sex,
-            picture: picture,
-            email: email,
-            phone: phone,
-            address: address,
-            onlineStatus: onlineStatus,
-            userStatus: userStatus,
-            roleIds: checkedRole,
-            personalizedSign: personalizedSign
+            name: name,
+            soft: soft,
+            photo: photo,
+            carouselState: showChecked
         }
         return params;
     }

@@ -1,5 +1,6 @@
 package com.xun.sys.dao;
 
+import com.xun.common.pojo.countBlogTypeVo;
 import com.xun.sys.pojo.Blog;
 import com.xun.sys.pojo.BlogUserTypeVo;
 import org.apache.ibatis.annotations.Mapper;
@@ -19,6 +20,10 @@ import java.util.List;
  */
 @Mapper
 public interface BlogDao {
+    @Select ( "select count(1) value,t.`name` from blog b join type t on t.id=b.type_id  where deleteState=1\n" +
+                    "GROUP BY b.type_id" )
+    List< countBlogTypeVo > countBlogType ( );
+
     @Select ( "select * from blog where id=#{id}" )
     Blog findBlogById ( int id );
 
@@ -114,12 +119,28 @@ public interface BlogDao {
 
     /**
      * 审核文章
+     * 草稿状态不能审核
      *
      * @param id
      * @param essayStatus
      * @param recommend
      * @return
      */
-    @Update ( "update blog set essayStatus=#{essayStatus} where id=#{id}" )
+    @Update ( "update blog set essayStatus=#{essayStatus} where id=#{id} and essayStatus !=0" )
     int updateEssayStatus ( Integer id, Integer essayStatus, Integer recommend );
+
+    /**
+     * 查询最新推荐的文章显示
+     *
+     * @return
+     */
+    @Select ( "select  * From blog where recommend=1 and deleteState=1 ORDER BY essayGrade,publishDate desc " )
+    List< Blog > findRecommendBlog ( );
+
+    /**
+     * 查询主页最新文章
+     *
+     * @return
+     */
+    List< BlogUserTypeVo > findAllFirstPageBlog ( );
 }

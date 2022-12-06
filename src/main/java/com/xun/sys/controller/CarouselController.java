@@ -81,4 +81,26 @@ public class CarouselController {
         jr.setMsg ( n + "条数据已恢复到列表！" );
         return jr;
     }
+
+    /**
+     * 修改轮播图
+     *
+     * @param carousel
+     * @return
+     */
+    @RequestMapping ( "updateCarousel" )
+    public JsonResult updateCarousel ( Carousel carousel ) {
+        Integer n = carouselServiceImpl.updateCarousel ( carousel );
+        JsonResult jr = new JsonResult ( n );
+        jr.setMsg ( "修改成功！" );
+        return jr;
+    }
+
+    @RequestMapping ( "saveCarousel" )
+    public JsonResult saveCarousel ( Carousel carousel ) {
+        Integer n = carouselServiceImpl.saveCarousel ( carousel );
+        JsonResult jr = new JsonResult ( n );
+        jr.setMsg ( "添加成功！" );
+        return jr;
+    }
 }

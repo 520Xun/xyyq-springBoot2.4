@@ -1,7 +1,7 @@
 package com.xun.sys.dao;
 
+import com.xun.common.pojo.countUserAddressVo;
 import com.xun.sys.pojo.User;
-import com.xun.sys.pojo.countUserAddressVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
@@ -160,10 +160,11 @@ public interface UserDao {
 
     /**
      * 统计用户分布，在地图上显示
+     * userStatus
      *
      * @return
      */
-    @Select ( "select count(1) value,address name from user GROUP BY address" )
+    @Select ( "select count(1) value,address name from user where delete_state=1 GROUP BY address" )
     List< countUserAddressVo > countUserAddress ( );
 
     /**

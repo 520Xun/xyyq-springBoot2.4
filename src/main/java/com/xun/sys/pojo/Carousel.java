@@ -24,7 +24,7 @@ public class Carousel {
     @JsonFormat ( pattern = "yyyy-MM-dd" )
     private Date createdTime;
     @JsonFormat ( pattern = "yyyy-MM-dd" )
-    private Date updatedTime;
+    private Date updateTime;
     private Integer carouselState = 1;//是否展示 1展示 0 不展示
     private Integer deleteState = 1;//是否删除
 }

@@ -3,6 +3,8 @@ package com.xun.sys.service;
 import com.xun.common.pojo.JsonResult;
 import com.xun.sys.pojo.Carousel;
 
+import java.util.List;
+
 /**
  * @version: java version 1.8
  * @Author: xun
@@ -52,4 +54,27 @@ public interface CarouselService {
      * @return
      */
     Integer recoverCarousel ( Integer[] ids );
+
+    /**
+     * 修改轮播图
+     *
+     * @param carousel
+     * @return
+     */
+    Integer updateCarousel ( Carousel carousel );
+
+    /**
+     * 添加轮播图
+     *
+     * @param carousel
+     * @return
+     */
+    Integer saveCarousel ( Carousel carousel );
+
+    /**
+     * 前台要显示的轮播图片
+     *
+     * @return
+     */
+    List< Carousel > findShowCarousel ( );
 }

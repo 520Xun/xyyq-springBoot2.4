@@ -31,9 +31,18 @@ public class Role implements Serializable {
      */
     private String note;
     @JsonFormat ( pattern = "yyyy-MM-dd HH:mm:ss" )
+    /**
+     * 创建时间
+     */
     private Date createdTime;
     @JsonFormat ( pattern = "yyyy-MM-dd HH:mm:ss" )
     private Date modifiedTime;
+    /**
+     * 修改用户
+     */
     private String createdUser;
+    /**
+     * 创建用户
+     */
     private String modifiedUser;
 }

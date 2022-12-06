@@ -4,11 +4,13 @@ import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
 import com.xun.common.pojo.JsonResult;
 import com.xun.common.pojo.Pagination;
+import com.xun.common.pojo.countBlogTypeVo;
 import com.xun.common.pojo.pageProperties;
 import com.xun.common.util.Assert;
 import com.xun.sys.dao.BlogDao;
 import com.xun.sys.dao.BlogTagDao;
 import com.xun.sys.dao.UserDao;
+import com.xun.sys.pojo.Blog;
 import com.xun.sys.pojo.BlogUserTypeVo;
 import com.xun.sys.pojo.User;
 import com.xun.sys.service.BlogService;
@@ -43,6 +45,12 @@ public class BlogServiceImpl implements BlogService {
 
     @Autowired
     private pageProperties pp;
+
+    @Override
+    public List< countBlogTypeVo > countBlogType ( ) {
+        List< countBlogTypeVo > blogTypeVos = blogDao.countBlogType ( );
+        return blogTypeVos;
+    }
 
     @Override
     public JsonResult findBlog ( BlogUserTypeVo blog, Integer curPage, Integer pageSize ) {
@@ -152,7 +160,18 @@ public class BlogServiceImpl implements BlogService {
         Assert.isEmpty ( id == null, "请选择要修改的数据！" );
         Assert.isEmpty ( essayStatus == null, "参数异常！" );
         int n = blogDao.updateEssayStatus ( id, essayStatus, recommend );
-        Assert.isEmpty ( n == 0, "修改失败！" );
+        Assert.isEmpty ( n == 0, "当前状态不能审批！" );
         return n;
+    }
+
+    @Override
+    public List< Blog > findRecommendBlog ( ) {
+        List< Blog > blogList = blogDao.findRecommendBlog ( );
+        return blogList;
+    }
+
+    @Override
+    public List< BlogUserTypeVo > findAllFirstPageBlog ( ) {
+        return blogDao.findAllFirstPageBlog ( );
     }
 }

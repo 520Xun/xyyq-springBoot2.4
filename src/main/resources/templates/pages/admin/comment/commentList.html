@@ -155,7 +155,7 @@
         var params = {
             createdTime: createdTime,
             curPage: curPage ? curPage : 1,
-            pageSize: 1 //默认条数
+            pageSize: 5 //默认条数
         }
         $.get(url, params, function (result) {
             //查询成功！
@@ -181,11 +181,10 @@
             $("#tbody").append(tr);
         } else {
             for (var i = 0; i < data.length; i++) {
-                debugger;
                 tr = "  <tr>\n" +
                     "  <th><input type=\"checkbox\" value='" + data[i].id + "' name='checkbox'></th>\n" +
-                    " <th>" + data[i].user.authorName + "</th>\n" +
-                    " <th>" + "<img src='" + data[i].user.picture + "' width='80px' height='80px' style='border-radius: 40px'>" + "</th>" +
+                    " <th>" + (data[i].user == null ? "用户可能不存在！" : data[i].user.username) + "</th>\n" +
+                    " <th>" + "<img src='" + (data[i].user == null ? "用户可能不存在！" : data[i].user.picture) + "' width='80px' height='80px' style='border-radius: 40px'>" + "</th>" +
                     " <th>" + data[i].blog.title + "</th>\n" +
                     " <th>" + data[i].contant + "</th>\n" +
                     " <th>" + data[i].commentIp + "</th>\n" +

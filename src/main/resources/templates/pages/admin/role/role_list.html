@@ -6,243 +6,348 @@
     <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico"/>
     <link rel="stylesheet" href="/layui/css/layui.css">
     <link rel="stylesheet" href="/css/common.css">
-    
+
     <link rel="stylesheet" href="/layui/extend/dtree.css">
     <link rel="stylesheet" href="/layui/extend/font/dtreefont.css">
 
     <!-- 图标 -->
     <link rel="stylesheet" href="../../static/CaoMei/style.css">
+    <style type="text/css">
+        .switch {
+            width: 57px;
+            height: 28px;
+            position: relative;
+            border: 1px solid #dfdfdf;
+            background-color: #fdfdfd;
+            box-shadow: #dfdfdf 0 0 0 0 inset;
+            border-radius: 20px;
+            background-clip: content-box;
+            display: inline-block;
+            -webkit-appearance: none;
+            user-select: none;
+            outline: none;
+        }
+
+        .switch:before {
+            content: '';
+            width: 26px;
+            height: 26px;
+            position: absolute;
+            top: 0;
+            left: 0;
+            border-radius: 20px;
+            background-color: #fff;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
+        }
+
+        .switch:checked {
+            border-color: #64bd63;
+            box-shadow: #64bd63 0 0 0 16px inset;
+            background-color: #64bd63;
+        }
+
+        .switch:checked:before {
+            left: 30px;
+        }
+
+        .switch.switch-anim {
+            transition: border cubic-bezier(0, 0, 0, 1) 0.4s, box-shadow cubic-bezier(0, 0, 0, 1) 0.4s;
+        }
+
+        .switch.switch-anim:before {
+            transition: left 0.3s;
+        }
+
+        .switch.switch-anim:checked {
+            box-shadow: #64bd63 0 0 0 16px inset;
+            background-color: #64bd63;
+            transition: border ease 0.4s, box-shadow ease 0.4s, background-color ease 1.2s;
+        }
+
+        .switch.switch-anim:checked:before {
+            transition: left 0.3s;
+        }
+
+        .container {
+            width: auto;
+            display: inline-block;
+            margin: 0 10px;
+        }
+
+        .upload {
+            width: 80px;
+            height: 38px;
+            padding: 4px 10px;
+            line-height: 27px;
+            position: relative;
+            text-decoration: none;
+            color: #fff;
+            background-color: #1E9FFF;
+        }
+
+        .inputFile {
+            position: absolute;
+            overflow: hidden;
+            right: 0;
+            top: 0;
+            opacity: 0;
+        }
+
+        .fileInfo {
+            float: left;
+            position: relative;
+            margin-left: 100px;
+            margin-top: -30px;
+        }
+    </style>
 </head>
-<body>
-    <div class="yadmin-body animated fadeIn">
+<body id="BindbodyData">
+<div class="yadmin-body animated fadeIn">
 
-        <form class="layui-form yadmin-search-area input">
-            <div class="layui-form-item">
-                <div class="layui-inline">
-                    <label for="roleName" class="layui-form-label">名称</label>
-                    <div class="layui-input-inline">
-                        <input type="text" name="roleName" autocomplete="off"
-                               id="roleName" class="layui-input">
-                    </div>
-
-                    <button lay-submit="" lay-filter="search" class="layui-btn layui-btn-sm layui-btn-primary table-action">
-                        <i class="layui-icon layui-icon-search"></i>
-                    </button>
+    <form class="layui-form yadmin-search-area input">
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label for="roleName" class="layui-form-label">名称</label>
+                <div class="layui-input-inline">
+                    <input type="text" name="roleName" autocomplete="off"
+                           id="roleName" class="layui-input">
                 </div>
+                <input type="button" value="查询" class="layui-btn layui-btn-normal" onclick="doLoadData()">
             </div>
-        </form>
+        </div>
+    </form>
 
-        <table class="layui-hide" id="role-table"></table>
+    <div class="caozuo">
+        <input type="button" value="新增" class="layui-btn layui-btn-normal insert">
+        <input type="button" value="修改" class="layui-btn layui-btn-normal update">
+        <input type="button" value="删除" class="layui-btn layui-btn-normal" onclick="deleteRole()">
+        <input type="file" id="saveRole" style="display: none" onchange="saveExcelRole()">
+        <label for="saveRole" class="layui-btn layui-btn-normal saveRole">导入</label>
+        <input type="button" value="导出" class="layui-btn layui-btn-normal" onclick="exports()">
     </div>
+    <table id="table" class="layui-table">
+        <thead>
+        <tr>
+            <td><input type="checkbox" onclick="choiceAll()" id="all"></td>
+            <td>序号</td>
+            <td>角色名称</td>
+            <td>描述</td>
+            <td>创建时间</td>
+            <td>修改时间</td>
+            <td>创建用户</td>
+            <td>修改用户</td>
+        </tr>
+        </thead>
+        <tbody id="tbody">
+        <tr>
+            <td>数据加载中....</td>
+        </tr>
+        </tbody>
+    </table>
+    <div id="page"></div>
+</div>
 
-    <script type="text/html" id="toolbar">
+<script type="text/javascript" src="/js/jquery-3.4.1.min.js"></script>
+<script src="/layui/layui.js"></script>
+<script src="https://cdn.bootcss.com/jquery/3.2.1/jquery.js"></script>
+<script src="https://cdn.bootcss.com/xlsx/0.11.5/xlsx.core.min.js"></script>
+<script src="/js/common.js"></script>
+<script>
+    $(function () {
+        $("#page").load("/doPageUI", function () {
+            //刷新数据
+            doLoadData();
+        })
+        $(".caozuo").on("click", ".insert, .update", saveRole)
+    })
 
-        <button type="button" class="layui-btn layui-btn-xs layui-btn-normal" lay-event="add">
-            <i class="layui-icon layui-icon-addition"></i>
-            新增
-        </button>
-
-    </script>
-
-    <script type="text/html" id="auth-toolbar">
-
-        <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="grant-menu">授权菜单</a>
-
-        <a class="layui-btn layui-btn-normal layui-btn-xs" lay-event="grant-operator">授权功能</a>
-
-    </script>
-
-    <script type="text/html" id="column-toolbar">
-
-        <button type="button" class="layui-btn layui-btn-normal layui-btn-xs" lay-event="edit">
-            <i class="layui-icon layui-icon-edit" title="编辑"></i>
-            编辑
-        </button>
-
-        <button type="button" class="layui-btn layui-btn-danger layui-btn-xs" lay-event="del">
-            <i class="layui-icon layui-icon-delete" title="删除"></i>
-            删除
-        </button>
-
-    </script>
-
-    <script src="/js/jquery.js"></script>
-    <script src="/layui/layui.js"></script>
-    <script src="/js/common.js"></script>
-
-    <script>
-        layui.config({
-            base: '/layui/extend/'
-        }).use(['table', 'element', 'dtree', 'form', 'tablePlug'], function () {
-            var table = layui.table;
-            var $ = layui.$;
-            var dtree = layui.dtree;
-            var form = layui.form;
-            var tablePlug = layui.tablePlug;
-
-            tablePlug.smartReload.enable(true);
-
-            form.on('submit(search)', function (form) {
-                table.reload('role-table', {
-                    where: form.field
-                });
-                return false;
-            });
-
-            table.render({
-                elem: '#role-table',
-                url: '/data/role/list.json',
-                cellMinWidth: 80,
-                page: true,
-                toolbar: '#toolbar',
-                smartReloadModel: true,
-                cols: [
-                    [
-                        {type: 'numbers', title: '序号', width: 60},
-                        {field: 'roleId', title: 'ID', hide: true},
-                        {field: 'roleName', title: '角色名称', width: 120},
-                        {field: 'remark', title: '描述', minWidth: 200},
-                        {title: '授权', align: 'center', width: 200, toolbar: '#auth-toolbar'},
-                        {title: '操作', fixed: 'right', width: 200, align: 'center', toolbar: '#column-toolbar'}
-                    ]
-                ]
-            });
-
-            table.on('toolbar', function (obj) {
-                var event = obj.event;
-                if (event === 'add') {
-                    add();
+    function saveRole() {
+        var bool = $(this).hasClass("update")
+        var title = bool ? "修改角色" : "添加角色";
+        var radioCheck = $("#tbody").find("input[type='checkbox']:checked");
+        if (title == "修改角色" && !radioCheck.length) {
+            alert("请选择要修改的角色");
+            return
+        } else if (radioCheck.length > 1) {
+            alert("一次只能更改一个角色");
+            return
+        }
+        if (title == "修改角色") {
+            var inps = $("#tbody input[type='checkbox']:checked");
+            var arr = [];
+            for (var i = 0; i < inps.length; i++) {
+                arr.push($(inps[i]).val());
+            }
+            var rowData = arr;
+            if (rowData != null) {
+                $("#BindbodyData").data("roleData", rowData);
+            }
+            layer.open({
+                type: 2,
+                title: title,
+                shadeClose: true,
+                shade: false,
+                maxmin: true, //开启最大化最小化按钮
+                area: ['500px', '300px'],
+                content: '/admin/role/role_add', //展示的页面
+                success: function (obj, index) {
+                    var iframe = window['layui-layer-iframe' + index];
+                    var data = $("#BindbodyData").data("roleData");
+                    if (data != null) {
+                        iframe.loadUPdateUserData(data);
+                    }
+                }, end: function () {
+                    $("#BindbodyData").data("roleData", "");
+                    parent.location.reload();
                 }
             });
-
-            table.on('tool', function (obj) {
-                var data = obj.data;
-                var event = obj.event;
-
-                if (event === 'edit') {
-                    edit(data.roleId);
-                } else if (event === 'grant-menu') {
-                    layer.open({
-                        type: 1,
-                        title: "授权菜单",
-                        area: ["350px", "85%"],
-                        shadeClose: true,
-                        content: '<ul id="menuTree" class="dtree" data-id="0"></ul>',
-                        btn: ['确认选择'],
-                        success: function(layero, index){
-                            dtree.render({
-                                obj: $(layero).find("#menuTree"),
-                                url: "/data/menu/tree.json",
-                                dataStyle: "layuiStyle",
-                                method: "GET",
-                                dot: false,
-                                checkbar: true, // 开启复选框
-                                menubar: true,
-                                response: {
-                                    statusCode: 0,
-                                    message: "msg",
-                                    treeId: "id",
-                                    parentId: "parentId",
-                                    title: "name"
-                                }
-                            });
-                        },
-                        yes: function(index, layero) {
-                            var flag = true;
-                            var nodes = dtree.getCheckbarNodesParam("menuTree"); // 获取选中值
-                            var ids = [];
-                            for (var key in nodes) {
-                                var node = nodes[key];
-                                ids.push(node.nodeId);
-                            }
-                            console.log("授权菜单 ID: " + ids);
-                            layer.msg("授权成功", {icon: 6});
-                            layer.close(index);
-
-                        }
-                    });
-                } else if (event === 'grant-operator') {
-                    layer.open({
-                        type: 1,
-                        title: "授权功能",
-                        area: ["350px", "85%"],
-                        shadeClose: true,
-                        content: '<ul id="operatorTree" class="dtree" data-id="0"></ul>',
-                        btn: ['确认选择'],
-                        success: function(layero, index){
-                            dtree.render({
-                                obj: $(layero).find("#operatorTree"),
-                                url: "/data/operator/tree.json",
-                                dataStyle: "layuiStyle",
-                                initLevel: 5,   // 初始打开节点级别
-                                method: "GET",
-                                dot: false,
-                                checkbar: true, // 开启复选框
-                                menubar: true,
-                                response: {
-                                    statusCode: 0,
-                                    message: "msg",
-                                    treeId: "id",
-                                    parentId: "parentId",
-                                    title: "name"
-                                }
-                            });
-                        },
-                        yes: function(index, layero) {
-                            var flag = true;
-                            var nodes = dtree.getCheckbarNodesParam("operatorTree"); // 获取选中值
-                            var ids = [];
-                            for (var key in nodes) {
-                                var node = nodes[key];
-                                ids.push(node.nodeId);
-                            }
-                            console.log("授权功能 ID: " + ids);
-                            layer.msg("授权成功", {icon: 6});
-                            layer.close(index);
-                        }
-                    });
-                } else if (event === 'del') {
-                    layer.confirm("确定删除角色吗?", {icon: 3, title: '提示'},
-                        function (index) {// 确定回调
-                            obj.del();
-                            parent.layer.msg("删除成功", {icon: 6});
-                            layer.close(index);
-                        }, function (index) {//取消回调
-                            layer.close(index);
-                        }
-                    );
-                }
-            });
-
-            function add() {
-                layer.open({
-                    content: "/view/role/role-add.html",
-                    title: "新增角色",
-                    area: ['40%', '85%'],
-                    type: 2,
-                    maxmin: true,
-                    shadeClose: true,
-                    end: function () {
-                        table.reload('role-table');
-                    }
-                });
-            }
-
-            function edit(id) {
-                layer.open({
-                    content: "/role/" + id,
-                    title: "编辑角色",
-                    area: ['40%', '85%'],
-                    type: 2,
-                    maxmin: true,
-                    shadeClose: true,
-                    end: function () {
-                        table.reload('role-table');
-                    }
-                });
-            }
+            return
+        }
+        layer.open({
+            type: 2,
+            title: title,
+            shadeClose: true,
+            shade: false,
+            maxmin: true, //开启最大化最小化按钮
+            area: ['500px', '300px'],
+            content: '/admin/role/role_add', //展示的页面
         });
-    </script>
 
+    }
+
+    function doLoadData() {
+        var curPage = $("#page").data("curPage")
+        params = {
+            roleName: $("#roleName").val(),
+            curPage: curPage ? curPage : 0,
+            pageSize: 5
+
+        }
+        $.get("/role/FindAllRole", params, function (result) {
+            if (result.state == 0) {
+                alert("查询失败！")
+            }
+            setPageData(result.data)
+            $("#tbody").empty();
+            var tr = "";
+            debugger
+            data = result.data.pageData;
+            for (var i = 0; i < data.length; i++) {
+                tr += "<tr><td><input type='checkbox' value='" + data[i].id + "' onclick='choiceThis(this)'></td>"
+                    + "<td>" + i + "</td>"
+                    + "<td>" + data[i].roleName + "</td>"
+                    + "<td>" + data[i].note + "</td>"
+                    + "<td>" + data[i].createdTime + "</td>"
+                    + "<td>" + data[i].modifiedTime + "</td>"
+                    + "<td>" + data[i].createdUser + "</td>"
+                    + "<td>" + data[i].modifiedUser + "</td>"
+                    + "</tr>";
+            }
+            $("#tbody").html(tr);
+
+        });
+    }
+
+    function choiceAll() {
+        var checks = $("#tbody input[type='checkbox']");
+        if ($("#all").prop("checked") == true) {
+            checks.prop("checked", true);
+
+        } else {
+            checks.prop("checked", false);
+        }
+    }
+
+    function choiceThis(btn) {
+        var checks = $("#tbody input[type='checkbox']");//拿到所有多选下面的input
+        var checkeds = $("#tbody input[type='checkbox']:checked");//选中的多选
+        if (checks.length == checkeds.length) {
+            $("#all").prop("checked", true)
+        } else {
+            $("#all").prop("checked", false);
+        }
+    }
+
+    function deleteRole() {
+        var url = "/role/deleteRole";
+        var inps = $("#tbody input[type='checkbox']:checked");
+        if (inps.length == 0) {
+            alert("请选择要删除的数据！")
+        }
+        var arr = [];
+        for (var i = 0; i < inps.length; i++) {
+            arr.push($(inps[i]).val());
+        }
+        var data = {"ids": arr};
+        $.get(url, data, function (result) {
+            if (result.state == 0) {
+                alert(result.msg);
+            }
+            if (result.state == 1) {
+                alert(result.data);
+            }
+        })
+        doLoadData();
+    }
+
+    function exports() {
+        var inps = $("#tbody input[type='checkbox']:checked");
+        if (inps.length == 0) {
+            alert("请选择要导出的数据！")
+        }
+        var arr = [];
+        for (var i = 0; i < inps.length; i++) {
+            arr.push($(inps[i]).val());
+        }
+        $.get("/role/exportsRole", {ids: arr}, function (result) {
+            alert(result.data)
+        })
+    }
+
+    function saveExcelRole() {
+        // 收集参数，也就是文件名
+        var fileName = $("#saveRole").val();
+        // 截取导入文件的类型
+        var suffix = fileName.substr(fileName.lastIndexOf(".") + 1).toLocaleLowerCase();
+        if (suffix != "xlsx") {
+            alert("只支持xls文件");
+            return;
+        }
+        //获得上传的文件，并判断大小
+        var uploadFile = $("#saveRole").get(0).files[0];
+        if (uploadFile.size > 1 * 1024 * 1024) {
+            alert("文件大小不超过1MB");
+            return;
+        }
+        // FormData是ajax提供的接口,可以模拟键值对向后台提交参数;
+        // FormData最大的优势是不但能提交文本数据，还能提交二进制数据
+        var formData = new FormData();
+        formData.append("file", uploadFile);
+        $(".saveRole").text("已选择");
+        //发送请求
+        $.ajax({
+            url: '/role/saveExcelCar',
+            data: formData,
+            // 设置ajax向后台提交参数之前，是否把参数转换成字符串：true--是,false--不是,默认是true
+            processData: false,
+            // 提交参数之前，是否把参数统一按urlencoded编码：true--是,false--不是，默认是true
+            contentType: false,
+            type: 'post',
+            dataType: 'json',
+            success: function (result) {
+                if (result.state == "1") {
+                    //提示成功导入记录条数
+                    layer.msg("成功导入" + result.data + "条记录", {icon: "1"});
+                    //调用刷新数据方法
+                    doLoadData();
+                    $(".saveRole").text("导入");
+                } else {
+                    // 提示信息
+                    layer.msg(result.msg, {icon: "2"})
+                }
+            }
+        })
+    }
+</script>
 </body>
 </html>

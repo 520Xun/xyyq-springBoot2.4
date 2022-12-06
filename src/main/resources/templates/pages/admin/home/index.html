@@ -11,6 +11,7 @@
 </head>
 <body>
 <div id="main" style="width: 900px;height: 700px"></div>
+<div id="main1" style="width: 900px;height: 700px"></div>
 <script type="text/javascript">
     // 基于准备好的dom，初始化echarts实例
     var myChart = echarts.init(document.getElementById('main'));
@@ -113,6 +114,53 @@
         })
     })
     myChart.setOption(option);
+</script>
+<script>
+    // 基于准备好的dom，初始化echarts实例
+    var myChart2 = echarts.init(document.getElementById('main1'));
+    var dataList2 = [];
+    //配置属性
+    option = {
+        title: {
+            text: 'Referer of a Website',
+            subtext: 'Fake Data',
+            left: 'center'
+        },
+        tooltip: {
+            trigger: 'item'
+        },
+        legend: {
+            orient: 'vertical',
+            left: 'left'
+        }
+    };
+    var url = "/blog/countBlogType";
+    $.get(url, {}, function (result) {
+        var data = result.data;
+        debugger;
+        for (var i = 0; i < data.length; i++) {
+            dataList2[i] = data[i];
+        }
+        myChart2.setOption({
+            series: [
+                {
+                    name: '文章分类统计图',
+                    type: 'pie',
+                    radius: '50%',
+                    data: dataList2,
+                    emphasis: {
+                        itemStyle: {
+                            shadowBlur: 10,
+                            shadowOffsetX: 0,
+                            shadowColor: 'rgba(0, 0, 0, 0.5)'
+                        }
+                    }
+                }
+            ]
+        })
+    })
+    //刷新数据
+    myChart2.setOption(option)
 </script>
 </body>
 </html>

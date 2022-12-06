@@ -22,7 +22,7 @@ public class BlogUserTypeVo implements Serializable {
     private String title; //文章标题
     private User user;//作者
     private String content;//博文
-    private Integer NumberView;//被查看次数
+    private Integer NumberView = 1;//被查看次数
     @JsonFormat ( pattern = "yyyy-MM-dd HH:mm:ss" )
     private String publishDate;//发布时间
     @JsonFormat ( pattern = "yyyy-MM-dd HH:mm:ss" )

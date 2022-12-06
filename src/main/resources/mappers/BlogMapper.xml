@@ -32,7 +32,7 @@
         select *
         from blog
         where title = #{title}
-        and content = #{content}
+          and content = #{content}
     </select>
     <resultMap id="checkedBlog" type="com.xun.sys.pojo.BlogUserTypeVo">
         <id property="id" column="id"/>
@@ -45,23 +45,23 @@
     <insert id="insertBlog" parameterType="com.xun.sys.pojo.BlogUserTypeVo" useGeneratedKeys="true"
             keyProperty="blog.id">
         INSERT INTO `myblog`.`blog`(`id`, `title`, `user_id`, `content`, `NumberView`, `publishDate`, `updateDate`,
-        `essayStatus`, `essayGrade`, `essayCollect`, `essayTop`, `essayTread`, `type_id`,
-        `deleteState`, `recommend`, `blog_cover`)
+                                    `essayStatus`, `essayGrade`, `essayCollect`, `essayTop`, `essayTread`, `type_id`,
+                                    `deleteState`, `recommend`, `blog_cover`)
         VALUES (null, #{blog.title}, #{userId}, #{blog.content}, #{blog.NumberView}, now(), #{blog.updateDate},
-        #{blog.essayStatus}, #{blog.essayGrade}, #{blog.essayCollect}, #{blog.essayTop}, #{blog.essayTread},
-        #{blog.type.id}, #{blog.deleteState}, #{blog.recommend},
-        #{blog.blogCover})
+                #{blog.essayStatus}, #{blog.essayGrade}, #{blog.essayCollect}, #{blog.essayTop}, #{blog.essayTread},
+                #{blog.type.id}, #{blog.deleteState}, #{blog.recommend},
+                #{blog.blogCover})
     </insert>
 
     <update id="updateBlog">
         UPDATE `myblog`.`blog`
-        SET `title` = #{title},
-        `content` =#{content},
-        `NumberView` = #{NumberView},
-        `updateDate` = now(),
-        `essayStatus` = #{essayStatus},
-        `type_id` = #{type.id},
-        `blog_cover` =#{blogCover}
+        SET `title`       = #{title},
+            `content`     =#{content},
+            `NumberView`  = #{NumberView},
+            `updateDate`  = now(),
+            `essayStatus` = #{essayStatus},
+            `type_id`     = #{type.id},
+            `blog_cover`  =#{blogCover}
         WHERE `id` = #{id};
     </update>
 
@@ -85,4 +85,12 @@
             #{id}
         </foreach>
     </update>
+
+    <select id="findAllFirstPageBlog" resultMap="findBlogAll">
+        select *
+        from blog
+        where deleteState = 1
+          and essayStatus = 2
+        ORDER BY essayGrade, publishDate desc
+    </select>
 </mapper>

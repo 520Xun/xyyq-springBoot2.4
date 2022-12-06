@@ -23,6 +23,11 @@ public class BlogController {
     @Autowired
     private BlogService blogServiceImpl;
 
+    @RequestMapping ( "countBlogType" )
+    public JsonResult countBlogType ( ) {
+        return new JsonResult ( blogServiceImpl.countBlogType ( ) );
+    }
+
     /**
      * 查找博文 目前只支持根据标题搜索
      *
