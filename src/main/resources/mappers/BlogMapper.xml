@@ -93,4 +93,10 @@
           and essayStatus = 2
         ORDER BY essayGrade, publishDate desc
     </select>
+
+    <select id="findBlogInfoByBlogId" resultMap="findBlogAll">
+        select *
+        from blog
+        where id = #{id}
+    </select>
 </mapper>

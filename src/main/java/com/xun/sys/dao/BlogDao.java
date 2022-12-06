@@ -143,4 +143,12 @@ public interface BlogDao {
      * @return
      */
     List< BlogUserTypeVo > findAllFirstPageBlog ( );
+
+    /**
+     * 根据文章id 查找文章信息
+     *
+     * @param id
+     * @return
+     */
+    BlogUserTypeVo findBlogInfoByBlogId ( Integer id );
 }

@@ -115,4 +115,12 @@ public interface BlogService {
      * @return
      */
     List< BlogUserTypeVo > findAllFirstPageBlog ( );
+
+    /**
+     * 根据文章id 查询所有文章信息
+     *
+     * @param id
+     * @return
+     */
+    BlogUserTypeVo findBlogInfoByBlogId ( Integer id );
 }

@@ -174,4 +174,12 @@ public class BlogServiceImpl implements BlogService {
     public List< BlogUserTypeVo > findAllFirstPageBlog ( ) {
         return blogDao.findAllFirstPageBlog ( );
     }
+
+    @Override
+    public BlogUserTypeVo findBlogInfoByBlogId ( Integer id ) {
+        Assert.isEmpty ( id == null || id == 0, "请求参数有误！" );
+        BlogUserTypeVo blogInfo = blogDao.findBlogInfoByBlogId ( id );
+        Assert.isEmpty ( blogInfo == null || blogInfo.getClass ( ) == null, "文章拔腿跑了！" );
+        return null;
+    }
 }

@@ -89,7 +89,7 @@
     </div>
     <div class="ui stackable m-container-mini m-opacity grid">
         <div class="m-margin-tb-tiny four wide column" th:each="blog : ${recommendedBlogs}">
-            <a href="#" class="class_outer" target="_blank" th:href="@{/myblog/select/{id}(id=${blog.id})}">
+            <a href="#" class="class_outer" target="_blank" th:href="@{/myblog/blogInfo/{id}(id=${blog.id})}">
                 <img src="http://localhost/images/20221126163350.jpg" alt="" class="ui rounded image"  th:src="@{${blog.blogCover}}" >
                 <span class="class_cover" >
                      <h4 class="m-font-size-blog-text m-margin-tb-tiny" th:text="${blog.title}">大圣，此去欲何?</h4>
@@ -116,7 +116,7 @@
                     <div class="ui large aligned mobile reversed stackable grid">
                         <!--博文信息-->
                         <div class="eleven wide column ">
-                            <h3 class="ui header" ><a href="#" target="_blank" class="m-black" th:href="@{/blog/select/{id}(id=${blog.id})}" th:text="${blog.title}">大圣，此去欲何?</a></h3>
+                            <h3 class="ui header" ><a href="#" target="_blank" class="m-black" th:href="@{/myblog/blogInfo/{id}(id=${blog.id})}" th:text="${blog.title}">大圣，此去欲何?</a></h3>
                             <p class="m-text m-margin-top-max hidden" th:text="${blog.content}">今天看到群里有小伙伴问，这个异常要怎么解决</p>
                             <div class="ui m-margin-top-max grid">
                                 <div class="eleven wide column">
@@ -143,7 +143,7 @@
                         </div>
                         <!--博文图片-->
                         <div class="five wide column">
-                            <a href="#" target="_blank">
+                            <a href="#" target="_blank"  th:href="@{/myblog/blogInfo/{id}(id=${blog.id})}">
                                 <img src="	http://localhost/images/20221126163350.jpg" alt="" class="ui rounded image" th:src="${blog.blogCover}">
                             </a>
                         </div>
