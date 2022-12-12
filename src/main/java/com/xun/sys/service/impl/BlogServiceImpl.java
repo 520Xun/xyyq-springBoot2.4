@@ -9,6 +9,7 @@ import com.xun.common.pojo.pageProperties;
 import com.xun.common.util.Assert;
 import com.xun.sys.dao.BlogDao;
 import com.xun.sys.dao.BlogTagDao;
+import com.xun.sys.dao.CommentDao;
 import com.xun.sys.dao.UserDao;
 import com.xun.sys.pojo.Blog;
 import com.xun.sys.pojo.BlogUserTypeVo;
@@ -43,6 +44,8 @@ public class BlogServiceImpl implements BlogService {
     @Autowired
     private BlogTagDao blogTagDao;
 
+    @Autowired
+    private CommentDao commentDao;
     @Autowired
     private pageProperties pp;
 
@@ -176,10 +179,22 @@ public class BlogServiceImpl implements BlogService {
     }
 
     @Override
-    public BlogUserTypeVo findBlogInfoByBlogId ( Integer id ) {
-        Assert.isEmpty ( id == null || id == 0, "请求参数有误！" );
+    public BlogUserTypeVo findBlogInfoByBlogId ( String id ) {
+        Assert.isEmpty ( id == null || id.equals ( "" ), "请求参数有误！" );
         BlogUserTypeVo blogInfo = blogDao.findBlogInfoByBlogId ( id );
+        //获取文章的评论数量
+        Integer countNumber = commentDao.countByBlogId ( blogInfo.getId ( ) );
+        blogInfo.setCountComment ( countNumber );
+        //获取文章的标签
+        List< String > BlogTags = blogTagDao.findTagInfoByBlogId ( blogInfo.getId ( ) );
+        blogInfo.setBlogTags ( BlogTags );
         Assert.isEmpty ( blogInfo == null || blogInfo.getClass ( ) == null, "文章拔腿跑了！" );
-        return null;
+        return blogInfo;
+    }
+
+    @Override
+    public List< BlogUserTypeVo > findBlogByTypeId ( String id ) {
+        Assert.isEmpty ( id == null || id.equals ( "" ), "请求参数异常！" );
+        return blogDao.findBlogByTypeId ( id );
     }
 }

@@ -65,40 +65,9 @@ public class PageUIController {
      */
     @RequestMapping ( "admin/essay/essayEdit/{content}" )
     public String blogEditPageUI ( Model model, @PathVariable ( "content" ) String content ) {
-        model.addAttribute ( "text", content );
+        model.addAttribute ( "content", content );
         return "admin/essay/essayEdit";
     }
 
-    /**
-     * 审批文章
-     *
-     * @return
-     */
-    @RequestMapping ( "admin/essay/blogHtml" )
-    public String blogInfo ( Model model ) {
-        model.addAttribute ( "comment", "今天看到群里有小伙伴问，这个异常要怎么解决：\n" +
-                        "```java\n" +
-                        "java.lang.IllegalArgumentException: Request header is too large\n" +
-                        "```\n" +
-                        "#### 异常原因\n" +
-                        "\n" +
-                        "##### 根据Exception MessageRequest header is too large，就可以判断这个错误原因是HTTP请求头过大导致的。\n" +
-                        "\n" +
-                        "#### 如何解决\n" +
-                        "\n" +
-                        "##### 解决方法主要两个方向：\n" +
-                        "\n" +
-                        "#### 方向一：配置应用服务器使其允许的最大值 > 你实用实用的请求头数据大小\n" +
-                        "\n" +
-                        "##### 如果用Spring Boot的话，只需要在配置文件里配置这个参数即可：\n" +
-                        "    server.max-http-header-size=\n" +
-                        "#### 方向二：规避请求头过大的情况\n" +
-                        "\n" +
-                        "##### 虽然上面的配置可以在解决，但是如果无节制的使用header部分，那么这个参数就会变得很不可控。你来一段，他来一段，为了适配不出错，还得求个并集的最大值，保证万无一失...即便如此，未来可能还得扩...\n" +
-                        "\n" +
-                        "##### 所以，对于请求头部分的数据还是不建议放太大的数据，建议把这些数据放到body里更为合理。这是我的建议，那么在读的各位都是如何处理的呢？留言说说你认为最好的处理方式吧？\n" +
-                        "![](http://localhost/images/20221124164904.jpg)" );
-        return "admin/essay/blogHtml";
-    }
-    
+
 }

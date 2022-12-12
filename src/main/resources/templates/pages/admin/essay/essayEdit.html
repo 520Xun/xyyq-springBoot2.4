@@ -302,6 +302,7 @@
         var url = "/admin/essay/essayEdit/" + data.content;
         $.get(url, {}, function () {
         })
+        debugger
         $("#bindUserData").data("blogData", data);
         $("#titile").val(data.title);
         $("#authorName").val(data.user.authorName);

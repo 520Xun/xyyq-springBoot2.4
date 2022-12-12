@@ -14,7 +14,7 @@
     <script src="/layui/layui.js"></script>
     <style>
         body{
-            background-image: url("http://localhost/images/20221126163350.jpg");
+            background-image: url("https://images.newstar.net.cn/img/bg.jpg");
         }
         /*文本超出隐藏*/
         .hidden{
@@ -29,13 +29,13 @@
 <body >
 
 <!--导航-->
-<nav id="nav" class="gird-header" style="display: none">
+<nav id="nav" class="gird-header" style="display: none"  th:fragment="navBar">
     <div class="ui container">
         <div class="ui inverted secondary stackable menu">
             <h2 class="ui olive header item" style="font-family: STSong" th:text="阿勋博客">Myblog</h2>
             <!--<div class="right m-item item m-mobile-hide">-->
-                <a href="#" class="active m-item item"><i class="home icon"></i>首页</a>
-                <a href="#" class="m-item item"><i class="clone outline icon"></i>分类</a>
+                <a href="#" class="active m-item item" th:href="@{/myblog/index}"><i class="home icon"></i>首页</a>
+                <a href="#" class="m-item item" th:href="@{/myblog/type/0}"><i class="clone outline icon"></i>分类</a>
                 <a href="#" class="m-item item"><i class="clock icon"></i>时间轴</a>
                 <a href="#" class="m-item item"><i class="music icon"></i>音乐盒</a>
                 <a href="#" class="m-item item"><i class="book icon"></i>留言板</a>
@@ -43,10 +43,10 @@
                 <a href="#" class="olive m-item item"><i class="image icon"></i>照片墙</a>
                 <a href="#" class="m-item item"><i class="info icon"></i>关于我</a>
             <!--</div>-->
-            <div class="right m-item item">
-                <form name="search" action="#" method="post" target="_blank">
-                    <div class="ui icon transparent input m-margin-tb-tiny" style="color: #0beac1">
-                        <input style="color: #0beac1" type="text" name="query" placeholder="S一下....">
+            <div class="right m-item item" >
+                <form name="search" action="#" th:action="@{/search}" method="post" target="_blank">
+                    <div class="ui icon transparent input m-margin-tb-tiny" style="color: white">
+                        <input style="color: white" type="text" name="query" placeholder="Search...." th:value="${query}">
                         <i onclick="document.forms['search'].submit()" class="search link icon"></i>
                     </div>
                 </form>
@@ -57,11 +57,12 @@
         <i class="sidebar icon"></i>
     </a>
 </nav>
+
 <!--顶部图片-->
 <div class="m-bg-class_outer" style="width: 100%;height: 750px">
-        <div id="waypoint" class="ui m-margin-top-large" align="center">
-            <a href="#" class="ui circular icon button m-opacity-small m-item item m-mobile-hide m-index-btn" ><i class="home icon"></i>首页</a>
-            <a href="#" class="ui circular icon button m-opacity-small m-item item m-mobile-hide m-index-btn" ><i class="clone outline icon"></i>分类</a>
+        <div id="waypoint" class="ui m-margin-top-large" align="center" th:fragment="head">
+            <a href="#" class="ui circular icon button m-opacity-small m-item item m-mobile-hide m-index-btn" th:href="@{/myblog/index}"><i class="home icon"></i>首页</a>
+            <a href="#" class="ui circular icon button m-opacity-small m-item item m-mobile-hide m-index-btn"th:href="@{/myblog/type}" ><i class="clone outline icon"></i>分类</a>
             <a href="#" class="ui circular icon button m-opacity-small m-item item m-mobile-hide m-index-btn" ><i class="clock icon"></i>时间轴</a>
             <a href="#" class="ui circular icon button m-opacity-small m-item item m-mobile-hide m-index-btn"><i class="music icon"></i>音乐盒</a>
             <a href="#" class="ui circular icon button m-opacity-small m-item item m-mobile-hide m-index-btn" ><i class="book icon"></i>留言板</a>
@@ -120,19 +121,16 @@
                             <p class="m-text m-margin-top-max hidden" th:text="${blog.content}">今天看到群里有小伙伴问，这个异常要怎么解决</p>
                             <div class="ui m-margin-top-max grid">
                                 <div class="eleven wide column">
-                                    <div class="ui mini horizontal link list">
-                                        <div class="item">
+                                    <div class="ui mini horizontal link list" style="color: #1A1A17!important;">
+                                        <div class="item" style="color: #1A1A17!important;">
                                             <img src="	http://localhost/images/20221126163350.jpg"  alt="" class="ui avatar image"  th:src="${blog.user.picture}">
-                                            <div class="content"><a href="#" target="_blank" class="header" th:text="${blog.user.authorName}">oneStar</a></div>
+                                            <div class="content"><a href="#" target="_blank" class="header" th:text="${blog.user.authorName}"  th:href="@{/myblog/userInfo/{id}(id=${blog.user.id})}">oneStar</a></div>
                                         </div>
-                                        <div class="item">
+                                        <div class="item" style="color: #1A1A17!important;">
                                             <i class="calendar icon"></i><span th:text="${blog.publishDate}">2020-01-01</span>
                                         </div>
-                                        <div class="item">
+                                        <div class="item" style="color: #1A1A17!important;">
                                             <i class="eye icon"></i><span th:text="${blog.NumberView}">2222</span>
-                                        </div>
-                                        <div class="item">
-                                            <i class="comment outline icon"></i> <span>2222</span>
                                         </div>
                                     </div>
                                 </div>
@@ -186,37 +184,10 @@
 <br>
 <br>
 <!--底部栏-->
-<footer class="ui inverted vertical segment m-padded-tb-massive m-opacity">
+<footer class="ui inverted vertical segment m-padded-tb-massive m-opacity" th:fragment="footer">
     <!--容器-->
     <div class="ui center aligned container">
         <div class="ui inverted divided stackable grid">
-<!--            <div class="four wide column">-->
-<!--                <div style="font-size: large;font-weight: bold" class="ui inverted m-text-thin m-text-spaced m-margin-top-max" >联系我</div>-->
-<!--                <div class="ui inverted link list">-->
-<!--                    <div href="#" class="m-text-thin">Email：onestarlr@hotmail.com</div>-->
-<!--                    <div href="#" class="m-text-thin">QQ：316392836</div>-->
-<!--                </div>-->
-<!--            </div>-->
-
-<!--            <div class="four wide column" >-->
-<!--                <div class="ui inverted link list">-->
-<!--                    <div class="item">-->
-<!--                        &lt;!&ndash;微信二维码&ndash;&gt;-->
-<!--                        <div style="font-size: large;font-weight: bold" class="ui inverted m-text-thin m-text-spaced " >关注公众号</div>-->
-<!--                        <img src="../static/images/oneStar.jpg" th:src="@{/images/oneStar.jpg}"  class="ui m-margin-top rounded image" alt="" style="width: 110px">-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
-
-<!--            <div class="four wide column">-->
-<!--                <div class="ui inverted link list">-->
-<!--                    <div class="item">-->
-<!--                        &lt;!&ndash;微信二维码&ndash;&gt;-->
-<!--                        <div style="font-size: large;font-weight: bold" class="ui inverted m-text-thin m-text-spaced " >问题交流（QQ群）</div>-->
-<!--                        <img src="../static/images/QQ-question.jpg" th:src="@{/images/QQ-question.jpg}"  class="ui m-margin-top rounded image" alt="" style="width: 110px">-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
             <!--博客运行时间统计-->
             <div class="four wide column">
                 <div style="font-size: large;font-weight: bold" class="ui inverted  m-text-thin m-text-spaced m-margin-top">客栈信息</div>

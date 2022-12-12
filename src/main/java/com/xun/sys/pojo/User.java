@@ -44,4 +44,21 @@ public class User implements Serializable {
     public User ( String authorName ) {
         this.authorName = authorName;
     }
+
+    /**
+     * 测试用
+     *
+     * @param id
+     * @param username
+     * @param password
+     * @param salt
+     * @param authorName
+     */
+    public User ( Integer id, String username, String password, String salt, String authorName ) {
+        this.id = id;
+        this.username = username;
+        this.password = password;
+        this.salt = salt;
+        this.authorName = authorName;
+    }
 }

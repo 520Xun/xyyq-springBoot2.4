@@ -2,7 +2,9 @@ package com.xun.sys.service;
 
 import com.xun.common.pojo.JsonResult;
 import com.xun.sys.pojo.CommentVO;
+import com.xun.sys.pojo.ParentCommentVo;
 
+import javax.servlet.http.HttpSession;
 import java.util.List;
 import java.util.Map;
 
@@ -48,4 +50,13 @@ public interface CommentService {
      * @return
      */
     List< Map< String, Object > > findObjects ( );
+
+    /**
+     * 查询多级评论
+     */
+    List< ParentCommentVo > commentVoTest ( Integer id );
+
+    Integer saveComent ( ParentCommentVo comment, HttpSession session );
+
+    Integer deleteCommentByCid ( String id );
 }

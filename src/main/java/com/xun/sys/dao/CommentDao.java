@@ -1,8 +1,8 @@
 package com.xun.sys.dao;
 
 import com.xun.sys.pojo.CommentVO;
-import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Update;
+import com.xun.sys.pojo.ParentCommentVo;
+import org.apache.ibatis.annotations.*;
 
 import java.util.List;
 import java.util.Map;
@@ -48,4 +48,61 @@ public interface CommentDao {
      * @return
      */
     int deleteComment ( Integer[] ids );
+
+    /**
+     * 查询父评论
+     *
+     * @param blogId
+     * @param parentId
+     * @return
+     */
+    List< ParentCommentVo > findByBlogIdParentIdNull ( @Param ( "blogId" ) Integer blogId, @Param ( "parentId" ) Integer parentId );
+
+    /**
+     * 查询一级评论
+     *
+     * @param blogId
+     * @param parentId
+     * @return
+     */
+    List< ParentCommentVo > findByBlogIdParentIdNotNull ( @Param ( "blogId" ) Integer blogId, @Param ( "parentId" ) Integer parentId );
+
+    /**
+     * 根据子一级评论的id找到子二级评论
+     */
+    List< ParentCommentVo > findByBlogIdAndReplayId ( @Param ( "blogId" ) Integer blogId, @Param ( "parentId" ) Integer parentId );
+
+    /**
+     * 提交评论
+     *
+     * @param comment
+     * @return
+     */
+    Integer saveComment ( ParentCommentVo comment );
+
+    /**
+     * 根据父评论id查找评论信息
+     *
+     * @param parentId
+     * @return
+     */
+    List< ParentCommentVo > findCommentInfoByParentId ( Integer parentId );
+
+    /**
+     * 删除评论
+     *
+     * @param id
+     * @return
+     */
+    @Delete ( " delete from comment  where id = #{id}" )
+    int deleteCommentByCid ( String id );
+
+    /**
+     * 统计文章评论数量
+     *
+     * @param id
+     * @return
+     */
+    @Select ( "select count(1) from `comment` where blog_id=#{blogId}" )
+    Integer countByBlogId ( Integer blogId );
 }

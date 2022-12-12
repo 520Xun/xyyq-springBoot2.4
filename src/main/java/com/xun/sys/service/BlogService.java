@@ -122,5 +122,13 @@ public interface BlogService {
      * @param id
      * @return
      */
-    BlogUserTypeVo findBlogInfoByBlogId ( Integer id );
+    BlogUserTypeVo findBlogInfoByBlogId ( String id );
+
+    /**
+     * 根据类型id 查询文章信息显示在分类页面
+     *
+     * @param id
+     * @return
+     */
+    List< BlogUserTypeVo > findBlogByTypeId ( String id );
 }

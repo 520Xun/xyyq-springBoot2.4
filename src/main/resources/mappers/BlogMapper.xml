@@ -85,7 +85,7 @@
             #{id}
         </foreach>
     </update>
-
+    <!--查询主页最新文章-->
     <select id="findAllFirstPageBlog" resultMap="findBlogAll">
         select *
         from blog
@@ -93,10 +93,16 @@
           and essayStatus = 2
         ORDER BY essayGrade, publishDate desc
     </select>
-
+    <!--根据id查询文章所有信息-->
     <select id="findBlogInfoByBlogId" resultMap="findBlogAll">
         select *
         from blog
         where id = #{id}
+    </select>
+    <!--    根据分类id查询文章信息-->
+    <select id="findBlogByTypeId" resultMap="findBlogAll">
+        select *
+        from blog
+        where type_id = #{id}
     </select>
 </mapper>

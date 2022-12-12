@@ -2,6 +2,7 @@ package com.xun.sys.controller;
 
 import com.xun.common.pojo.JsonResult;
 import com.xun.sys.pojo.CommentVO;
+import com.xun.sys.pojo.ParentCommentVo;
 import com.xun.sys.service.CommentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -21,11 +22,23 @@ import java.util.Map;
 @RequestMapping ( "comment" )
 public class CommentComtroller {
     @Autowired
-    private CommentService commentService;
+    private CommentService CommentServiceImpl;
+
+    /**
+     * 测试根据文章id查询评论
+     *
+     * @return
+     */
+    @RequestMapping ( "findALL" )
+    public JsonResult findAll ( ) {
+        Integer id = 10;
+        List< ParentCommentVo > list = CommentServiceImpl.commentVoTest ( id );
+        return new JsonResult ( list );
+    }
 
     @RequestMapping ( "findComment" )
     public JsonResult findComment ( CommentVO comment, @RequestParam ( required = false, defaultValue = "1" ) Integer curPage, @RequestParam ( required = false, defaultValue = "5" ) Integer pageSize ) {
-        return commentService.findComment ( comment, curPage, pageSize );
+        return CommentServiceImpl.findComment ( comment, curPage, pageSize );
     }
 
     /**
@@ -37,7 +50,7 @@ public class CommentComtroller {
      */
     @RequestMapping ( "updateCommentState" )
     public JsonResult updateCommentState ( Integer id, Integer commentState ) {
-        Integer n = commentService.updateCommentState ( id, commentState );
+        Integer n = CommentServiceImpl.updateCommentState ( id, commentState );
         JsonResult jr = new JsonResult ( n );
         jr.setMsg ( "修改成功！" );
         return jr;
@@ -48,7 +61,7 @@ public class CommentComtroller {
      */
     @RequestMapping ( "deleteComment" )
     public JsonResult deleteComment ( @RequestParam ( "ids[]" ) Integer[] ids ) {
-        int n = commentService.deleteComment ( ids );
+        int n = CommentServiceImpl.deleteComment ( ids );
         JsonResult jr = new JsonResult ( n );
         jr.setMsg ( n + "条数据已删除！" );
         return jr;
@@ -56,7 +69,7 @@ public class CommentComtroller {
 
     @RequestMapping ( "findObjectes" )
     public JsonResult findObjectes ( ) {
-        List< Map< String, Object > > objects = commentService.findObjects ( );
+        List< Map< String, Object > > objects = CommentServiceImpl.findObjects ( );
         return new JsonResult ( objects );
     }
 }

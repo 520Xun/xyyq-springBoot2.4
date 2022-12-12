@@ -29,4 +29,13 @@ public interface BlogTagDao {
 
     @Delete ( "delete from blog_tag where blog_id=#{id}" )
     int deteleBlogTagByBlogId ( Integer id );
+
+    /**
+     * 根据文章id 查询文章的标签
+     *
+     * @param id
+     * @return
+     */
+    @Select ( "select name from tag where id in(select tag_id from blog_tag where blog_id=#{id})" )
+    List< String > findTagInfoByBlogId ( Integer id );
 }

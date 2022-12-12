@@ -37,6 +37,21 @@ spring:
     prefix: classpath:/templates/pages/
     suffix: .html
     cache: false
+  #邮箱发送信息
+  mail:
+    host: smtp.qq.com #主机名
+    username: axun_6@qq.com
+    password: rzspnjvgqhfodfee #授权码，过段时间就需要重新获取
+    default-encoding: utf-8
+    port: 465
+    properties:
+      mail:
+        smtp:
+          socketFactory:
+            class: javax.net.ssl.SSLSocketFactory
+        debug: true
+
+
 
 com:
   xun:
@@ -47,4 +62,6 @@ com:
 pagehelper:
   helper-dialect: mysql #指定方言为mysql
   reasonable: true #分页查询合理化（当前页>最大页 为最大页 <0 为1）
+
+
 

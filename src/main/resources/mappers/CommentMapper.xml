@@ -17,6 +17,7 @@
         <include refid="commentQuerry"/>
         GROUP BY createdTime asc
     </select>
+
     <resultMap id="commentVo" type="com.xun.sys.pojo.CommentVO">
         <id property="id" column="id"/>
         <association property="user"
@@ -43,4 +44,54 @@
                  left join comment c2 on c1.parentId = c2.id
     </select>
 
+    <!--    查询父评论-->
+    <select id="findByBlogIdParentIdNull" resultMap="Pvo">
+        select *
+        from `comment`
+        where blog_id = #{blogId}
+          and parentId = #{parentId}
+        order by createdTime desc
+    </select>
+    <!--    查询一级评论-->
+    <select id="findByBlogIdParentIdNotNull" resultMap="Pvo">
+        select *
+        from `comment`
+        where blog_id = #{blogId}
+          and parentId = #{parentId}
+        order by createdTime desc
+    </select>
+    <!--    查询二级评论-->
+    <select id="findByBlogIdAndReplayId" resultMap="Pvo">
+        select *
+        from `comment`
+        where blog_id = #{blogId}
+          and parentId = #{parentId}
+        order by createdTime desc
+    </select>
+    <!--拿取关联的信息-->
+    <resultMap id="Pvo" type="com.xun.sys.pojo.ParentCommentVo">
+        <id property="id" column="id"/>
+        <association property="user"
+                     column="user_id"
+                     select="com.xun.sys.dao.UserDao.findUserById">
+        </association>
+        <association property="blog"
+                     column="blog_id"
+                     select="com.xun.sys.dao.BlogDao.findBlogById">
+        </association>
+    </resultMap>
+    <!--新增评论-->
+    <insert id="saveComment">
+        INSERT INTO comment(`id`, `blog_id`, `user_id`, `parentId`, `contant`, `commentIP`,
+                            `createdTime`, `commentState`, `commentTop`, `commentTread`)
+        VALUES (null, #{blog.id}, #{user.id}, #{parentId}, #{contant}, #{commentIp},
+                now(), 0, 0, 0);
+    </insert>
+    <!--查询父评论的信息-->
+    <select id="findCommentInfoByParentId" resultMap="Pvo">
+        select *
+        from `comment`
+        where parentId = #{parentId}
+        order by createdTime desc
+    </select>
 </mapper>

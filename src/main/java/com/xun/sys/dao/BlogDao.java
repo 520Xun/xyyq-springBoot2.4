@@ -150,5 +150,13 @@ public interface BlogDao {
      * @param id
      * @return
      */
-    BlogUserTypeVo findBlogInfoByBlogId ( Integer id );
+    BlogUserTypeVo findBlogInfoByBlogId ( String id );
+
+    /**
+     * 根据分类id查询文章信息
+     *
+     * @param id
+     * @return
+     */
+    List< BlogUserTypeVo > findBlogByTypeId ( String id );
 }

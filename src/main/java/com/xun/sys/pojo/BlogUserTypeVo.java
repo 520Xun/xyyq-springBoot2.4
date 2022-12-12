@@ -6,6 +6,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * @version: java version 1.8
@@ -32,6 +33,11 @@ public class BlogUserTypeVo implements Serializable {
     private Integer essayCollect = 0;//博文被收藏数量
     private Integer essayTop = 0;//被顶数量
     private Integer essayTread = 0;//被踩数量
+    /**
+     * 查询文章评论数量，数据库无字段，依据评论表查询
+     */
+    private Integer countComment;//文章评论数量
+    private List< String > BlogTags;
     private Type type;//分类对象
     private Integer deleteState = 1;//是否删除 1为正常  0为彻底删除  默认1正常 2加入回收站
     /**
