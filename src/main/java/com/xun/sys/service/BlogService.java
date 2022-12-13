@@ -131,4 +131,12 @@ public interface BlogService {
      * @return
      */
     List< BlogUserTypeVo > findBlogByTypeId ( String id );
+
+    /**
+     * 搜索博客信息
+     *
+     * @param query
+     * @return
+     */
+    List< BlogUserTypeVo > getSearchBlog ( String query );
 }

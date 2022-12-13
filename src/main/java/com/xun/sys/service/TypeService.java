@@ -1,5 +1,6 @@
 package com.xun.sys.service;
 
+import com.xun.sys.pojo.BlogTypeVo;
 import com.xun.sys.pojo.Type;
 
 import java.util.List;
@@ -19,4 +20,11 @@ public interface TypeService {
      * @return
      */
     List< Type > findAllType ( );
+
+    /**
+     * 查询所有的分类和文章
+     *
+     * @return
+     */
+    List< BlogTypeVo > findAllTypeAndBlog ( );
 }

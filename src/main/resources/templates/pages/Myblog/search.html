@@ -31,7 +31,7 @@
          class="ui m-bg image" style="width: 100%;height: 100%">
     <div class="m-bg-class_cover">
         <div class="ui container" style="position: relative ;bottom: -540px;">
-            <div class="m-font-size-title m-right-bottom" align="center" style="font-family:'STXingkai'">文章分类</div>
+            <div class="m-font-size-title m-right-bottom" align="center" style="font-family:'STXingkai'">搜索结果</div>
             <div class="m-font-size-text-init-title m-margin-top" align="center" th:text="页面描述">
                 记忆是一种相聚的方式，放下是一种自由的形式。不必悲伤，不必忧愁，邂逅的回忆都是美好的故事
             </div>
@@ -39,21 +39,21 @@
     </div>
 </div>
 
-
 <!--中间内容-->
-<div class="m-margin- animated fadeIn">
+<div class="m-margin-">
     <div class="ui container">
-        <div class="ui segment m-padded-tb-large m-opacity">
-            <div class="ui container" align="center">
-                <div class="ui labeled button m-margin-tb-tiny" th:each="type : ${types}">
-                    <a href="#" th:href="@{/myblog/type/{id}(id=${type.id})}" class="ui basic  button"
-                       th:classappend="${type.id==activeTypeId} ? 'teal':''" th:text="${type.name}">好文</a>
-                    <div class="ui basic  left pointing label" th:text="${type.countTypeBlog}"
-                         th:classappend="${type.id==activeTypeId} ? 'teal'">24
-                    </div>
+        <!--header-->
+        <div class="ui top attached segment">
+            <div class="ui middle aligned two column grid">
+                <div class="column">
+                    <h3 class="ui teal header">搜索结果</h3>
+                </div>
+                <div class="right aligned column">
+                    共 <h2 class="ui orange header m-inline-block m-text-thin" th:text="${blogInfo.total}"> 14 </h2> 个
                 </div>
             </div>
         </div>
+
 
         <div class="ui top attached teal m-opacity segment">
             <div class="ui padded vertical segment m-padded-tb-large" th:each="blogInfo : ${blogInfo.list}">
@@ -100,7 +100,6 @@
                                  th:src="@{${blogInfo.blogCover}}">
                         </a>
                     </div>
-
                 </div>
             </div>
         </div>
@@ -131,14 +130,12 @@
 <!--底部栏-->
 <footer class="ui inverted vertical segment m-padded-tb-massive m-opacity">
     <!--容器-->
-    <div class="ui center aligned container" th:include="Myblog/index::footer">
-    </div>
+    <div class="ui center aligned container" th:include="Myblog/index:: footer"></div>
 
 </footer>
 
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
 <script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
-
 
 <script>
 

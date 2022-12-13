@@ -95,15 +95,41 @@ public class MyblogPageController {
      * @return
      */
     @RequestMapping ( "type/{id}" )
-    public String blogType ( Model model, @RequestParam ( required = false, defaultValue = "1" ) Integer curPage, @PathVariable String id ) {
+    public String blogType ( Model model, @RequestParam ( required = false, defaultValue = "1", name = "curPage" ) Integer curPage, @PathVariable ( name = "id" ) String id ) {
         //查询所有分类
-        List< Type > allType = typeServiceImpl.findAllType ( );
-        if ( id != null || id.equals ( "0" ) ) {
+        List< BlogTypeVo > allType = typeServiceImpl.findAllTypeAndBlog ( );
+        //为0代表 从首页跳转到了分类页面
+        if ( id.equals ( "0" ) ) {
             if ( ! allType.isEmpty ( ) ) {
                 id = allType.get ( 0 ).getId ( ) + "";
             }
         }
+        model.addAttribute ( "types", allType );
+        PageHelper.startPage ( curPage, 100 );
+        //根据分类查询文章
         List< BlogUserTypeVo > blogInfo = blogServiceImpl.findBlogByTypeId ( id );
+        PageInfo< BlogUserTypeVo > pageInfo = new PageInfo<> ( blogInfo );
+        model.addAttribute ( "blogInfo", pageInfo );
+        model.addAttribute ( "activeTypeId", Integer.parseInt ( id ) );
         return "Myblog/types";
+    }
+
+    //搜索博客信息
+    @RequestMapping ( "/search" )
+    public String search ( Model model,
+                           @RequestParam ( defaultValue = "1", value = "curPage" ) Integer curPage,
+                           @RequestParam String query ) {
+        PageHelper.startPage ( curPage, 100 );
+        List< BlogUserTypeVo > searchBlog = blogServiceImpl.getSearchBlog ( query );
+
+        PageInfo< BlogUserTypeVo > pageInfo = new PageInfo<> ( searchBlog );
+        model.addAttribute ( "blogInfo", pageInfo );
+        model.addAttribute ( "query", query );
+        return "Myblog/search";
+    }
+
+    @RequestMapping ( "music" )
+    public String musicPageUI ( ) {
+        return "Myblog/music";
     }
 }

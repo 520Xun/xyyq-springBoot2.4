@@ -197,4 +197,9 @@ public class BlogServiceImpl implements BlogService {
         Assert.isEmpty ( id == null || id.equals ( "" ), "请求参数异常！" );
         return blogDao.findBlogByTypeId ( id );
     }
+
+    @Override
+    public List< BlogUserTypeVo > getSearchBlog ( String query ) {
+        return blogDao.getSearchBlog ( query );
+    }
 }

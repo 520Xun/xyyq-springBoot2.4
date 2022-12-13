@@ -159,4 +159,12 @@ public interface BlogDao {
      * @return
      */
     List< BlogUserTypeVo > findBlogByTypeId ( String id );
+
+    /**
+     * 查询文章信息
+     *
+     * @param query
+     * @return
+     */
+    List< BlogUserTypeVo > getSearchBlog ( String query );
 }

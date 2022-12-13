@@ -98,11 +98,23 @@
         select *
         from blog
         where id = #{id}
+          and deleteState = 1
     </select>
     <!--    根据分类id查询文章信息-->
     <select id="findBlogByTypeId" resultMap="findBlogAll">
         select *
         from blog
         where type_id = #{id}
+          and deleteState = 1
+          and essayStatus = 1
+    </select>
+    <!--  查询文章信息-->
+    <select id="getSearchBlog" resultMap="findBlogAll">
+        select *
+        from blog
+        where title like concat("%", #{query}, "%")
+          and content like concat("%", #{query}, "%")
+          and deleteState = 1
+          and essayStatus = 1
     </select>
 </mapper>
