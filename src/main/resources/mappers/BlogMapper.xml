@@ -16,7 +16,7 @@
         deleteState=#{deleteState}
     </select>
 
-    <resultMap id="findBlogAll" type="com.xun.sys.pojo.BlogUserTypeVo">
+    <resultMap id="findBlogAll" type="com.xun.sys.vo.BlogUserTypeVo">
         <id property="id" column="id"/>
         <association property="user"
                      column="user_id"
@@ -34,7 +34,7 @@
         where title = #{title}
           and content = #{content}
     </select>
-    <resultMap id="checkedBlog" type="com.xun.sys.pojo.BlogUserTypeVo">
+    <resultMap id="checkedBlog" type="com.xun.sys.vo.BlogUserTypeVo">
         <id property="id" column="id"/>
         <association property="user"
                      column="user_id"
@@ -42,7 +42,7 @@
         </association>
     </resultMap>
 
-    <insert id="insertBlog" parameterType="com.xun.sys.pojo.BlogUserTypeVo" useGeneratedKeys="true"
+    <insert id="insertBlog" parameterType="com.xun.sys.vo.BlogUserTypeVo" useGeneratedKeys="true"
             keyProperty="blog.id">
         INSERT INTO `myblog`.`blog`(`id`, `title`, `user_id`, `content`, `NumberView`, `publishDate`, `updateDate`,
                                     `essayStatus`, `essayGrade`, `essayCollect`, `essayTop`, `essayTread`, `type_id`,
@@ -99,6 +99,7 @@
         from blog
         where id = #{id}
           and deleteState = 1
+          and essayStatus = 2
     </select>
     <!--    根据分类id查询文章信息-->
     <select id="findBlogByTypeId" resultMap="findBlogAll">
@@ -106,15 +107,15 @@
         from blog
         where type_id = #{id}
           and deleteState = 1
-          and essayStatus = 1
+          and essayStatus = 2
     </select>
     <!--  查询文章信息-->
     <select id="getSearchBlog" resultMap="findBlogAll">
         select *
         from blog
         where title like concat("%", #{query}, "%")
-          and content like concat("%", #{query}, "%")
-          and deleteState = 1
-          and essayStatus = 1
+           or content like concat("%", #{query}, "%")
+            and deleteState = 1
+            and essayStatus = 2
     </select>
 </mapper>

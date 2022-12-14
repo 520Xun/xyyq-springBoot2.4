@@ -1,7 +1,7 @@
 package com.xun.sys.service;
 
-import com.xun.sys.pojo.BlogTypeVo;
 import com.xun.sys.pojo.Type;
+import com.xun.sys.vo.BlogTypeVo;
 
 import java.util.List;
 

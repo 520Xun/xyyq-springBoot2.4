@@ -1,7 +1,7 @@
 package com.xun.sys.dao;
 
-import com.xun.sys.pojo.CommentVO;
-import com.xun.sys.pojo.ParentCommentVo;
+import com.xun.sys.vo.CommentVO;
+import com.xun.sys.vo.ParentCommentVo;
 import org.apache.ibatis.annotations.*;
 
 import java.util.List;
@@ -100,9 +100,12 @@ public interface CommentDao {
     /**
      * 统计文章评论数量
      *
-     * @param id
+     * @param blogId
      * @return
      */
     @Select ( "select count(1) from `comment` where blog_id=#{blogId}" )
     Integer countByBlogId ( Integer blogId );
+
+    @Delete ( " delete from comment  where parentId = #{id}" )
+    Integer deleteCommentByReplay ( String id );
 }

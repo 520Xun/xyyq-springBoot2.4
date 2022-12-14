@@ -1,7 +1,7 @@
 package com.xun.sys.dao;
 
-import com.xun.sys.pojo.BlogTypeVo;
 import com.xun.sys.pojo.Type;
+import com.xun.sys.vo.BlogTypeVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Select;
 
@@ -22,6 +22,6 @@ public interface TypeDao {
     @Select ( "select * from type" )
     List< Type > findAllType ( );
 
-    @Select ( "select t.id,count(1) countTypeBlog,t.`name` from blog b join type t on t.id=b.type_id  where deleteState=1 GROUP BY b.type_id" )
+    @Select ( "select t.id,count(1) countTypeBlog,t.`name` from blog b join type t on t.id=b.type_id  where deleteState=1 and essayStatus = 2  GROUP BY b.type_id" )
     List< BlogTypeVo > findAllTypeAndBlog ( );
 }

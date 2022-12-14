@@ -1,8 +1,8 @@
 package com.xun.sys.service;
 
 import com.xun.common.pojo.JsonResult;
-import com.xun.sys.pojo.CommentVO;
-import com.xun.sys.pojo.ParentCommentVo;
+import com.xun.sys.vo.CommentVO;
+import com.xun.sys.vo.ParentCommentVo;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
@@ -54,7 +54,7 @@ public interface CommentService {
     /**
      * 查询多级评论
      */
-    List< ParentCommentVo > commentVoTest ( Integer id );
+    List< ParentCommentVo > findParentCommentVoList ( Integer id );
 
     Integer saveComent ( ParentCommentVo comment, HttpSession session );
 

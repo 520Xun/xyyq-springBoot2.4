@@ -8,11 +8,11 @@ import com.xun.common.pojo.pageProperties;
 import com.xun.common.util.Assert;
 import com.xun.common.util.IPUtils;
 import com.xun.sys.dao.CommentDao;
-import com.xun.sys.pojo.BlogUserTypeVo;
-import com.xun.sys.pojo.CommentVO;
-import com.xun.sys.pojo.ParentCommentVo;
 import com.xun.sys.pojo.User;
 import com.xun.sys.service.CommentService;
+import com.xun.sys.vo.BlogUserTypeVo;
+import com.xun.sys.vo.CommentVO;
+import com.xun.sys.vo.ParentCommentVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
@@ -102,7 +102,7 @@ public class CommentServiceImpl implements CommentService {
     //存放迭代找出的所有子代的集合
     private List< ParentCommentVo > tempReplys = new ArrayList<> ( );
 
-    public List< ParentCommentVo > commentVoTest ( Integer id ) {
+    public List< ParentCommentVo > findParentCommentVoList ( Integer id ) {
         /**
          *  查询父亲
          */
@@ -171,6 +171,7 @@ public class CommentServiceImpl implements CommentService {
     @Override
     public Integer deleteCommentByCid ( String id ) {
         Assert.isEmpty ( id == null || id.equals ( "" ), "请求参数异常" );
+        commentDao.deleteCommentByReplay ( id );
         int n = commentDao.deleteCommentByCid ( id );
         Assert.isEmpty ( n == 0, "删除失败" );
         return n;

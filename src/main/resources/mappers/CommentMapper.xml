@@ -18,7 +18,7 @@
         GROUP BY createdTime asc
     </select>
 
-    <resultMap id="commentVo" type="com.xun.sys.pojo.CommentVO">
+    <resultMap id="commentVo" type="com.xun.sys.vo.CommentVO">
         <id property="id" column="id"/>
         <association property="user"
                      column="user_id"
@@ -60,6 +60,7 @@
           and parentId = #{parentId}
         order by createdTime desc
     </select>
+    
     <!--    查询二级评论-->
     <select id="findByBlogIdAndReplayId" resultMap="Pvo">
         select *
@@ -68,8 +69,9 @@
           and parentId = #{parentId}
         order by createdTime desc
     </select>
+
     <!--拿取关联的信息-->
-    <resultMap id="Pvo" type="com.xun.sys.pojo.ParentCommentVo">
+    <resultMap id="Pvo" type="com.xun.sys.vo.ParentCommentVo">
         <id property="id" column="id"/>
         <association property="user"
                      column="user_id"

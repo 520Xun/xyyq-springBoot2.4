@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="阿勋博客">myblog-首页</title>
+    <link th:href="@{/images/20221126163350.jpg}" rel="icon" type="image/x-ico">
+    <link href="../static/images/me.jpg" th:href="@{/images/me.jpg}" rel="icon" type="image/x-ico">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css">
+    <link rel="stylesheet" href="../static/css/me.css" th:href="@{/css/me.css}">
+</head>
+<body>
+
+<!--导航-->
+<nav class="gird-header" th:include="Myblog/index::navBar">
+</nav>
+
+
+<!--顶部图片-->
+<div class="m-bg-type_outer" style="width: 100%;height: 40%">
+    <!--  放分类的背景图-->
+    <img src="../static/images/typebg.jpg" th:src="@{http://images.newstar.net.cn/img/default-bg.jpeg}" alt=""
+         class="ui m-bg image" style="width: 100%;height: 100%">
+    <div class="m-bg-class_cover">
+        <div class="ui container" style="position: relative ;bottom: -540px;">
+            <div class="m-font-size-title m-right-bottom" align="center" style="font-family:'STXingkai'">留言板</div>
+            <div class="m-font-size-text-init-title m-margin-top" align="center"
+                 th:text="虽然只是短暂的擦身，相遇与分别，尽管如此，我却仍然想珍惜这所有的一切">
+                虽然只是短暂的擦身，相遇与分别，尽管如此，我却仍然想珍惜这所有的一切
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!--中间内容-->
+<div id="waypoint" class="m-margin- animated fadeIn">
+    <div class="ui container m-opacity box-shadow-max">
+        <!--                新增留言-->
+        <div id="message-form" class="ui form">
+            <input type="hidden" name="parentMessage.id" value="0">
+            <!--                    留言区-->
+            <div class="field">
+                <textarea name="content" placeholder="请输入留言信息..."></textarea>
+            </div>
+            <div class="ui grid">
+                <!--                    输入姓名-->
+                <div class="five wide column">
+                    <div class="field m-mobile-wide m-margin-bottom-small">
+                        <div class="ui left icon input">
+                            <!--                      <i class="user icon"></i>-->
+                            <!--                      <input type="text" name="nickname" placeholder="Id">-->
+                        </div>
+                    </div>
+                </div>
+
+                <!--                        输入邮箱-->
+                <div class="five wide column">
+                    <div class="field m-mobile-wide m-margin-bottom-small">
+                        <div class="ui left icon input">
+                            <!--                      <i class="mail icon"></i>-->
+                            <!--                      <input type="text" name="email" placeholder="Email">-->
+                        </div>
+                    </div>
+                </div>
+
+                <div class="right aligned six wide column">
+                    <div class="field m-mobile-wide m-margin-bottom-small">
+                        <button id="messagepost-btn" type="button" class="ui teal button m-mobile-wide"><i
+                                class="edit icon"></i>发布
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--留言区-->
+        <div class="ui bottom attached m-margin-top">
+            <div id="message-container" class="ui teal segment" th:fragment="messageList">
+                <div>
+                    <div class="ui threaded comments" style="max-width: 100%;">
+                        <h3 class="ui dividing header">留言</h3>
+                        <div class="comment" th:each="message : ${messages.list}">
+                            <a class="avatar">
+                                <img src="../static/images/avatar.png" th:src="@{${message.user.picture}}">
+                            </a>
+                            <div class="content">
+                                <a class="author">
+                                    <span th:text="${message.user.authorName}">Matt</span>
+                                    <div class="ui mini basic teal left pointing label m-padded-mini">楼主</div>
+                                </a>
+                                <div class="metadata">
+                                    <span class="date" th:text="${message.createdTime}">今天下午 5:42</span>
+                                </div>
+                                <div class="text" th:text="${message.contant}">太赞了！</div>
+                                <div class="actions">
+                                    <a class="reply" data-messageid="1" data-messagenickname="Matt"
+                                       th:attr="data-messageid=${message.id},data-messagenickname=${message.user.authorName}"
+                                       onclick="reply(this)">回复</a>
+                                    <a class="delete" href="#"
+                                       th:href="@{/message/deleteMessage/{param1}/{param2}(param1=${message.user.id},param2=${message.id})}"
+                                       onclick="return confirm('确定要删除该评论吗？三思啊! 删了可就没了！')"
+                                       th:if="true">删除</a>
+                                </div>
+                            </div>
+                            <!--子集留言-->
+                            <div class="comments" th:if="${#arrays.length(message.replyMessages)}>0">
+                                <div class="comment" th:each="reply : ${message.replyMessages}">
+                                    <a class="avatar">
+                                        <img src="../static/images/avatar.png" th:src="@{${reply.user.picture}}">
+                                    </a>
+                                    <div class="content">
+                                        <a class="author">
+                                            <span th:text="${reply.user.authorName}">小红</span>
+                                            <!--                                          <div class="ui mini basic teal left pointing label m-padded-mini">栈主</div>-->
+                                            &nbsp;<span class="m-teal"
+                                                        th:text="|@ ${reply.parentNickname}|">@ 小白</span>
+                                        </a>
+                                        <div class="metadata">
+                                            <span class="date" th:text="${reply.createdTime}">今天下午 5:42</span>
+                                        </div>
+                                        <div class="text" th:text="${reply.contant}">太赞了！</div>
+                                        <div class="actions">
+                                            <a class="reply" data-messageid="1" data-messagenickname="Matt"
+                                               th:attr="data-messageid=${reply.id},data-messagenickname=${reply.parentNickname}"
+                                               onclick="reply(this)">回复</a>
+                                            <a class="delete" href="#"
+                                               th:href="@{/message/deleteMessage/{param1}/{param2}(param1=${reply.user.id},param2=${reply.id})}"
+                                               onclick="return confirm('确定要删除该评论吗？三思啊! 删了可就没了！')"
+                                               th:if="${true}">删除</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+            <!--          分页-->
+            <div class="ui inverted divided stackable grid">
+                <div class="three wide column" align="center">
+                    <a class="item"
+                       th:href="@{/myblog/message/(pageNum=${messages.hasPreviousPage}?${messages.prePage}:1)}"
+                       th:unless="${messages.isFirstPage}">上一页</a>
+                </div>
+
+                <div class="ten wide column" align="center">
+                    <p><span th:text="${messages.pageNum}"></span> / <span th:text="${messages.pages}"></span></p>
+                </div>
+
+                <div class="three wide column" align="center">
+                    <a class="item"
+                       th:href="@{/myblog/message/(pageNum=${messages.hasNextPage}?${messages.nextPage}:${messages.pages})}"
+                       th:unless="${messages.isLastPage}">下一页</a>
+                </div>
+            </div>
+        </div>
+
+        <br>
+        <br>
+        <br>
+
+    </div>
+</div>
+
+
+<br>
+<br>
+<br>
+
+
+<!--底部栏-->
+<footer class="ui inverted vertical segment m-padded-tb-massive m-opacity">
+    <!--容器-->
+    <div class="ui center aligned container">
+    </div>
+
+</footer>
+
+
+<script src="../static/lib/jquery-3.2.1/jquery-3.2.1.min.js" th:src="@{/js/jquery-3.4.1.min.js}"></script>
+<script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
+<!--窗口回弹-->
+<script src="//cdn.jsdelivr.net/npm/jquery.scrollto@2.1.2/jquery.scrollTo.min.js"></script>
+<!--消息提示所需-->
+<script src="/layui/layui.all.js"></script>
+<script>
+    // 初始化加载
+    // $(function () {
+    //     $("#message-container").load(/*[[@{/messagecomment}]]*/"messagecomment");
+    // });
+
+    // 校验信息
+    $('#messagepost-btn').click(function () {
+        var params = {
+            "parentMessage.id": $("[name='parentMessage.id']").val(),
+            "contant": $("[name='content']").val()
+        }
+        console.log(params);
+        if (!params) {
+            layer.msg("请填写内容！", {icon: 2});
+        } else {
+            //load 加载的不是注释，这是传值路径
+            $("#message-container").load("/message/saveMessage", params, function () {
+                //    $(window).scrollTo($('#message-containe'), 500); //滚动到指定目标
+                clearContent();
+            });
+            console.log("校验成功！")
+        }
+    });
+
+    // 清除表单
+    function clearContent() {
+        $("[name='nickname']").val('');
+        $("[name='email']").val('');
+        $("[name='content']").val('');
+        $("[name='parentMessage.id']").val(-1);
+        $("[name='content']").attr("placeholder", "良言一句三冬暖，恶语伤人六月寒...");
+    }
+
+    function reply(obj) {
+        var messageId = $(obj).data('messageid');
+        var messageNickname = $(obj).data('messagenickname');
+        $("[name='content']").attr("placeholder", "@" + messageNickname).focus();
+        $("[name='parentMessage.id']").val(messageId);
+        debugger
+        $(window).scrollTo(0, 500);
+    }
+
+</script>
+</body>
+</html>

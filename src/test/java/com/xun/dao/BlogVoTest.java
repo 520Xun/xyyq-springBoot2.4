@@ -1,7 +1,7 @@
 package com.xun.dao;
 
 import com.xun.sys.dao.BlogDao;
-import com.xun.sys.pojo.BlogUserTypeVo;
+import com.xun.sys.vo.BlogUserTypeVo;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

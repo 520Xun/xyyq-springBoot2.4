@@ -1,6 +1,8 @@
-package com.xun.sys.pojo;
+package com.xun.sys.vo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.xun.sys.pojo.Type;
+import com.xun.sys.pojo.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

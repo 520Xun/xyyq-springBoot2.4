@@ -107,7 +107,8 @@
         <!--分页-->
         <div class="ui bottom attached segment m-opacity stackable grid">
             <div class="three wide column" align="center">
-                <a class="item" th:href="@{/myblog/type/(curPage=${blogInfo.hasPreviousPage}?${blogInfo.prePage}:1)}"
+                <a class="item"
+                   th:href="@{/myblog/search/(curPage=${blogInfo.hasPreviousPage}?${blogInfo.prePage}:1,query=${query})}"
                    th:unless="${blogInfo.isFirstPage}">上一页</a>
             </div>
 
@@ -117,7 +118,7 @@
 
             <div class="three wide column" align="center">
                 <a class="item"
-                   th:href="@{/myblog/type/(curPage=${blogInfo.hasNextPage}?${blogInfo.nextPage}:${blogInfo.pages})}"
+                   th:href="@{/myblog/search/(curPage=${blogInfo.hasNextPage}?${blogInfo.nextPage}:${blogInfo.pages},query=${query})}"
                    th:unless="${blogInfo.isLastPage}">下一页</a>
             </div>
         </div>

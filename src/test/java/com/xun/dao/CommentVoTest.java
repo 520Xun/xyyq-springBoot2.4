@@ -2,8 +2,8 @@ package com.xun.dao;
 
 import com.xun.common.pojo.JsonResult;
 import com.xun.sys.dao.CommentDao;
-import com.xun.sys.pojo.CommentVO;
-import com.xun.sys.pojo.ParentCommentVo;
+import com.xun.sys.vo.CommentVO;
+import com.xun.sys.vo.ParentCommentVo;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

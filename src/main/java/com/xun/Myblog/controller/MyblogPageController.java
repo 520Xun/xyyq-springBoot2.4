@@ -2,8 +2,14 @@ package com.xun.Myblog.controller;
 
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
-import com.xun.sys.pojo.*;
+import com.xun.sys.pojo.Blog;
+import com.xun.sys.pojo.Carousel;
 import com.xun.sys.service.*;
+import com.xun.sys.vo.BlogTypeVo;
+import com.xun.sys.vo.BlogUserTypeVo;
+import com.xun.sys.vo.ParentCommentVo;
+import com.xun.sys.vo.ParentMessageVo;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,6 +27,7 @@ import java.util.concurrent.atomic.AtomicLong;
  * @date: 2022-12-05 14:00
  */
 @Controller
+@Slf4j //日志打印
 @RequestMapping ( "myblog" )
 public class MyblogPageController {
     //该对象利用CPU的算法保证了线程安全
@@ -40,6 +47,10 @@ public class MyblogPageController {
 
     @Autowired
     private TypeService typeServiceImpl;
+
+    @Autowired
+    private MessageService messageServiceImpl;
+
 
     public MyblogPageController ( ) {
         System.out.println ( "欢迎访问博客" );
@@ -80,7 +91,7 @@ public class MyblogPageController {
     @RequestMapping ( "blogInfo/{id}" )
     public String BlogInfoPage ( @PathVariable String id, Model model ) {
         BlogUserTypeVo blogInfo = blogServiceImpl.findBlogInfoByBlogId ( id );
-        List< ParentCommentVo > list = commentServieImpl.commentVoTest ( Integer.parseInt ( id ) );
+        List< ParentCommentVo > list = commentServieImpl.findParentCommentVoList ( Integer.parseInt ( id ) );
         model.addAttribute ( "blogInfo", blogInfo );//绑定博文信息
         model.addAttribute ( "comments", list );//文章对应的评论信息
         return "Myblog/blog";
@@ -116,10 +127,8 @@ public class MyblogPageController {
 
     //搜索博客信息
     @RequestMapping ( "/search" )
-    public String search ( Model model,
-                           @RequestParam ( defaultValue = "1", value = "curPage" ) Integer curPage,
-                           @RequestParam String query ) {
-        PageHelper.startPage ( curPage, 100 );
+    public String search ( Model model, @RequestParam ( defaultValue = "1", value = "curPage" ) Integer curPage, @RequestParam ( required = false ) String query ) {
+        PageHelper.startPage ( curPage, 1 );
         List< BlogUserTypeVo > searchBlog = blogServiceImpl.getSearchBlog ( query );
 
         PageInfo< BlogUserTypeVo > pageInfo = new PageInfo<> ( searchBlog );
@@ -128,8 +137,29 @@ public class MyblogPageController {
         return "Myblog/search";
     }
 
+    /**
+     * 跳转到音乐盒
+     *
+     * @return
+     */
     @RequestMapping ( "music" )
     public String musicPageUI ( ) {
         return "Myblog/music";
+    }
+
+    /**
+     * 留言，问答页面
+     *
+     * @param model
+     * @param pageNum
+     * @return
+     */
+    @RequestMapping ( "message" )
+    public String messagePageUI ( Model model, @RequestParam ( defaultValue = "1", value = "pageNum" ) Integer pageNum ) {
+        PageHelper.startPage ( pageNum, 2 );
+        List< ParentMessageVo > messageVos = messageServiceImpl.listMessageVoList ( );
+        PageInfo< ParentMessageVo > pageInfo = new PageInfo<> ( messageVos );
+        model.addAttribute ( "messages", pageInfo );
+        return "Myblog/message";
     }
 }

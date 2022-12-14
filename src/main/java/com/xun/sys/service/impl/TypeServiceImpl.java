@@ -2,9 +2,9 @@ package com.xun.sys.service.impl;
 
 import com.xun.sys.dao.BlogDao;
 import com.xun.sys.dao.TypeDao;
-import com.xun.sys.pojo.BlogTypeVo;
 import com.xun.sys.pojo.Type;
 import com.xun.sys.service.TypeService;
+import com.xun.sys.vo.BlogTypeVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -32,7 +32,6 @@ public class TypeServiceImpl implements TypeService {
     @Override
     public List< BlogTypeVo > findAllTypeAndBlog ( ) {
         List< BlogTypeVo > allTypeAndBlog = typeDao.findAllTypeAndBlog ( );
-
         return allTypeAndBlog;
     }
 

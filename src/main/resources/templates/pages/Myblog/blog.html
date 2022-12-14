@@ -61,7 +61,7 @@
             <div class="ui container" align="center">
                 <div class="ui horizontal link list" align="center">
                     <div class="item">
-                        <a th:href="@{/type/search/{id}(id=${blogInfo.type.id})}">
+                        <a th:href="@{/myblog/type/{id}(id=${blogInfo.type.id})}">
                             <div class="ui orange basic label" style="font-size: 7px" th:text="${blogInfo.type.name}">
                                 原创
                             </div>
@@ -232,8 +232,9 @@
             <div id="comment-form" class="ui form">
                 <input type="hidden" name="blogId" th:value="${blogInfo.id}">
                 <input type="hidden" name="parentComment.id" value="0">
+                <!--                <img src="" th:src="@{${blogInfo.blogCover}}" width="40px" height="40px" title="评论者头像">-->
                 <div class="field">
-                    <textarea name="content" placeholder="请输入评论信息..."></textarea>
+                    <textarea name="content" placeholder="评论千万条，友善第一条..."></textarea>
                 </div>
                 <div class="fields">
                     <!--          <div class="field m-mobile-wide m-margin-bottom-small">-->
@@ -294,7 +295,6 @@
 <script src="//cdn.jsdelivr.net/npm/jquery.scrollto@2.1.2/jquery.scrollTo.min.js"></script>
 <script src="../static/lib/qrcode/qrcode.min.js" th:src="@{/lib/qrcode/qrcode.min.js}"></script>
 <script src="../static/lib/prism/prism.js" th:src="@{/lib/prism/prism.js}"></script>
-<script src="../static/lib/tocbot/tocbot.min.js" th:src="@{/lib/tocbot/tocbot.min.js}"></script>
 <script src="../static/lib/waypoints/jquery.waypoints.min.js"
         th:src="@{/lib/waypoints/jquery.waypoints.min.js}"></script>
 <!--解析md文件必须-->
@@ -431,7 +431,6 @@
             "blog.id": $("[name='blogId']").val(),
             "contant": $("[name='content']").val()
         }
-        debugger
         if (!params) {
             layer.msg("请填写内容！", {icon: 2});
         } else {

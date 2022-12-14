@@ -3,7 +3,7 @@ package com.xun.sys.service;
 import com.xun.common.pojo.JsonResult;
 import com.xun.common.pojo.countBlogTypeVo;
 import com.xun.sys.pojo.Blog;
-import com.xun.sys.pojo.BlogUserTypeVo;
+import com.xun.sys.vo.BlogUserTypeVo;
 
 import java.util.List;
 

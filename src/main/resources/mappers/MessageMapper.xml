@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace：命名空间，对应一个dao层接口的全路径 -->
+<mapper namespace="com.xun.sys.dao.MessageDao">
+    <!--        查询父留言-->
+    <select id="findByParentIdNotNull" resultMap="MVO">
+        select *
+        from message
+        where parent_message_id = #{parentId}
+          and messageState = 1
+        ORDER BY createdTime desc
+    </select>
+    <!--    查询关联信息-->
+    <resultMap id="MVO" type="com.xun.sys.vo.ParentMessageVo">
+        <id property="id" column="id"/>
+        <association property="user"
+                     column="user_id"
+                     select="com.xun.sys.dao.UserDao.findUserById">
+        </association>
+    </resultMap>
+    <!--新增留言-->
+    <insert id="saveMessage">
+        INSERT INTO `myblog`.`message`(`id`, `user_id`, `parent_message_id`, `contant`, `messageIp`, `messageState`,
+                                       `createdTime`)
+        VALUES (null, #{user.id}, #{parentMessageId}, #{contant}, #{messageIp}, #{messageState}, now());
+    </insert>
+</mapper>

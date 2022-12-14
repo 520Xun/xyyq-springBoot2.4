@@ -1,6 +1,8 @@
-package com.xun.sys.pojo;
+package com.xun.sys.vo;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.xun.sys.pojo.Blog;
+import com.xun.sys.pojo.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -27,7 +29,6 @@ public class ParentCommentVo implements Serializable {
     private Integer parentId; //父id
     private String contant;//内容
     private String commentIp;//评论的ip地址
-    private Integer isReply;//是否回复
     private Integer commentState;//审核
     private Integer commentTop;//被顶
     private Integer commentTread;//被踩
@@ -38,5 +39,5 @@ public class ParentCommentVo implements Serializable {
     private List< ParentCommentVo > replyComments = new ArrayList<> ( );
     private ParentCommentVo parentComment;
     private String parentNickname; //父评论者名称
-    
+
 }

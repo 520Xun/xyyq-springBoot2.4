@@ -1,9 +1,9 @@
 package com.xun.sys.controller;
 
 import com.xun.common.pojo.JsonResult;
-import com.xun.sys.pojo.CommentVO;
-import com.xun.sys.pojo.ParentCommentVo;
 import com.xun.sys.service.CommentService;
+import com.xun.sys.vo.CommentVO;
+import com.xun.sys.vo.ParentCommentVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -32,7 +32,7 @@ public class CommentComtroller {
     @RequestMapping ( "findALL" )
     public JsonResult findAll ( ) {
         Integer id = 10;
-        List< ParentCommentVo > list = CommentServiceImpl.commentVoTest ( id );
+        List< ParentCommentVo > list = CommentServiceImpl.findParentCommentVoList ( id );
         return new JsonResult ( list );
     }
 

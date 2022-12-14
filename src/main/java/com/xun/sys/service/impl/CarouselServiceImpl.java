@@ -7,9 +7,9 @@ import com.xun.common.pojo.Pagination;
 import com.xun.common.pojo.pageProperties;
 import com.xun.common.util.Assert;
 import com.xun.sys.dao.CarouselDao;
-import com.xun.sys.pojo.BlogUserTypeVo;
 import com.xun.sys.pojo.Carousel;
 import com.xun.sys.service.CarouselService;
+import com.xun.sys.vo.BlogUserTypeVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
