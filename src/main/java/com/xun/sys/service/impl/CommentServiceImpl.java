@@ -20,7 +20,6 @@ import org.springframework.stereotype.Service;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @version: java version 1.8
@@ -88,16 +87,6 @@ public class CommentServiceImpl implements CommentService {
         return n;
     }
 
-    /**
-     * 所有评论
-     *
-     * @return
-     */
-    @Override
-    public List< Map< String, Object > > findObjects ( ) {
-        List< Map< String, Object > > map = commentDao.findObjects ( );
-        return map;
-    }
 
     //存放迭代找出的所有子代的集合
     private List< ParentCommentVo > tempReplys = new ArrayList<> ( );

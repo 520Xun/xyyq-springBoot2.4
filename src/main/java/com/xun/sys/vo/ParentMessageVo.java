@@ -27,7 +27,9 @@ public class ParentMessageVo {
     /**
      * 暂时测试使用
      */
-    private Integer messageState = 1;//审核
+    private Integer messageState = 0;//审核
+    private Integer messageTop = 0;//被顶
+    private Integer messageTread = 0;//被踩
     @JsonFormat ( pattern = "yyyy-MM-dd HH:mm:ss" )
     private String createdTime;//创建时间
 

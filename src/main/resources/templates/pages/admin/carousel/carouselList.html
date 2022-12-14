@@ -314,8 +314,8 @@
         //查询回收数据
         if ($(this).hasClass("btn_recycleBin")) {
             params.deleteState = 2;
-            $("#btn-tool-area").append("<button class=\"layui-btn layui-btn-normal  back\" onclick='doLoadData()'>返回用户列表</button>");
-            $("#btn-tool-area").append("<button class=\"layui-btn layui-btn-normal  back\" onclick='recover()'>恢复用户</button>");
+            $("#btn-tool-area").append("<button class=\"layui-btn layui-btn-normal  back\" onclick='doLoadData()'>返回轮播图列表</button>");
+            $("#btn-tool-area").append("<button class=\"layui-btn layui-btn-normal  back\" onclick='recover()'>恢复轮播图</button>");
             $("#btn-tool-area").find(".btn_delete").removeClass("btn_delete").addClass("chealUser");
         }
         $.get(url, params, function (result) {

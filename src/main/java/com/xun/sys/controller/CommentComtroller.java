@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
-import java.util.Map;
 
 /**
  * @version: java version 1.8
@@ -67,9 +66,4 @@ public class CommentComtroller {
         return jr;
     }
 
-    @RequestMapping ( "findObjectes" )
-    public JsonResult findObjectes ( ) {
-        List< Map< String, Object > > objects = CommentServiceImpl.findObjects ( );
-        return new JsonResult ( objects );
-    }
 }

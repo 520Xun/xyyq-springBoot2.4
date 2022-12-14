@@ -6,7 +6,6 @@ import com.xun.sys.vo.ParentCommentVo;
 
 import javax.servlet.http.HttpSession;
 import java.util.List;
-import java.util.Map;
 
 /**
  * @version: java version 1.8
@@ -43,13 +42,6 @@ public interface CommentService {
      * @return
      */
     Integer deleteComment ( Integer[] ids );
-
-    /**
-     * 查询所有评论 及所有子评论
-     *
-     * @return
-     */
-    List< Map< String, Object > > findObjects ( );
 
     /**
      * 查询多级评论

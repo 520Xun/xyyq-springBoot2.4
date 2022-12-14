@@ -29,10 +29,9 @@ public class ParentCommentVo implements Serializable {
     private Integer parentId; //父id
     private String contant;//内容
     private String commentIp;//评论的ip地址
-    private Integer commentState;//审核
+    private Integer commentState = 0;//审核 1 为审核 0 为未审核
     private Integer commentTop;//被顶
     private Integer commentTread;//被踩
-    private String soft = "ASC";//排序  ASC正序 desc 倒叙
     @JsonFormat ( pattern = "yyyy-MM-dd HH:mm:ss" )
     private String createdTime;//创建时间
     //回复评论

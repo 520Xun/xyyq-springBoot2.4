@@ -95,11 +95,7 @@
             <col width="30">
             <col width="150">
             <col width="100">
-            <col width="180">
-            <col width="150">
-            <col width="150">
-            <col width="150">
-            <col width="150">
+            <col width="450">
             <col width="150">
             <col width="150">
             <col>
@@ -107,19 +103,15 @@
         <thead>
         <tr>
             <th><input type="checkbox" onchange="IsCheckAll(this)" name="checkbox" id="checkedAll"></th>
-            <th>评论者</th>
+            <th>留言者</th>
             <th>头像</th>
-            <th>评论文章</th>
-            <th>评论内容</th>
+            <th>留言信息</th>
             <th>IP</th>
             <th>是否审批</th>
-            <th>被顶</th>
-            <th>被踩</th>
             <th>发布时间</th>
         </tr>
         </thead>
         <tbody id="tbody">
-
         </tbody>
     </table>
     <!--加载分页区域-->
@@ -198,16 +190,12 @@
                     "  <th><input type=\"checkbox\" value='" + data[i].id + "' name='checkbox'></th>\n" +
                     " <th>" + (data[i].user == null ? "用户可能不存在！" : data[i].user.authorName) + "</th>\n" +
                     " <th>" + "<img src='" + (data[i].user == null ? "用户可能不存在！" : data[i].user.picture) + "' width='80px' height='80px' style='border-radius: 40px'>" + "</th>" +
-                    " <th>" + data[i].blog.title + "</th>\n" +
                     " <th>" + data[i].contant + "</th>\n" +
                     " <th>" + data[i].commentIp + "</th>\n" +
                     "<th><input class=\"switch switch-anim onlineStatus\" onchange=\"checkNum(this)\" type=\"checkbox\" value='" + data[i].commentState + "'  /></th>" +
-                    " <th>" + data[i].commentTop + "</th>\n" +
-                    " <th>" + data[i].commentTread + "</th>\n" +
                     " <th>" + data[i].createdTime + "</th>\n" +
                     "</tr>";
                 $("#tbody").append(tr);
-                $("#tbody tr").last().data("blogRow", data[i]);
                 StateIschecked();//加载推荐
             }
         }

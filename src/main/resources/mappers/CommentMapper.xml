@@ -9,6 +9,9 @@
             <!-- 查询当前时间本周的评论 -->
             and YEARWEEK(date_format(#{createdTime} ,'%Y-%m-%d')) = YEARWEEK(now())
         </if>
+        <if test="contant!=null and contant !='' ">
+            and contant like concat("%",#{contant},"%")
+        </if>
     </sql>
 
     <!-- 查找所有的评论 -->
@@ -50,6 +53,7 @@
         from `comment`
         where blog_id = #{blogId}
           and parentId = #{parentId}
+          and commentState = 1
         order by createdTime desc
     </select>
     <!--    查询一级评论-->
@@ -58,15 +62,17 @@
         from `comment`
         where blog_id = #{blogId}
           and parentId = #{parentId}
+          and commentState = 1
         order by createdTime desc
     </select>
-    
+
     <!--    查询二级评论-->
     <select id="findByBlogIdAndReplayId" resultMap="Pvo">
         select *
         from `comment`
         where blog_id = #{blogId}
           and parentId = #{parentId}
+          and commentState = 1
         order by createdTime desc
     </select>
 
@@ -94,6 +100,7 @@
         select *
         from `comment`
         where parentId = #{parentId}
+          and commentState = 1
         order by createdTime desc
     </select>
 </mapper>
