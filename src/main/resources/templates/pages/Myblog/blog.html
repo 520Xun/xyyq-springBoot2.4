@@ -101,8 +101,6 @@
     <div class="ui container m-opacity box-shadow-max">
         <!--内容-->
         <div class="ui attached padded segment">
-
-
             <!--中间主要内容部分-->
             <div id="test-editormd" style="width: 90%;padding-left: 5%" class=" js-toc-content">
                 <textarea style="display: none" name="test-editormd-markdown-doc "
@@ -113,29 +111,12 @@
             <!--文章评价区域-->
             <div>
                 <div class="ui center aligned basic segment">
-                    <button id="payButton" class="ui orange basic circular button">赞赏</button>
                     <button id="btnTop" class="ui orange basic circular button">点赞<span
                             th:text="${blogInfo.essayTop}">9999</span></button>
                     <button id="btnTread" class="ui orange basic circular button">踩<span
                             th:text="${blogInfo.getEssayTread()}">9999</span></button>
                     <button id="btnCollect" class="ui orange basic circular button">收藏<span
                             th:text="${blogInfo.essayCollect}">9999</span></button>
-                </div>
-                <div class="ui payQR flowing popup transition hidden">
-                    <div class="ui orange basic label">
-                        <div class="ui images" style="font-size: inherit !important;">
-                            <div class="image">
-                                <img src="../static/images/zhifupay.jpg" th:src="@{/images/zhifupay.jpg}" alt=""
-                                     class="ui rounded bordered image" style="width: 120px">
-                                <div>支付宝</div>
-                            </div>
-                            <div class="image">
-                                <img src="../static/images/wechatpay.jpg" th:src="@{/images/wechatpay.jpg}" alt=""
-                                     class="ui rounded bordered image" style="width: 120px">
-                                <div>微信</div>
-                            </div>
-                        </div>
-                    </div>
                 </div>
             </div>
 
@@ -146,9 +127,11 @@
                 <div class="nine wide column">
                     <ui class="list">
                         <li>作者：<span th:text="${blogInfo.user.authorName}"></span><a href="#" target="_blank"
-                                                                                       th:text="${blogInfo.user.phone}">（联系作者）</a>
+                                                                                       th:href="@{/user/userInfo/{id}(id=${blogInfo.user.id})}">（联系作者）</a>
                         </li>
                         <li>发表时间：<span th:text="${blogInfo.publishDate}">2020-01-02 09:08</span></li>
+                        <li th:if="${blogInfo.updateDate}!=null">修改时间：<span th:text="${blogInfo.updateDate}">2020-01-02 09:08</span>
+                        </li>
                         <li>版权声明：自由转载-非商用-非衍生-保持署名（创意共享3.0许可证）</li>
                         <li>转载声明：如果是转载栈主转载的文章，请附上原文链接</li>
                         <li>公众号转载：请在文末添加作者公众号二维码（公众号二维码见右边，欢迎关注）</li>

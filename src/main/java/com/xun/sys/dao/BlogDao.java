@@ -2,6 +2,7 @@ package com.xun.sys.dao;
 
 import com.xun.common.pojo.countBlogTypeVo;
 import com.xun.sys.pojo.Blog;
+import com.xun.sys.pojo.memoryBlog;
 import com.xun.sys.vo.BlogUserTypeVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -167,4 +168,12 @@ public interface BlogDao {
      * @return
      */
     List< BlogUserTypeVo > getSearchBlog ( String query );
+
+    /**
+     * 根据用户id查询用户的文章发布情况
+     *
+     * @param userId
+     * @return
+     */
+    List< memoryBlog > findListMemory ( int userId );
 }

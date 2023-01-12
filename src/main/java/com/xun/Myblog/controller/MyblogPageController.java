@@ -4,6 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.xun.sys.pojo.Blog;
 import com.xun.sys.pojo.Carousel;
+import com.xun.sys.pojo.memoryBlog;
 import com.xun.sys.service.*;
 import com.xun.sys.vo.BlogTypeVo;
 import com.xun.sys.vo.BlogUserTypeVo;
@@ -125,7 +126,9 @@ public class MyblogPageController {
         return "Myblog/types";
     }
 
-    //搜索博客信息
+    /**
+     * 搜索博客信息
+     */
     @RequestMapping ( "/search" )
     public String search ( Model model, @RequestParam ( defaultValue = "1", value = "curPage" ) Integer curPage, @RequestParam ( required = false ) String query ) {
         PageHelper.startPage ( curPage, 1 );
@@ -161,5 +164,20 @@ public class MyblogPageController {
         PageInfo< ParentMessageVo > pageInfo = new PageInfo<> ( messageVos );
         model.addAttribute ( "messages", pageInfo );
         return "Myblog/message";
+    }
+
+    @RequestMapping ( "archives" )
+    public String archivesPageUI ( Model model, @RequestParam ( defaultValue = "1", value = "pageNum" ) Integer pageNum ) {
+        /**
+         *  根据用户id查询用户的文章发布信息
+         */
+        PageHelper.startPage ( pageNum, 10 );
+        List< memoryBlog > listMemory = blogServiceImpl.findListMemory ( 39 );
+        listMemory.stream ( ).forEach ( e -> {
+            System.out.println ( e );
+        } );
+        PageInfo< memoryBlog > pageList = new PageInfo<> ( listMemory );
+        model.addAttribute ( "memorys", pageList );
+        return "Myblog/archives";
     }
 }

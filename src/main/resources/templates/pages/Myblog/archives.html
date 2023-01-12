@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title th:text="阿勋博客"></title>
+    <link href="../static/images/me.jpg" th:href="@{/images/20221126163350.jpg}" rel="icon" type="image/x-ico">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css">
+    <link rel="stylesheet" href="../static/css/me.css" th:href="@{/css/me.css}">
+    <link rel="stylesheet" href="../static/css/timeline.css" th:href="@{/css/timeline.css}">
+    <link rel="stylesheet" href="../static/css/jazz-timeline.css" th:href="@{/css/jazz-timeline.css}">
+</head>
+<body>
+
+<!--导航-->
+<nav class="gird-header" th:include="Myblog/index::navBar">
+</nav>
+
+
+<!--顶部背景图片-->
+<div class="m-bg-type_outer" style="width: 100%;height: 40%">
+    <img src="../static/images/aboutbg.jpg" th:src="@{http://images.newstar.net.cn/img/liunian.jpg}" alt=""
+         class="ui m-bg image" style="width: 100%;height: 100%">
+    <div class="m-bg-class_cover">
+        <div class="ui container" style="position: relative ;bottom: -540px;">
+            <div class="m-font-size-title" align="center" style="font-family:'STXingkai'">流年记</div>
+            <div class="m-font-size-text-init-title m-margin-top" align="center">
+                对待生命，不妨大胆一点，因为我们终究要失去它
+            </div>
+        </div>
+    </div>
+</div>
+
+<!--  背景音乐播放-->
+<audio autoplay="autoplay" controls="controls" loop="loop" preload="auto" style="display: none"
+       src="../static/music/yaoyuandeni.mp3" th:src="@{/music/yaoyuandeni.mp3}">
+</audio>
+
+<!--  流年记录-->
+<div class="jazz-timeline-wrapper">
+    <div class="jazz-timeline multiline-timeline thin-timeline">
+
+        <div id="broadcast" class="timeline-post turqoise-post turqoise-trail" th:each="memory : ${memorys.list}">
+            <div class="timeline-icon icon-dot-full-white">
+                <div class="timeline-bar"></div>
+            </div>
+            <div class="timeline-content">
+                <div class="ui mini horizontal link list">
+                    <div class="item">
+                        <img th:src="@{${memory.user.picture}}" class="ui avatar image">
+                        <div class="content">
+                            <a href="#" style="color: #ffffff;font-size: 18px" th:text="|${memory.user.authorName}✍️|"
+                               th:href="@{/myblog/userInfo/{id}(id=${memory.user.id})}" target="_blank">oneStar</a>
+                        </div>
+                    </div>
+                </div>
+
+                <span style="color: #dddddd" th:text="${#dates.format(memory.publishDate,'yyyy-MM-dd')}">2020年07月12日10:48:17 </span>
+                <div class="content-details">
+                    <a href="#" class="class_outer" target="_blank" th:href="@{/myblog/blogInfo/{id}(id=${memory.id})}"
+                       style="color: white">
+                        <p th:text="${memory.title}">国庆和中秋刚好在同一天</p>
+                        <img src="https://note.youdao.com/yws/api/personal/file/1DEBA60653854130B107CB49E3D3AD83?method=download&shareKey=3ace447cd59e0d0500d9000e82a8ae40"
+                             th:src="@{${memory.blogCover}}">
+                    </a>
+                </div>
+            </div><!-- timeline content -->
+        </div><!-- .timeline-post -->
+
+    </div><!-- .timeline -->
+</div><!-- .jazz-timeline-wrapper -->
+
+
+<!--置顶图标-->
+<div id="toolbar" class="m-padded-tb-large m-fixed m-right-bottom">
+    <a href="#" class="ui center aligned basic segment icon"><i class="ui medium orange chevron up icon"></i> </a>
+</div>
+
+<!--底部栏-->
+<footer class="ui inverted vertical segment m-padded-tb-massive m-opacity">
+    <!--容器-->
+    <div class="ui center aligned container" th:include="Myblog/index::footer">
+    </div>
+
+</footer>
+</body>
+</html>

@@ -13,6 +13,7 @@ import com.xun.sys.dao.CommentDao;
 import com.xun.sys.dao.UserDao;
 import com.xun.sys.pojo.Blog;
 import com.xun.sys.pojo.User;
+import com.xun.sys.pojo.memoryBlog;
 import com.xun.sys.service.BlogService;
 import com.xun.sys.vo.BlogUserTypeVo;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -182,12 +183,14 @@ public class BlogServiceImpl implements BlogService {
     public BlogUserTypeVo findBlogInfoByBlogId ( String id ) {
         Assert.isEmpty ( id == null || id.equals ( "" ), "请求参数有误！" );
         BlogUserTypeVo blogInfo = blogDao.findBlogInfoByBlogId ( id );
-        //获取文章的评论数量
-        Integer countNumber = commentDao.countByBlogId ( blogInfo.getId ( ) );
-        blogInfo.setCountComment ( countNumber );
-        //获取文章的标签
-        List< String > BlogTags = blogTagDao.findTagInfoByBlogId ( blogInfo.getId ( ) );
-        blogInfo.setBlogTags ( BlogTags );
+        if ( blogInfo != null ) {
+            //获取文章的评论数量
+            Integer countNumber = commentDao.countByBlogId ( blogInfo.getId ( ) );
+            blogInfo.setCountComment ( countNumber );
+            //获取文章的标签
+            List< String > BlogTags = blogTagDao.findTagInfoByBlogId ( blogInfo.getId ( ) );
+            blogInfo.setBlogTags ( BlogTags );
+        }
         Assert.isEmpty ( blogInfo == null || blogInfo.getClass ( ) == null, "文章拔腿跑了！" );
         return blogInfo;
     }
@@ -201,5 +204,11 @@ public class BlogServiceImpl implements BlogService {
     @Override
     public List< BlogUserTypeVo > getSearchBlog ( String query ) {
         return blogDao.getSearchBlog ( query );
+    }
+
+    @Override
+    public List< memoryBlog > findListMemory ( int userId ) {
+        List< memoryBlog > listMemoryBlog = blogDao.findListMemory ( userId );
+        return listMemoryBlog;
     }
 }

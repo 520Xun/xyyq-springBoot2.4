@@ -118,4 +118,21 @@
             and deleteState = 1
             and essayStatus = 2
     </select>
+    <!--    根据用户id查询文章发布情况-->
+    <select id="findListMemory" resultMap="memory">
+        select id, title, user_id, blog_cover, publishDate
+        from blog
+        where user_id = #{userId}
+          and deleteState = 1
+          and essayStatus = 2
+        ORDER BY publishDate desc
+    </select>
+    <!--    根据用户id查询用户信息-->
+    <resultMap id="memory" type="com.xun.sys.pojo.memoryBlog">
+        <id column="id" property="id"></id>
+        <association property="user"
+                     column="user_id"
+                     select="com.xun.sys.dao.UserDao.findUserById">
+        </association>
+    </resultMap>
 </mapper>

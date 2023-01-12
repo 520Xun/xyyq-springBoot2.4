@@ -3,6 +3,7 @@ package com.xun.sys.service;
 import com.xun.common.pojo.JsonResult;
 import com.xun.common.pojo.countBlogTypeVo;
 import com.xun.sys.pojo.Blog;
+import com.xun.sys.pojo.memoryBlog;
 import com.xun.sys.vo.BlogUserTypeVo;
 
 import java.util.List;
@@ -139,4 +140,12 @@ public interface BlogService {
      * @return
      */
     List< BlogUserTypeVo > getSearchBlog ( String query );
+
+    /**
+     * 查询博主的发布历史
+     * 流年记
+     *
+     * @return
+     */
+    List< memoryBlog > findListMemory ( int userId );
 }

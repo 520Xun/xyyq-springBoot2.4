@@ -36,8 +36,8 @@
             <!--<div class="right m-item item m-mobile-hide">-->
                 <a href="#" class="active m-item item" th:href="@{/myblog/index}"><i class="home icon"></i>首页</a>
                 <a href="#" class="m-item item" th:href="@{/myblog/type/0}"><i class="clone outline icon"></i>分类</a>
-                <a href="#" class="m-item item"><i class="clock icon"></i>时间轴</a>
-                <a href="#" class="m-item item"><i class="music icon"></i>音乐盒</a>
+                <a href="#" class="m-item item" th:href="@{/myblog/archives}"><i class="clock icon"></i>留年记</a>
+                <a href="#" class="m-item item" th:href="@{/myblog/music}"><i class="music icon"></i>音乐盒</a>
                 <a href="#" class="m-item item" th:href="@{/myblog/message}"><i class="book icon"></i>留言板</a>
                 <a href="#" class="m-item item"><i class="pencil alternate icon"></i>友人帐</a>
                 <a href="#" class="olive m-item item"><i class="image icon"></i>照片墙</a>
@@ -63,7 +63,7 @@
         <div id="waypoint" class="ui m-margin-top-large" align="center" th:fragment="head">
             <a href="#" class="ui circular icon button m-opacity-small m-item item m-mobile-hide m-index-btn" th:href="@{/myblog/index}"><i class="home icon"></i>首页</a>
             <a href="#" class="ui circular icon button m-opacity-small m-item item m-mobile-hide m-index-btn"th:href="@{/myblog/type/0}" ><i class="clone outline icon"></i>分类</a>
-            <a href="#" class="ui circular icon button m-opacity-small m-item item m-mobile-hide m-index-btn" ><i class="clock icon"></i>时间轴</a>
+            <a href="#" class="ui circular icon button m-opacity-small m-item item m-mobile-hide m-index-btn" th:href="@{/myblog/archives}" ><i class="clock icon"></i>时间轴</a>
             <a href="#" class="ui circular icon button m-opacity-small m-item item m-mobile-hide m-index-btn" th:href="@{/myblog/music}"><i class="music icon"></i>音乐盒</a>
             <a href="#" class="ui circular icon button m-opacity-small m-item item m-mobile-hide m-index-btn" th:href="@{/myblog/message}"><i class="book icon"></i>留言板</a>
             <a href="#" class="ui circular icon button m-opacity-small m-item item m-mobile-hide m-index-btn"><i class="pencil alternate icon"></i>友人帐</a>
@@ -91,7 +91,7 @@
     <div class="ui stackable m-container-mini m-opacity grid">
         <div class="m-margin-tb-tiny four wide column" th:each="blog : ${recommendedBlogs}">
             <a href="#" class="class_outer" target="_blank" th:href="@{/myblog/blogInfo/{id}(id=${blog.id})}">
-                <img src="http://localhost/images/20221126163350.jpg" alt="" class="ui rounded image"  th:src="@{${blog.blogCover}}" >
+                <img src="http://localhost/images/20221126163350.jpg" alt="" class="ui rounded image"  th:src="@{${blog.blogCover}}" height="241px">
                 <span class="class_cover" >
                      <h4 class="m-font-size-blog-text m-margin-tb-tiny" th:text="${blog.title}">大圣，此去欲何?</h4>
                   </span>
