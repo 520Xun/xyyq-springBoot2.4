@@ -69,7 +69,7 @@
 <body>
 <div class="box">
     <div class="box-header">
-        <h2 style="padding: 15px">评论管理</h2>
+        <h2 style="padding: 15px">留言管理</h2>
         <div class="layui-form-item">
             <label class="layui-form-label">日期</label>
             <div class="layui-input-inline">
@@ -151,7 +151,7 @@
     });
 
     function doLoadData() {
-        var url = "/comment/findComment";
+        var url = "/message/queryByPage";
         var curPage = $("#page").data("curPage");
         var createdTime = $("#date").val();
         var contant = $("#contant").val();
@@ -166,7 +166,7 @@
             //查询成功！
             if (result.state == 1) {
                 doHandlerTableBody(result.data);
-                //设置页码
+                // //设置页码
                 setPageData(result.data);
             } else {
                 //相当于alert()
@@ -178,21 +178,21 @@
     function doHandlerTableBody(data) {
         $("#tbody").empty();
         data = data.pageData;
-        //分页数据赋值
-        setPageData(data);
+        //分页数据赋值setPageData(data);
         var tr;
         if (data.length <= 0) {
             tr = "<tr><td></td></tr>";
             $("#tbody").append(tr);
         } else {
             for (var i = 0; i < data.length; i++) {
+                debugger
                 tr = "  <tr>\n" +
                     "  <th><input type=\"checkbox\" value='" + data[i].id + "' name='checkbox'></th>\n" +
                     " <th>" + (data[i].user == null ? "用户可能不存在！" : data[i].user.authorName) + "</th>\n" +
                     " <th>" + "<img src='" + (data[i].user == null ? "用户可能不存在！" : data[i].user.picture) + "' width='80px' height='80px' style='border-radius: 40px'>" + "</th>" +
                     " <th>" + data[i].contant + "</th>\n" +
-                    " <th>" + data[i].commentIp + "</th>\n" +
-                    "<th><input class=\"switch switch-anim onlineStatus\" onchange=\"checkNum(this)\" type=\"checkbox\" value='" + data[i].commentState + "'  /></th>" +
+                    " <th>" + data[i].messageIp + "</th>\n" +
+                    "<th><input class=\"switch switch-anim onlineStatus\" onchange=\"checkNum(this)\" type=\"checkbox\" value='" + data[i].messageState + "'  /></th>" +
                     " <th>" + data[i].createdTime + "</th>\n" +
                     "</tr>";
                 $("#tbody").append(tr);
@@ -218,9 +218,9 @@
         var checked = $(btn).prop('checked') ? "1" : "0";
         var params = {
             id: id,
-            commentState: checked,
+            messageState: checked,
         }
-        var url = "/comment/updateCommentState";
+        var url = "/message/updateMessageState";
         $.get(url, params, function (result) {
             if (result.state == 1) {
                 //静态修改
@@ -255,8 +255,7 @@
                 ids.push($(this).val());
             })
             var params = {ids: ids};
-            var url = "/comment/deleteComment";
-            debugger
+            var url = " /message/deleteMessage";
             $.get(url, params, function (result) {
                 if (result.state == 0) {
                     layer.msg(result.msg, {icon: 2});

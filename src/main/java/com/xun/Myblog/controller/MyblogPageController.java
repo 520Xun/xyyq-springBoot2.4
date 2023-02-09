@@ -142,8 +142,6 @@ public class MyblogPageController {
 
     /**
      * 跳转到音乐盒
-     *
-     * @return
      */
     @RequestMapping ( "music" )
     public String musicPageUI ( ) {
@@ -157,9 +155,9 @@ public class MyblogPageController {
      * @param pageNum
      * @return
      */
-    @RequestMapping ( "message" )
+    @RequestMapping ( value = "message" )
     public String messagePageUI ( Model model, @RequestParam ( defaultValue = "1", value = "pageNum" ) Integer pageNum ) {
-        PageHelper.startPage ( pageNum, 2 );
+        PageHelper.startPage ( pageNum, 10 );
         List< ParentMessageVo > messageVos = messageServiceImpl.listMessageVoList ( );
         PageInfo< ParentMessageVo > pageInfo = new PageInfo<> ( messageVos );
         model.addAttribute ( "messages", pageInfo );
@@ -169,13 +167,11 @@ public class MyblogPageController {
     @RequestMapping ( "archives" )
     public String archivesPageUI ( Model model, @RequestParam ( defaultValue = "1", value = "pageNum" ) Integer pageNum ) {
         /**
-         *  根据用户id查询用户的文章发布信息
+         *  根据当前在线用户id查询用户的文章发布信息
          */
         PageHelper.startPage ( pageNum, 10 );
         List< memoryBlog > listMemory = blogServiceImpl.findListMemory ( 39 );
-        listMemory.stream ( ).forEach ( e -> {
-            System.out.println ( e );
-        } );
+        listMemory.forEach ( System.out :: println );
         PageInfo< memoryBlog > pageList = new PageInfo<> ( listMemory );
         model.addAttribute ( "memorys", pageList );
         return "Myblog/archives";

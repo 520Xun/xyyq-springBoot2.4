@@ -1,29 +1,40 @@
 package com.xun.sys.service.impl;
 
+//自动导包设置
+
+import com.github.pagehelper.Page;
+import com.github.pagehelper.PageHelper;
+import com.xun.common.config.pageProperties;
+import com.xun.common.pojo.JsonResult;
+import com.xun.common.pojo.Pagination;
 import com.xun.common.util.Assert;
 import com.xun.common.util.IPUtils;
 import com.xun.sys.dao.MessageDao;
+import com.xun.sys.pojo.Message;
 import com.xun.sys.pojo.User;
 import com.xun.sys.service.MessageService;
 import com.xun.sys.vo.ParentMessageVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
 import javax.servlet.http.HttpSession;
 import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @version: java version 1.8
- * @Author: xun
- * @description:
- * @date: 2022-12-13 14:20
+ * (Message)表服务实现类
+ *
+ * @author xun
+ * @since 2023-02-07 09:12:18
  */
-@Service
+@Service ( "messageService" )
 public class MessageServiceImpl implements MessageService {
-
     @Autowired
     private MessageDao messageDao;
+
+    @Resource
+    private pageProperties pp;//分页默认数据
 
     //存放迭代找出的所有子代的集合
     private List< ParentMessageVo > tempReplys = new ArrayList<> ( );
@@ -141,5 +152,75 @@ public class MessageServiceImpl implements MessageService {
             tempReplys.add ( e );
             recursively ( e.getId ( ), praentName3 );
         } );
+    }
+
+    /**
+     * 通过ID查询单条数据
+     *
+     * @param id 主键
+     * @return 实例对象
+     */
+    @Override
+    public Message queryById ( Integer id ) {
+        return this.messageDao.queryById ( id );
+    }
+
+    /**
+     * 分页查询
+     *
+     * @param message  筛选条件
+     * @param curPage  当前页
+     * @param pageSize 页数
+     * @return 查询结果
+     */
+    @Override
+    public JsonResult queryByPage ( Message message, Integer curPage, Integer pageSize ) {
+        Assert.isEmpty ( curPage == null || pageSize == null, "查询参数异常！！！" );
+        pageSize = pageSize == 0 ? pp.getPageSize ( ) : pageSize;
+        Page< ParentMessageVo > page = PageHelper.startPage ( curPage, pageSize );
+        List< ParentMessageVo > lists = messageDao.queryByPage ( message );
+        Pagination pageObj = new Pagination ( curPage, ( int ) page.getTotal ( ), pageSize );
+        pageObj.setPageData ( lists );
+        return new JsonResult ( pageObj );
+    }
+
+
+    /**
+     * 修改数据
+     *
+     * @param message 实例对象
+     * @return 实例对象
+     */
+    @Override
+    public Message update ( Message message ) {
+        this.messageDao.update ( message );
+        return this.queryById ( message.getId ( ) );
+    }
+
+    /**
+     * 通过主键删除数据
+     *
+     * @param id 主键
+     * @return 是否成功
+     */
+    @Override
+    public boolean deleteById ( Integer id ) {
+        return this.messageDao.deleteById ( id ) > 0;
+    }
+
+    @Override
+    public Integer updateMessageState ( Integer id, Integer messageState ) {
+        Assert.isEmpty ( id == null || messageState == null, "请求参数异常" );
+        Integer n = messageDao.updateMessageState ( id, messageState );
+        Assert.isEmpty ( n == 0, "修改失败！" );
+        return n;
+    }
+
+    @Override
+    public Integer deleteMessage ( Integer[] ids ) {
+        Assert.isEmpty ( ids == null || ids.length == 0, "至少选择一条数据删除！" );
+        int n = messageDao.deleteMessage ( ids );
+        Assert.isEmpty ( n == 0, "修改失败！" );
+        return n;
     }
 }

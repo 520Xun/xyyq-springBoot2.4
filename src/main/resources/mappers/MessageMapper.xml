@@ -25,4 +25,96 @@
                                        `createdTime`)
         VALUES (null, #{user.id}, #{parentMessageId}, #{contant}, #{messageIp}, #{messageState}, now());
     </insert>
+
+    <!--查询单个-->
+    <select id="queryById" resultType="com.xun.sys.pojo.Message">
+        select id,
+               user_id,
+               parent_message_id,
+               contant,
+               messageIp,
+               messageState,
+               messageTread,
+               messageTop,
+               createdTime
+        from message
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryByPage" resultMap="MVO">
+        select
+        id, user_id, parent_message_id, contant, messageIp, messageState, messageTread, messageTop, createdTime
+        from message
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="userId != null">
+                and user_id = #{userId}
+            </if>
+            <if test="parentMessageId != null">
+                and parent_message_id = #{parentMessageId}
+            </if>
+            <if test="contant != null and contant != ''">
+                and contant = #{contant}
+            </if>
+            <if test="messageip != null and messageip != ''">
+                and messageIp = #{messageip}
+            </if>
+            <if test="messagestate != null">
+                and messageState = #{messagestate}
+            </if>
+            <if test="messagetread != null">
+                and messageTread = #{messagetread}
+            </if>
+            <if test="messagetop != null">
+                and messageTop = #{messagetop}
+            </if>
+            <if test="createdtime != null">
+                and createdTime = #{createdtime}
+            </if>
+        </where>
+    </select>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update message
+        <set>
+            <if test="userId != null">
+                user_id = #{userId},
+            </if>
+            <if test="parentMessageId != null">
+                parent_message_id = #{parentMessageId},
+            </if>
+            <if test="contant != null and contant != ''">
+                contant = #{contant},
+            </if>
+            <if test="messageip != null and messageip != ''">
+                messageIp = #{messageip},
+            </if>
+            <if test="messagestate != null">
+                messageState = #{messagestate},
+            </if>
+            <if test="messagetread != null">
+                messageTread = #{messagetread},
+            </if>
+            <if test="messagetop != null">
+                messageTop = #{messagetop},
+            </if>
+            <if test="createdtime != null">
+                createdTime = #{createdtime},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteMessage">
+        delete from message where id in
+        <foreach collection="array" item="id" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
 </mapper>

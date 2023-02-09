@@ -57,9 +57,16 @@ com:
   xun:
     page:
       page-size: 5 #每页条数
-
+    picture:
+      user-prctrue: "http://localhost/images/20221206165941.png" #默认的用户头像，或者注销号的头像
+      #腾讯云短信接口参数配置
+    txsms:
+      app-id: 1400773093
+      app-key: 0b5a0696b6584706e8950ee76badaaa2
+      template-id: 1622149
+      sign-name: "阿勋博客公众号"
 #pageHelper
-pagehelper:
+page helper:
   helper-dialect: mysql #指定方言为mysql
   reasonable: true #分页查询合理化（当前页>最大页 为最大页 <0 为1）
 

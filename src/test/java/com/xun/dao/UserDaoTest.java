@@ -2,9 +2,9 @@ package com.xun.dao;
 
 import com.github.pagehelper.Page;
 import com.github.pagehelper.PageHelper;
+import com.xun.common.config.pageProperties;
 import com.xun.common.pojo.JsonResult;
 import com.xun.common.pojo.Pagination;
-import com.xun.common.pojo.pageProperties;
 import com.xun.sys.dao.UserDao;
 import com.xun.sys.pojo.User;
 import org.junit.jupiter.api.Test;

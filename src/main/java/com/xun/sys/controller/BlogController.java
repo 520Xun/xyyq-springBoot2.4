@@ -34,7 +34,6 @@ public class BlogController {
      * @param blog
      * @param curPage
      * @param pageSize
-     * @return
      */
     @RequestMapping ( "findBlog" )
     public JsonResult findBlog ( BlogUserTypeVo blog, @RequestParam ( required = false, defaultValue = "1" ) Integer curPage, @RequestParam ( required = false, defaultValue = "5" ) Integer pageSize ) {
@@ -96,7 +95,6 @@ public class BlogController {
      *
      * @param vo
      * @param tagIds
-     * @return
      */
     @RequestMapping ( "saveBlog" )
     public JsonResult insertBlog ( BlogUserTypeVo vo, @RequestParam ( "tagIds[]" ) Integer[] tagIds, String authorName, Integer typeId ) {
@@ -104,6 +102,7 @@ public class BlogController {
         vo.setUser ( user );
         Type type = new Type ( typeId );
         vo.setType ( type );
+        //插入博文
         Integer n = blogServiceImpl.insertBlog ( vo, tagIds );
         JsonResult jr = new JsonResult ( n );
         jr.setMsg ( "添加成功！" );

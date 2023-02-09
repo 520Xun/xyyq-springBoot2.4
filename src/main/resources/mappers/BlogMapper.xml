@@ -61,7 +61,8 @@
             `updateDate`  = now(),
             `essayStatus` = #{essayStatus},
             `type_id`     = #{type.id},
-            `blog_cover`  =#{blogCover}
+            `blog_cover`  =#{blogCover},
+            `recommend`   = #{recommend}
         WHERE `id` = #{id};
     </update>
 

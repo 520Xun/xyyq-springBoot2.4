@@ -27,7 +27,8 @@ public class User implements Serializable {
     private String sex;//性别
     private String email;//邮箱
     private String phone;//电话
-    private String picture = "http://localhost/images/20221206165941.png";//头像  默认一张灰白头像
+    //http://localhost/images/20221206165941.png
+    private String picture;//头像  默认一张灰白头像
     private String personalizedSign;//个性签名
     @JsonFormat ( pattern = "yyyy-MM-dd HH:mm:ss" )
     private Date registerTime;//注册时间

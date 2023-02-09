@@ -48,6 +48,13 @@ public interface CommentService {
      */
     List< ParentCommentVo > findParentCommentVoList ( Integer id );
 
+    /**
+     * 添加评论
+     *
+     * @param comment
+     * @param session
+     * @return
+     */
     Integer saveComent ( ParentCommentVo comment, HttpSession session );
 
     Integer deleteCommentByCid ( String id );

@@ -8,6 +8,7 @@
     <link href="../static/images/me.jpg" th:href="@{/images/me.jpg}" rel="icon" type="image/x-ico">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css">
     <link rel="stylesheet" href="../static/css/me.css" th:href="@{/css/me.css}">
+
 </head>
 <body>
 
@@ -18,7 +19,18 @@
 
 <!--顶部图片-->
 <div class="m-bg-type_outer" style="width: 100%;height: 40%">
-    <!--  放分类的背景图-->
+    <div style="position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 9999;
+    top: 100px;">
+        <marquee behavior="scroll" direction="left" scrollamount="20"
+                 th:each="message : ${messages.list}"><font
+                color="aqua" size="15px"
+                th:text="${message.contant}">6666666666</font>
+        </marquee>
+    </div>
+    <!--  放留言板的背景图-->
     <img src="../static/images/typebg.jpg" th:src="@{http://images.newstar.net.cn/img/default-bg.jpeg}" alt=""
          class="ui m-bg image" style="width: 100%;height: 100%">
     <div class="m-bg-class_cover">
@@ -156,19 +168,19 @@
                 </div>
             </div>
         </div>
-
         <br>
         <br>
         <br>
-
     </div>
 </div>
-
-
 <br>
 <br>
 <br>
 
+<!--置顶图标-->
+<div id="toolbar" class="m-padded-tb-large m-fixed m-right-bottom">
+    <a href="#" class="ui center aligned basic segment icon"><i class="ui medium orange chevron up icon"></i> </a>
+</div>
 
 <!--底部栏-->
 <footer class="ui inverted vertical segment m-padded-tb-massive m-opacity">
@@ -224,7 +236,6 @@
         var messageNickname = $(obj).data('messagenickname');
         $("[name='content']").attr("placeholder", "@" + messageNickname).focus();
         $("[name='parentMessage.id']").val(messageId);
-        debugger
         $(window).scrollTo(0, 500);
     }
 

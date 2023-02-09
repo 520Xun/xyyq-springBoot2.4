@@ -25,9 +25,9 @@ public class ParentMessageVo {
     private String contant;//内容
     private String messageIp;
     /**
-     * 暂时测试使用
+     * 目前测试前端，改为默认审核
      */
-    private Integer messageState = 0;//审核
+    private Integer messageState = 1;//审核 0未审核  1已审核
     private Integer messageTop = 0;//被顶
     private Integer messageTread = 0;//被踩
     @JsonFormat ( pattern = "yyyy-MM-dd HH:mm:ss" )
