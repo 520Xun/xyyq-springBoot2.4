@@ -13,33 +13,44 @@
     <link rel="stylesheet" href="../static/css/me.css" th:href="@{/css/me.css}">
     <!--  <link rel="stylesheet" href="../static/css/timeline.css" th:href="@{/css/timeline.css}">-->
     <style>
+        /*body {*/
+        /*    background-image: url("http://localhost/images/20221126163350.jpg");*/
+        /*!important;*/
+        /*}*/
         body {
-            background-image: url("http://localhost/images/20221126163350.jpg");
-        !important;
+            background-image: url("https://images.newstar.net.cn/img/bg.jpg");
+        }
+
+        #article-toc ul {
+            list-style: none;
         }
     </style>
 </head>
 <body>
 
 <!--导航-->
-<nav class="gird-header" th:include="Myblog/index::navBar">
-    <div class="ui container">
+<nav class="gird-header">
+    <div class="ui m-container-mini-m" style="max-width: 85em !important;
+    margin: auto !important;">
         <div class="ui inverted secondary stackable menu">
-            <h2 class="ui olive header item" style="font-family: STSong">阿勋博客</h2>
+            <h2 class="ui olive header item" style="font-family: STSong" th:text="xunblog">xunblog</h2>
             <!--<div class="right m-item item m-mobile-hide">-->
-            <a href="#" class="m-item item m-mobile-hide "><i class="home icon"></i>首页</a>
-            <a href="#" class="m-item item m-mobile-hide"><i class="clone outline icon"></i>分类</a>
-            <a href="#" class="m-item item m-mobile-hide"><i class="clock icon"></i>时间轴</a>
-            <a href="#" class="m-item item m-mobile-hide"><i class="music icon"></i>音乐盒</a>
-            <a href="#" class="m-item item m-mobile-hide"><i class="book icon"></i>留言板</a>
-            <a href="#" class="m-item item m-mobile-hide"><i class="pencil alternate icon"></i>友人帐</a>
-            <a href="#" class="m-item item m-mobile-hide"><i class="image icon"></i>照片墙</a>
-            <a href="#" class="m-item item m-mobile-hide"><i class="info icon"></i>关于我</a>
+            <a href="#" th:href="@{/myblog/index}" class="m-item item m-mobile-hide"><i class="home icon"></i>首页</a>
+            <a href="#" th:href="@{/myblog/type/0}" class="m-item item m-mobile-hide"><i
+                    class="clone outline icon"></i>分类</a>
+            <a href="#" th:href="@{/myblog/archives}" class="m-item item m-mobile-hide"><i class="coffee icon"></i>流年记</a>
+            <a href="#" th:href="@{/myblog/music}" class="m-item item m-mobile-hide"><i
+                    class="music icon"></i>音乐盒</a>
+            <a href="#" th:href="@{/myblog/message}" class="m-item item m-mobile-hide"><i
+                    class="book icon"></i>留言板</a>
+            <a href="#" th:href="@{/#}" class="m-item item m-mobile-hide"><i class="image icon"></i>照片墙</a>
+            <a href="#" th:href="@{/#}" class="m-item item m-mobile-hide"><i class="info icon"></i>关于我</a>
             <!--</div>-->
             <div class="right m-item item m-mobile-hide">
-                <form name="search" action="#" method="post" target="_blank">
+                <form name="search" action="#" th:action="@{/myblog/search}" method="post" target="_blank">
                     <div class="ui icon transparent input m-margin-tb-tiny" style="color: white">
-                        <input style="color: white" type="text" name="query" placeholder="Search....">
+                        <input style="color: white" type="text" name="query" placeholder="Search...."
+                               th:value="${query}">
                         <i onclick="document.forms['search'].submit()" class="search link icon"></i>
                     </div>
                 </form>
@@ -267,10 +278,7 @@
 <br>
 <br>
 <!--底部栏-->
-<footer class="ui inverted vertical segment m-padded-tb-massive m-opacity">
-    <!--容器-->
-    <div th:include="Myblog/index::footer"></div>
-</footer>
+<footer class="ui inverted vertical segment m-padded-tb-massive m-opacity" th:include="Myblog/common/footer"></footer>
 
 
 <script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
@@ -318,7 +326,7 @@
 
 
     $("#btnTop").click(function () {
-        console.log("点赞！");
+        layer.msg("点赞！", {icon: 1});
     });
 </script>
 <script th:inline="javascript">
@@ -328,47 +336,6 @@
     function commentLoction() {
         $("#comment-container").load(/*[[@{/comments/{id}(id=${blogInfo.id})}]]*/);
     }
-
-    // 运行时间统计
-    function secondToDate(second) {
-        if (!second) {
-            return 0;
-        }
-        var time = [0, 0, 0, 0, 0];
-        if (second >= 365 * 24 * 3600) {
-            time[0] = parseInt(second / (365 * 24 * 3600));
-            second %= 365 * 24 * 3600;
-        }
-        if (second >= 24 * 3600) {
-            time[1] = parseInt(second / (24 * 3600));
-            second %= 24 * 3600;
-        }
-        if (second >= 3600) {
-            time[2] = parseInt(second / 3600);
-            second %= 3600;
-        }
-        if (second >= 60) {
-            time[3] = parseInt(second / 60);
-            second %= 60;
-        }
-        if (second > 0) {
-            time[4] = second;
-        }
-        return time;
-    }
-
-    function setTime() {
-        /*此处为网站的创建时间*/
-        var create_time = Math.round(new Date(Date.UTC(2020, 0o1, 25, 15, 15, 15)).getTime() / 1000);
-        var timestamp = Math.round((new Date().getTime() + 8 * 60 * 60 * 1000) / 1000);
-        currentTime = secondToDate((timestamp - create_time));
-        currentTimeHtml = currentTime[0] + '年' + currentTime[1] + '天'
-            + currentTime[2] + '时' + currentTime[3] + '分' + currentTime[4]
-            + '秒';
-        document.getElementById("htmer_time").innerHTML = currentTimeHtml;
-    }
-
-    setInterval(setTime, 1000);
 
     $('.menu.toggle').click(function () {
         $('.m-item').toggleClass('m-mobile-hide');
@@ -418,7 +385,7 @@
             layer.msg("请填写内容！", {icon: 2});
         } else {
             //load 加载的不是注释，这是传值路径
-            $("#comment-container").load(/*[[@{/comments}]]*/"", params, function (responseTxt, statusTxt, xhr) {
+            $("#comment-container").load(/*[[@{/comments}]]*/"", params, function () {
                 $(window).scrollTo($('#goto'), 500); //滚动到指定目标
                 clearContent();
             });

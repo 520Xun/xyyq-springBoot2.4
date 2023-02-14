@@ -103,4 +103,18 @@
           and commentState = 1
         order by createdTime desc
     </select>
+    <!--    查询最新评论，并且是已经经过审核的-->
+    <select id="findNewComment" resultMap="newComment">
+        select *
+        from comment
+        where commentState = 1
+        order by createdTime desc
+    </select>
+    <resultMap id="newComment" type="com.xun.sys.pojo.NewComment">
+        <id property="id" column="id"/>
+        <association property="blog"
+                     column="blog_id"
+                     select="com.xun.sys.dao.BlogDao.findBlogById">
+        </association>
+    </resultMap>
 </mapper>

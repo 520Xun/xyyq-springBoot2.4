@@ -1,4 +1,4 @@
-package com.xun.common.pojo;
+package com.xun.sys.vo;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

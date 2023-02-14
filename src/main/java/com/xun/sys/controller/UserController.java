@@ -2,10 +2,10 @@ package com.xun.sys.controller;
 
 import com.xun.common.exception.ServiceException;
 import com.xun.common.pojo.JsonResult;
-import com.xun.common.pojo.countUserAddressVo;
 import com.xun.common.pojo.saveExcel;
 import com.xun.sys.pojo.User;
 import com.xun.sys.service.UserService;
+import com.xun.sys.vo.countUserAddressVo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;

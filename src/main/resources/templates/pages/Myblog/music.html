@@ -20,18 +20,21 @@
 
 <!--导航-->
 <nav class="gird-header">
-    <div class="ui container">
+    <div class="ui m-container-mini-m" style="max-width: 85em !important;
+    margin: auto !important;">
         <div class="ui inverted secondary stackable menu">
-            <h2 class="ui olive header item" style="font-family: STSong">阿勋博客</h2>
+            <h2 class="ui olive header item" style="font-family: STSong" th:text="xunblog">xunblog</h2>
             <!--<div class="right m-item item m-mobile-hide">-->
-            <a href="#" class="m-item item" th:href="@{/myblog/index}"><i class="home icon"></i>首页</a>
-            <a href="#" class="m-item item" th:href="@{/myblog/type/0}"><i class="clone outline icon"></i>分类</a>
-            <a href="#" class="m-item item" th:href="@{/myblog/archives}"><i class="clock icon"></i>留年记</a>
-            <a href="#" class="m-item item active" th:href="@{/myblog/music}"><i class="music icon"></i>音乐盒</a>
-            <a href="#" class="m-item item" th:href="@{/myblog/message}"><i class="book icon"></i>留言板</a>
-            <a href="#" class="m-item item"><i class="pencil alternate icon"></i>友人帐</a>
-            <a href="#" class="olive m-item item"><i class="image icon"></i>照片墙</a>
-            <a href="#" class="m-item item"><i class="info icon"></i>关于我</a>
+            <a href="#" th:href="@{/myblog/index}" class="m-item item m-mobile-hide"><i class="home icon"></i>首页</a>
+            <a href="#" th:href="@{/myblog/type/0}" class="m-item item m-mobile-hide"><i
+                    class="clone outline icon"></i>分类</a>
+            <a href="#" th:href="@{/myblog/archives}" class="m-item item m-mobile-hide"><i class="coffee icon"></i>流年记</a>
+            <a href="#" th:href="@{/myblog/music}" class="active m-item item m-mobile-hide"><i
+                    class="music icon"></i>音乐盒</a>
+            <a href="#" th:href="@{/myblog/message}" class="m-item item m-mobile-hide"><i
+                    class="book icon"></i>留言板</a>
+            <a href="#" th:href="@{/#}" class="m-item item m-mobile-hide"><i class="image icon"></i>照片墙</a>
+            <a href="#" th:href="@{/#}" class="m-item item m-mobile-hide"><i class="info icon"></i>关于我</a>
             <!--</div>-->
             <div class="right m-item item m-mobile-hide">
                 <form name="search" action="#" th:action="@{/myblog/search}" method="post" target="_blank">

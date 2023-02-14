@@ -1,9 +1,9 @@
 package com.xun.sys.dao;
 
-import com.xun.common.pojo.countBlogTypeVo;
 import com.xun.sys.pojo.Blog;
 import com.xun.sys.pojo.memoryBlog;
 import com.xun.sys.vo.BlogUserTypeVo;
+import com.xun.sys.vo.countBlogTypeVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;

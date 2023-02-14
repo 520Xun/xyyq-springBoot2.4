@@ -38,8 +38,12 @@
     <div class="layui-form-item">
         <label class="layui-form-label">分类</label>
         <div class="layui-input-block">
-            <select id="typeSelect" lay-filter="aihao">
-                <option value="" selected>请选择</option>
+            <!--            <select id="" lay-filter="aihao">-->
+            <!--                <option value="" selected>请选择</option>-->
+            <!--            </select>-->
+            <select name="role" xm-select="type-select" lay-verify="required" lay-vertype="tips"
+                    xm-select-skin="normal" id="typeSelect">
+                <option value="">请选择分类</option>
             </select>
         </div>
     </div>
@@ -96,9 +100,8 @@
     //初始化editorMD
     var testEditor;
     $(function () {
-        // initEditorMD();
-        loadTagselect();
         loadTypeselect();
+        loadTagselect();
     });
 
     function changType() {
@@ -158,7 +161,8 @@
     function getBlogParam() {
         var title = $("#titile").val();
         var authorName = $("#authorName").val();
-        var typeId = $("#typeSelect option:selected").val();
+        var typeId = layui.formSelects.value('type-select', 'val');
+        typeId = typeId[0];
         var tagIds = layui.formSelects.value('tag-select', 'val');
         var blogCover = $("#blogCover").attr("src");
         var content = $("#htmlContent").text();
@@ -170,9 +174,11 @@
             blogCover: blogCover,
             content: content
         }
+        console.log(blogParam);
         return blogParam;
     }
 
+    //加载类型
     function loadTypeselect() {
         var url = "/type/findAllType";
         $.get(url, {}, function (result) {
@@ -185,6 +191,7 @@
         })
     }
 
+    //加载标签
     function loadTagselect() {
         var url = "/tag/findAllTag";
         $.get(url, {}, function (result) {
@@ -319,7 +326,6 @@
     function selectBlogTagInfo(id) {
         $.get("/blogTag/findTagByBlogId", {id: id}, function (result) {
             if (result.state == 1) {
-                debugger
                 layui.formSelects.value('tag-select', result.data);
             } else {
                 layer.msg(result.msg, {icon: ' 2'})

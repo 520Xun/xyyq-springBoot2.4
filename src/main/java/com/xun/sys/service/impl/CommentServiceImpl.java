@@ -8,6 +8,7 @@ import com.xun.common.pojo.Pagination;
 import com.xun.common.util.Assert;
 import com.xun.common.util.IPUtils;
 import com.xun.sys.dao.CommentDao;
+import com.xun.sys.pojo.NewComment;
 import com.xun.sys.pojo.User;
 import com.xun.sys.service.CommentService;
 import com.xun.sys.vo.BlogUserTypeVo;
@@ -164,6 +165,11 @@ public class CommentServiceImpl implements CommentService {
         int n = commentDao.deleteCommentByCid ( id );
         Assert.isEmpty ( n == 0, "删除失败" );
         return n;
+    }
+
+    @Override
+    public List< NewComment > findNewComment ( ) {
+        return commentDao.findNewComment ( );
     }
 
     /**

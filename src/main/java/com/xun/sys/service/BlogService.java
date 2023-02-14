@@ -1,10 +1,10 @@
 package com.xun.sys.service;
 
 import com.xun.common.pojo.JsonResult;
-import com.xun.common.pojo.countBlogTypeVo;
 import com.xun.sys.pojo.Blog;
 import com.xun.sys.pojo.memoryBlog;
 import com.xun.sys.vo.BlogUserTypeVo;
+import com.xun.sys.vo.countBlogTypeVo;
 
 import java.util.List;
 
@@ -13,6 +13,7 @@ import java.util.List;
  * @Author: xun
  * @description:
  * @date: 2022-11-25 21:42
+ * 文章服务类
  */
 public interface BlogService {
     /**

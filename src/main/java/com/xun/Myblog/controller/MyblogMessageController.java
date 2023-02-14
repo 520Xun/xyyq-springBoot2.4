@@ -57,11 +57,12 @@ public class MyblogMessageController {
 //        if ( user != null ) {
         messageServiceImpl.deleteMessageByIdAndUserId ( id, userId );
 //        }
-        PageHelper.startPage ( 1, 2 );
+        PageHelper.startPage ( 1, 5 );
         List< ParentMessageVo > messageVos = messageServiceImpl.listMessageVoList ( );
         PageInfo< ParentMessageVo > pageInfo = new PageInfo<> ( messageVos );
         model.addAttribute ( "messages", pageInfo );
         return "Myblog/message";
     }
+
 
 }

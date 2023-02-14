@@ -4,6 +4,7 @@ import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import com.xun.sys.pojo.Blog;
 import com.xun.sys.pojo.Carousel;
+import com.xun.sys.pojo.NewComment;
 import com.xun.sys.pojo.memoryBlog;
 import com.xun.sys.service.*;
 import com.xun.sys.vo.BlogTypeVo;
@@ -54,7 +55,7 @@ public class MyblogPageController {
 
 
     public MyblogPageController ( ) {
-        System.out.println ( "欢迎访问博客" );
+        System.out.println ( "欢迎访问xunblog星球" );
     }
 
     /**
@@ -67,7 +68,7 @@ public class MyblogPageController {
     @RequestMapping ( "index" )
     public String webIndexPageUI ( Model model, @RequestParam ( required = false, defaultValue = "1" ) Integer curPage ) {
         long n = times.incrementAndGet ( );//加1的方法
-        System.out.println ( "cpu算法" + n );
+        System.out.println ( "前台页面cpu算法" + n );
         PageHelper.startPage ( curPage, 1 );// 自带page对象
         //查询最新文章 （已审核并且没回收的）
         List< BlogUserTypeVo > allFirstPageBlog = blogServiceImpl.findAllFirstPageBlog ( );
@@ -79,6 +80,9 @@ public class MyblogPageController {
         //查询推荐文章
         List< Blog > recommendedBlogs = blogServiceImpl.findRecommendBlog ( );
         model.addAttribute ( "recommendedBlogs", recommendedBlogs );
+        //查询最新评论
+        List< NewComment > newComments = commentServieImpl.findNewComment ( );
+        model.addAttribute ( "newComment", newComments );
         return "Myblog/index";//前台首页
     }
 
@@ -176,4 +180,5 @@ public class MyblogPageController {
         model.addAttribute ( "memorys", pageList );
         return "Myblog/archives";
     }
+
 }

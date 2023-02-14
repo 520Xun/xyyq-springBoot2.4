@@ -13,7 +13,37 @@
 <body>
 
 <!--导航-->
-<nav class="gird-header" th:include="Myblog/index::navBar">
+<nav class="gird-header">
+    <div class="ui m-container-mini-m" style="max-width: 85em !important;
+    margin: auto !important;">
+        <div class="ui inverted secondary stackable menu">
+            <h2 class="ui olive header item" style="font-family: STSong" th:text="xunblog">xunblog</h2>
+            <!--<div class="right m-item item m-mobile-hide">-->
+            <a href="#" th:href="@{/myblog/index}" class="m-item item m-mobile-hide"><i class="home icon"></i>首页</a>
+            <a href="#" th:href="@{/myblog/type/0}" class="m-item item m-mobile-hide"><i
+                    class="clone outline icon"></i>分类</a>
+            <a href="#" th:href="@{/myblog/archives}" class="m-item item m-mobile-hide"><i class="coffee icon"></i>流年记</a>
+            <a href="#" th:href="@{/myblog/music}" class=" m-item item m-mobile-hide"><i
+                    class="music icon"></i>音乐盒</a>
+            <a href="#" th:href="@{/myblog/message}" class="active m-item item m-mobile-hide"><i
+                    class="book icon"></i>留言板</a>
+            <a href="#" th:href="@{/#}" class="m-item item m-mobile-hide"><i class="image icon"></i>照片墙</a>
+            <a href="#" th:href="@{/#}" class="m-item item m-mobile-hide"><i class="info icon"></i>关于我</a>
+            <!--</div>-->
+            <div class="right m-item item m-mobile-hide">
+                <form name="search" action="#" th:action="@{/myblog/search}" method="post" target="_blank">
+                    <div class="ui icon transparent input m-margin-tb-tiny" style="color: white">
+                        <input style="color: white" type="text" name="query" placeholder="Search...."
+                               th:value="${query}">
+                        <i onclick="document.forms['search'].submit()" class="search link icon"></i>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <a href="#" class="ui menu toggle black icon button m-right-top m-mobile-show">
+        <i class="sidebar icon"></i>
+    </a>
 </nav>
 
 
@@ -183,12 +213,7 @@
 </div>
 
 <!--底部栏-->
-<footer class="ui inverted vertical segment m-padded-tb-massive m-opacity">
-    <!--容器-->
-    <div class="ui center aligned container" th:include="Myblog/index::footer">
-    </div>
-
-</footer>
+<footer class="ui inverted vertical segment m-padded-tb-massive m-opacity" th:include="Myblog/common/footer"></footer>
 
 
 <script src="../static/lib/jquery-3.2.1/jquery-3.2.1.min.js" th:src="@{/js/jquery-3.4.1.min.js}"></script>

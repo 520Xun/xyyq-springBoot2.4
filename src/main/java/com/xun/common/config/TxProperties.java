@@ -24,4 +24,9 @@ public class TxProperties {
     private int TemplateId;
     // 签名内容
     private String signName;
+
+    public static void main ( String[] args ) {
+        System.out.println ( "hello" );
+    }
+
 }

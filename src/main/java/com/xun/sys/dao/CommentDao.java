@@ -1,5 +1,6 @@
 package com.xun.sys.dao;
 
+import com.xun.sys.pojo.NewComment;
 import com.xun.sys.vo.CommentVO;
 import com.xun.sys.vo.ParentCommentVo;
 import org.apache.ibatis.annotations.*;
@@ -108,4 +109,11 @@ public interface CommentDao {
 
     @Delete ( " delete from comment  where parentId = #{id}" )
     Integer deleteCommentByReplay ( String id );
+
+    /**
+     * 查询最新评论
+     *
+     * @return
+     */
+    List< NewComment > findNewComment ( );
 }

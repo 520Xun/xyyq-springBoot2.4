@@ -1,6 +1,7 @@
 package com.xun.sys.service;
 
 import com.xun.common.pojo.JsonResult;
+import com.xun.sys.pojo.NewComment;
 import com.xun.sys.vo.CommentVO;
 import com.xun.sys.vo.ParentCommentVo;
 
@@ -58,4 +59,11 @@ public interface CommentService {
     Integer saveComent ( ParentCommentVo comment, HttpSession session );
 
     Integer deleteCommentByCid ( String id );
+
+    /**
+     * 查询最新评论
+     *
+     * @return
+     */
+    List< NewComment > findNewComment ( );
 }

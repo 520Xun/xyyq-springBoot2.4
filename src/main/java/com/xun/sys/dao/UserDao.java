@@ -1,7 +1,7 @@
 package com.xun.sys.dao;
 
-import com.xun.common.pojo.countUserAddressVo;
 import com.xun.sys.pojo.User;
+import com.xun.sys.vo.countUserAddressVo;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;

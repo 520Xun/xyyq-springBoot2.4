@@ -1,6 +1,6 @@
 #server
 server:
-  port: 80
+  port: 1353
   servlet:
     context-path: /
   tomcat:
@@ -29,9 +29,9 @@ spring:
       max-file-size: 1024MB #单个文件最大
       max-request-size: 102400MB #总文件最大
   datasource:
-    url: jdbc:mysql:///myblog?serverTimezone=GMT%2B8
-    username: root
-    password: root
+    url: jdbc:mysql://119.91.27.33:3306/myblog?serverTimezone=GMT%2B8 #119.91.27.33:3306
+    username: myblog #myblog
+    password: HjXJP7mMSeTnTKS7 #HjXJP7mMSeTnTKS7
     type: com.alibaba.druid.pool.DruidDataSource
   thymeleaf:
     prefix: classpath:/templates/pages/
